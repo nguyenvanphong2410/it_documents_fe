@@ -10,6 +10,9 @@ import { useDispatch, useSelector } from 'react-redux';
 // import { requestGetAllDocument } from '../../api/documents';
 import { requestGetAllCategory } from '../../api/category';
 const OverView = () => {
+
+
+
     const dispatch = useDispatch();
 
     const listCategory = useSelector(state => state.category.listCategories);
@@ -19,6 +22,9 @@ const OverView = () => {
         dispatch(requestGetAllCategory())
     }, [])
 
+    useEffect(() => {
+        document.title = "Tổng quan";
+      }, []);
 
     // const [categories, setCategories] = useState([]);
     const { search, pathname } = useLocation();

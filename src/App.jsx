@@ -26,6 +26,7 @@ import PendingPost from "./pages/pendingPost/PendingPost";
 import Users from "./pages/users/Users";
 import OverView from "./pages/overview/OverView";
 import SidebarAdmin from "./components/sidebarAdmin/SidebarAdmin";
+import { Col, Row } from "antd";
 
 function App() {
   const { user } = useContext(Context);
@@ -33,43 +34,50 @@ function App() {
     <BrowserRouter>
       {
         user?.isAdmin ?
-        <SidebarAdmin />
-        :
-        <>
-      <ScrollToTop />
+          <SidebarAdmin />
+          :
+          <>
+            <ScrollToTop />
 
-      <MainNav />
-      <Routes>
-        <Route path="*" element={<PageNotFound />} />
-        <Route path="/" element={user ? <Home /> : <Login />} />
-        <Route path="/search" element={<Home />} />
-        <Route path="/intro" element={<Intro />} />
-        <Route path="/contacts" element={user ? <Contacts /> : <Login />} />
-        <Route path="/register" element={user ? <Home /> : <Register />} />
-        <Route path="/login" element={user ? <Home /> : <Login />} />
-        <Route path="/write" element={user ? <Write /> : <Register />} />
-        <Route
-          path="/post/edit/:id"
-          element={user ? <EditPost /> : <Register />}
-        />
-        <Route path="/post/:id" element={user ? <Post /> : <Register />} />
-        <Route path="/settings" element={user ? <Settings /> : <Register />} />
-        <Route path="/overview" element={user ? <OverView /> : <Login />} />
-        <Route
-          path="/articles/category/:slug"
-          element={user ? <Articles /> : <Register />}
-        />
-        <Route
-          path="/pendingPost"
-          element={user ? <PendingPost /> : <Register />}
-        />
-        <Route path="/users" element={user ? <Users /> : <Register />} />
-        <Route
-          path="/createCategory"
-          element={user ? <CreateCategory /> : <Register />}
-        />
-      </Routes>
-      </>}
+            <MainNav />
+            <Row>
+              <Col span={3}></Col>
+              <Col span={18}>
+              <Routes>
+                <Route path="*" element={<PageNotFound />} />
+                <Route path="/" element={user ? <Home /> : <Login />} />
+                <Route path="/search" element={<Home />} />
+                <Route path="/intro" element={<Intro />} />
+                <Route path="/contacts" element={user ? <Contacts /> : <Login />} />
+                <Route path="/register" element={user ? <Home /> : <Register />} />
+                <Route path="/login" element={user ? <Home /> : <Login />} />
+                <Route path="/write" element={user ? <Write /> : <Register />} />
+                <Route
+                  path="/post/edit/:id"
+                  element={user ? <EditPost /> : <Register />}
+                />
+                <Route path="/post/:id" element={user ? <Post /> : <Register />} />
+                <Route path="/settings" element={user ? <Settings /> : <Register />} />
+                <Route path="/overview" element={user ? <OverView /> : <Login />} />
+                <Route
+                  path="/articles/category/:slug"
+                  element={user ? <Articles /> : <Register />}
+                />
+                <Route
+                  path="/pendingPost"
+                  element={user ? <PendingPost /> : <Register />}
+                />
+                <Route path="/users" element={user ? <Users /> : <Register />} />
+                <Route
+                  path="/createCategory"
+                  element={user ? <CreateCategory /> : <Register />}
+                />
+              </Routes>
+              </Col>
+              <Col span={3}></Col>
+            </Row>
+          </>
+      }
 
       {
         user?.isAdmin ?

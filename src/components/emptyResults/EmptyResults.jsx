@@ -10,8 +10,7 @@ const EmptyResults = () => {
           <SvgEmptyResults />
         </figure>
         <p className="emptyResults__message">
-          Không có <br />
-          kết quả nào được tìm thấy cho tìm kiếm của bạn.
+          Không có dữ liệu !!!
         </p>
       </div>
     </div>

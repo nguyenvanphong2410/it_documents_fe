@@ -3,6 +3,7 @@ import './pagination.scss';
 import { Link, useLocation } from "react-router-dom";
 import { SvgArrowRight } from "../svgs/SvgArrowRight";
 import { SvgArrowLeft } from "../svgs/SvgArrowLeft";
+import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 
 const Pagination = ({ total_pages, page }) => {
   const handleBackTopTop = () => {
@@ -14,8 +15,8 @@ const Pagination = ({ total_pages, page }) => {
   if (pathname === "/search") {
     return (
       <div className="pagination">
-        {page === 1 && (<button className="pagination__arrowPrev disabled"><SvgArrowLeft color="#0f2f7f" /><p>Trang trước</p></button>)}
-        {page > 1 && (<Link onClick={handleBackTopTop} to={`${pathname}${searchPath}&page=${page - 1}`}><button className="pagination__arrowPrev"><SvgArrowLeft color="#0f2f7f" /><p>Trang trước</p></button></Link>)}
+        {page === 1 && (<button className="pagination__arrowPrev disabled"><LeftOutlined /></button>)}
+        {page > 1 && (<Link onClick={handleBackTopTop} to={`${pathname}${searchPath}&page=${page - 1}`}><button className="pagination__arrowPrev"><LeftOutlined /></button></Link>)}
         <ul className="pagination__pageNumbers">
           {page > 3 && total_pages > 4 ? (
             <>
@@ -73,16 +74,16 @@ const Pagination = ({ total_pages, page }) => {
             </>
           ) : null}
         </ul>
-        {page < total_pages && (<Link onClick={handleBackTopTop} to={`${pathname}${searchPath}&page=${page + 1}`}><button className="pagination__arrowNext"><p>Trang tiếp theo</p><SvgArrowRight color="#0f2f7f" /></button></Link>)}
-        {page === total_pages && (<button className="pagination__arrowNext disabled"><p>Trang tiếp theo</p><SvgArrowRight color="#0f2f7f" /></button>)}
+        {page < total_pages && (<Link onClick={handleBackTopTop} to={`${pathname}${searchPath}&page=${page + 1}`}><button className="pagination__arrowNext"><RightOutlined /></button></Link>)}
+        {page === total_pages && (<button className="pagination__arrowNext disabled"><RightOutlined /></button>)}
       </div>
     );
 
   } else {
     return (
       <div className="pagination">
-        {page === 1 && (<button className="pagination__arrowPrev disabled"><SvgArrowLeft color="#0f2f7f" /><p>Trang trước</p></button>)}
-        {page > 1 && (<Link onClick={handleBackTopTop} to={`${pathname}?page=${page - 1}`}><button className="pagination__arrowPrev"><SvgArrowLeft color="#0f2f7f" /><p>Trang trước</p></button></Link>)}
+        {page === 1 && (<button className="pagination__arrowPrev disabled"><LeftOutlined /></button>)}
+        {page > 1 && (<Link onClick={handleBackTopTop} to={`${pathname}?page=${page - 1}`}><button className="pagination__arrowPrev"><LeftOutlined /></button></Link>)}
         <ul className="pagination__pageNumbers">
           {page > 3 && total_pages > 4 ? (
             <>
@@ -140,8 +141,8 @@ const Pagination = ({ total_pages, page }) => {
             </>
           ) : null}
         </ul>
-        {page < total_pages && (<Link onClick={handleBackTopTop} to={`${pathname}?page=${page + 1}`}><button className="pagination__arrowNext"><p>Trang tiếp theo</p><SvgArrowRight color="#0f2f7f" /></button></Link>)}
-        {page === total_pages && (<button className="pagination__arrowNext disabled"><p>Trang tiếp theo</p><SvgArrowRight color="#0f2f7f" /></button>)}
+        {page < total_pages && (<Link onClick={handleBackTopTop} to={`${pathname}?page=${page + 1}`}><button className="pagination__arrowNext"><RightOutlined /></button></Link>)}
+        {page === total_pages && (<button className="pagination__arrowNext disabled"><RightOutlined /></button>)}
       </div>
     );
   }

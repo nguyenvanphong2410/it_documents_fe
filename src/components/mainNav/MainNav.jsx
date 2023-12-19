@@ -125,7 +125,7 @@ const MainNav = () => {
               <NavLink to={`/settings`} className="mainNav__link"> Hồ sơ của bạn </NavLink>
             </li>
             <li className="mainNav__menuItem">
-              <NavLink to={`/users/`} className="mainNav__link"> Người dùng thành viên </NavLink>
+              <NavLink to={`/users/`} className="mainNav__link"> Người dùng khác</NavLink>
             </li>
             <li className="mainNav__menuItem">
               <NavLink to="/pendingPost" className="mainNav__link"> Tài liệu đang chờ </NavLink>

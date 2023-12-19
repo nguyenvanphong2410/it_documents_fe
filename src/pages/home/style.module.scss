@@ -45,7 +45,7 @@
   box-shadow: rgba(121, 121, 121, 0.3) 0px 7px 29px 0px;
 
   .headingIcon {
-    color: rgb(109, 114, 114);
+    color: #6d7272;
     font-size: 20px;
     margin-left: 10px;
     margin-right: 10px;
@@ -54,7 +54,7 @@
 
   .headingTitle {
     display: flex;
-    margin-top: -10px;
+    margin-top: -6px;
     margin-left: 16px;
 
     &:hover {
@@ -67,12 +67,15 @@
       font-size: 20px;
       line-height: 20px;
       margin-top: 11px;
+      .titleLink{
+        color: #6d7272;
+      }
     }
   }
 
   .headingOpption {
     margin-top: 5px;
-
+    display: flex;
     .addText {
       margin-top: -5px !important;
       margin-right: 40px;
@@ -86,19 +89,19 @@
         opacity: 0.7;
       }
     }
+    .selectCategory{
 
-    .headingSelectSort {
-      width: 120px;
-      height: 40px;
-      margin-right: 30px;
-      top: -2px;
+      margin: -6px 24px 0 0;
+    }
+    .formInput{
+      margin: -10px 24px 0 0;
     }
   }
 }
 
 .tableDocumentWrap {
   padding: 0 !important;
-
+  margin-top: -60px;
   .actionWrap {
     justify-content: center;
     text-align: center;
@@ -118,4 +121,30 @@
     }
   }
 
+}
+
+.container {
+  margin-bottom: 50px;
+  .cardItem {
+      box-shadow: rgba(100, 100, 109, 0.3) 0px 7px 29px 0px;
+      background: linear-gradient(90deg, rgb(241, 242, 244) 0%, rgb(255, 255, 255) 50%, rgb(243, 244, 245) 100%);
+
+      &:hover {
+          transform: scale(1.04);
+          transition: transform 0.4s ease-in-out; 
+          -webkit-transform: scale(1.04);
+          -moz-transform: scale(1.04);
+          -o-transform: scale(1.04);
+          -ms-transform: scale(1.04);
+      }
+      &:not(:hover) {
+          transform: scale(1);
+          transition: transform 0.6s ease-in-out; 
+      }
+      
+  }
+  .cardItemPending {}
+  .itemCardPending{
+    opacity: 0.4;
+  }
 }

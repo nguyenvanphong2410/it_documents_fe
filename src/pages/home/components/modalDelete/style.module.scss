@@ -1,3 +1,27 @@
+.btnDelete{
+    color: white;
+    background: red;
+    margin: 0 10px 0 0;
+    padding: 6px 12px 6px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    &:hover {
+        border: none;
+        color: white;
+    }
+}
+.btnCancelDelete{
+    color: white;
+    background: rgb(119, 118, 118);
+     padding: 6px 10px 6px 10px;
+     border-radius: 6px;
+    font-size: 14px;
+
+    &:hover {
+        border: none;
+        color: white;
+    }
+}
 .nameDelete{
     margin-left: 4px;
     font-size: 14px;

@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import useSWR from "swr";
 import Loading from "../../components/loading/Loading";
 import Pagination from "../../components/pagination/Pagination";
@@ -18,22 +18,51 @@ import { setOpenModalDelete } from "../../states/modules/document";
 import ModalDelete from "./components/modalDelete/ModalDelete";
 // import InputSearchCategory from "../createCategory/components/inputSearch/inputSearchCategory";
 // import SortIcon from "../createCategory/components/sortIcon/sortIcon";
-import { Tag } from "antd";
-import { CheckCircleOutlined, DeleteOutlined, EditOutlined, SyncOutlined } from "@ant-design/icons";
+import { Avatar, Card, Col, Image, Row, Select, Tag, Tooltip } from "antd";
+import { CheckCircleOutlined, CheckOutlined, ClockCircleOutlined, DeleteOutlined, EditOutlined, EyeOutlined, UserOutlined } from "@ant-design/icons";
+import Search from "antd/es/input/Search";
+import SpinComponent from "../../components/spin";
+import NoImage from "../../components/notImage";
 
 //Phong ưi
 const Home = () => {
+  const { user } = useContext(Context);
+
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [idDelete, setIdDelete] = useState('');
   const [nameDelete, setNameDelete] = useState('');
-  // const listDocuments = useSelector(state => state.document.listDocuments);
-  // console.log('listDocuments', listDocuments)
-  const { user } = useContext(Context);
+  const [keyword, setKeyword] = useState();
   const { search, pathname } = useLocation();
   const cat = pathname.split("/")[3];
   const subCat = pathname.split("/")[4];
   const pagePath = search.split("=")[1] || 1;
   const [categories, setCategories] = useState([]);
+  const [showTable, setShowTable] = useState(false);
+  const [gutter, setGutter] = useState([30, 30]);
+  const { Meta } = Card;
+  const SpinComponentDelayed = () => (
+    <div className="spin-container">
+      <SpinComponent />
+    </div>
+  );
+  // const listDocuments = useSelector(state => state.document.listDocuments);
+  // console.log('listDocuments', listDocuments)
+  useEffect(() => {
+    if (window.innerWidth < 576) {
+      setGutter([20, 20])
+    }
+  }, [])
+  useEffect(() => {
+    document.title = user?.isAdmin ? "Tài liệu" : "IT Documents";
+  }, []);
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setShowTable(true);
+    }, 1300);
+
+    return () => clearTimeout(timeoutId);
+  }, []);
 
   useEffect(() => {
     dispatch(requestGetAllDocument())
@@ -92,6 +121,22 @@ const Home = () => {
       console.log(err);
     }
   };
+
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    navigate(`/search?q=${keyword.trim().toLowerCase().replace(/\s/g, "+")}`);
+  };
+  console.log('posts', posts);
+
+
+  //const handleDetails
+  const handleDetails = (id) => {
+    navigate(`/post/${id}`)
+  }
+
+
+
   return (
     <>
       <MainHeading />
@@ -114,23 +159,33 @@ const Home = () => {
                           </svg>
                         </span>
                       </span>
-                      <span className={styles.title}>Thông tin tài liệu</span>
+                      <span className={styles.title}>
+                        <Link className={styles.titleLink} to="/documents">Thông tin tài liệu</Link>
+                      </span>
                     </div>
 
                     <div className={styles.headingOpption}>
                       <span variant="success"
                       // onClick={() => dispatch(setOpenModalAddCategory(true))}
                       >
-                        <Link to="/write" className={styles.addText}>+ Thêm mới</Link>
+                        <Link to="/write" className={styles.addText}>+ Tạo mới tài liệu</Link>
                       </span>
-                      {/* <Select
-                        className={styles.headingSelectSort}
-                        defaultValue="Sắp xếp ..."
-                        options={[{ label: <SortIcon type="fullName" /> }]}
+                      <Select
+                        defaultValue="Chọn thể loại tài liệu"
+                        style={{ width: 180 }}
+                        className={styles.selectCategory}
+                        options={categories?.map((cat) => ({
+                          value: cat.name,
+                          label:
+                            <Link to={`/articles/category/${cat.slug}`}>
+                              {cat.name}
+                            </Link>
+
+                        }))}
                       />
-                      <InputSearchCategory 
-                      // listCategory={listCategory} 
-                      /> */}
+                      <form onSubmit={handleSubmit} className={styles.formInput}>
+                        <Search placeholder="Tìm kiếm tài liệu" allowClear size="large" onChange={(e) => setKeyword(e.target.value)} />
+                      </form>
                     </div>
                   </div>
                   :
@@ -139,203 +194,214 @@ const Home = () => {
                   </Link>
               }
 
-              <div className="categories">
-
-                {categories?.map((cat) => (
-                  <span key={cat._id}>
-                    <Link className="categories__link" to={`/articles/category/${cat.slug}`}>
-                      {cat.name}
-                    </Link>
-                  </span>
-                ))}
-              </div>
-
+              {
+                user?.isAdmin ? <></> :
+                  <div className="categories">
+                    {categories?.map((cat) => (
+                      <span key={cat._id}>
+                        <Link className="categories__link" to={`/articles/category/${cat.slug}`}>
+                          {cat.name}
+                        </Link>
+                      </span>
+                    ))}
+                  </div>
+              }
               <section className="contentProducts">
                 <div className="contentProducts__wrapper">
+                  {!showTable && <SpinComponentDelayed />}
                   {
-                    user?.isAdmin ?
-                      <table className={styles.tableDocumentWrap}>
-                        <thead>
-                          <tr>
-                            <td>STT</td>
-                            <td>Hình ảnh</td>
-                            <td>Tên tài liệu</td>
-                            <td>Đăng bởi</td>
-                            <td>Thể loại</td>
-                            <td>Năm sáng tác</td>
-                            <td>Mô tả</td>
-                            <td></td>
-                            {user?.isAdmin && <td></td>}
-                            <td></td>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {posts.map((post, index) => (
-                            <tr key={post._id}>
-                              <td data-label="STT">
-                                <span>{index + 1}</span>
-                              </td>
-                              <td data-label="Hình ảnh">
-                                <span>
-                                  <img
-                                    style={{
-                                      width: "100px",
-                                      height: "50px",
-                                      objectFit: "cover",
-                                    }}
-                                    src={post.photos[0]?.src || ImgPlaceholder}
-                                    alt="alt"
-                                  />
-                                </span>
-                              </td>
-                              <td data-label="Tên tài liệu">
-                                <span>
-                                  <Link className="linkTable" to={`/post/${post._id}`}>
-                                    {post.name}
-                                  </Link>
-                                </span>
-                              </td>
-                              <td data-label="Đăng bởi">
-                                <span>
-                                  <Link className="linkTable" to={`/?user=${post.username}`}>
-                                    {post.username}
-                                  </Link>
-                                </span>
-                              </td>
-                              <td data-label="Thể loại">
-                                <span>
-                                  <Link className="linkTable" to={`/articles/category/${post.category}`} >
-                                    {post.category}
-                                  </Link>
-                                </span>
-                              </td>
-                              <td data-label="Năm sáng tác">
-                                <span>{post.year}</span>
-                              </td>
-                              <td data-label="Mô tả">
-                                <span
-                                  dangerouslySetInnerHTML={{
-                                    __html: post.desc.replace(/<[^>]+>/g, ""),
-                                  }}
-                                ></span>
-                              </td>
-                              {/* <td >
-                                <span>
-                                  {post.status === false && user.isAdmin === true ? (
-                                    <Link to={`/post/${post._id}`}>
-                                      <button
-                                        className="create-contact"
-                                        style={{
-                                          backgroundColor: "#868686",
-                                        }}
-                                      >
-                                        Chờ phê duyệt
-                                      </button>
-                                    </Link>
-                                  ) : post.status === false ? (
-                                    <Tag color="gold">gold</Tag>
-                                  ) : (
-                                    <Link to={`/post/${post._id}`}>
-                                      <button className="create-contact">
-                                        Xem bài viết
-                                      </button>
-                                    </Link>
-                                  )}
-                                </span>
-                              </td> */}
-                              {user.isAdmin && post.status === false && (
-                                <td>
-                                  <Tag onClick={() => handleUpdate(post._id)} icon={<SyncOutlined spin />} color="warning">
-                                    Chờ duyệt
-                                  </Tag>
-                                </td>
-                              )}
+                    user?.isAdmin ? (
 
-                              {user.isAdmin && post.status === true && (
-                                <td >
-                                  <Tag icon={<CheckCircleOutlined />} color="success">
-                                    Đã duyệt
-                                  </Tag>
-                                </td>
-                              )}
-                              {(user?.isAdmin || post.username === user?.username) && (
-                                <td className={styles.actionWrap}>
-                                  <Link to={`/post/edit/${post._id}`} >
-                                    <EditOutlined className={styles.actionIconEdit} />
-                                  </Link>
-                                  <DeleteOutlined className={styles.actionIconDelete}
-                                  // onClick={() => handleDelete(post._id)}
-                                  />
-
-                                </td>
-                              )}
-                              {!(user?.isAdmin || post.username === user?.username) && (
-                                <td></td>
-                              )}
+                      showTable && (
+                        <table className={styles.tableDocumentWrap}>
+                          <thead>
+                            <tr>
+                              <td>STT</td>
+                              <td>Hình ảnh</td>
+                              <td>Tên tài liệu</td>
+                              <td>Đăng bởi</td>
+                              <td>Thể loại</td>
+                              <td>Năm sáng tác</td>
+                              <td>Trạng thái</td>
+                              <td></td>
+                              {user?.isAdmin && <td></td>}
                             </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                          </thead>
+                          <tbody>
+                            {posts.map((post, index) => (
+                              <tr key={post._id}>
+                                <td data-label="STT">
+                                  <span>{index + 1}</span>
+                                </td>
+                                <td data-label="Hình ảnh">
+                                  <span>
+                                    <img
+                                      style={{
+                                        width: "100px",
+                                        height: "50px",
+                                        objectFit: "cover",
+                                      }}
+                                      src={post.photos[0]?.src || ImgPlaceholder}
+                                      alt="alt"
+                                    />
+                                  </span>
+                                </td>
+                                <td data-label="Tên tài liệu">
+                                  <span>
+                                    <Link className="linkTable" to={`/post/${post._id}`}>
+                                      {post.name}
+                                    </Link>
+                                  </span>
+                                </td>
+                                <td data-label="Đăng bởi">
+                                  <span>
+                                    <Link className="linkTable" to={`/?user=${post.username}`}>
+                                      {post.username}
+                                    </Link>
+                                  </span>
+                                </td>
+                                <td data-label="Thể loại">
+                                  <span>
+                                    <Link className="linkTable" to={`/articles/category/${post.category}`} >
+                                      {post.category.replace(/-/g, ' ')}
+                                    </Link>
+                                  </span>
+                                </td>
+                                <td data-label="Năm sáng tác">
+                                  <span>{post.year}</span>
+                                </td >
+
+                                {user.isAdmin && post.status === false && (
+                                  <td>
+                                    <Tag className={styles.tagStatusPending} icon={<ClockCircleOutlined />} color="warning">
+                                      Chờ duyệt
+                                    </Tag>
+                                  </td>
+                                )}
+
+                                {user.isAdmin && post.status === true && (
+                                  <td >
+                                    <Tag icon={<CheckCircleOutlined />} color="success">
+                                      Đã duyệt
+                                    </Tag>
+                                  </td>
+                                )}
+                                <td>
+                                  <span>
+                                    {post.status === false && user.isAdmin === true ? (
+                                      <Link to={`/post/${post._id}`}>
+                                        <Tag color="#8904B1" icon={<CheckOutlined />} onClick={() => handleUpdate(post._id)}>Duyệt</Tag>
+                                      </Link>
+                                    ) : post.status === false ? (<Tag color="gold">gold</Tag>) :
+                                      (<Link to={`/post/${post._id}`}>
+                                        <Tag color="#2db7f5" icon={<EyeOutlined />}>Xem</Tag>
+                                      </Link>)}
+                                  </span>
+                                </td>
+                                {(user?.isAdmin || post.username === user?.username) && (
+                                  <td className={styles.actionWrap}>
+                                    <Link to={`/post/edit/${post._id}`} >
+                                      <EditOutlined className={styles.actionIconEdit} />
+                                    </Link>
+                                    <DeleteOutlined className={styles.actionIconDelete}
+                                      onClick={() => onClickDelete(post._id, post.name)}
+                                    />
+
+                                  </td>
+                                )}
+                                {!(user?.isAdmin || post.username === user?.username) && (
+                                  <td></td>
+                                )}
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      )
+                    )
                       :
                       <div className="contentProducts__cards" >
+                        <div className={styles.container}>
 
-                        {posts?.map((post, index) => (
-                          // <div key={index} className="contentProducts__card">
-                          <div key={index} className={post.status === true ? 'contentProducts__card' : styles.cardWrapWait}>
-                            {post.status === true ? (
-                              <Link to={`/post/${post._id}`}>
-                                <figure className="contentProducts__image">
-                                  <img src={post.photos[0]?.src || ImgPlaceholder} alt="" />
-                                </figure>
-                              </Link>
-                            ) : (
-                              <div >
-                                <figure className="contentProducts__image">
-                                  <img className={styles.imgCardWait} src={post.photos[0]?.src || ImgPlaceholder} alt="" />
-                                </figure>
-                              </div>
-                            )}
+                          <Row gutter={gutter}>
+                            {
+                              posts?.map((item, index) => {
+                                return (
 
-                            {(user?.isAdmin || post.username === user?.username) && (
-                              <div className="contentProducts__seen">
-                                <Link to={`/post/edit/${post._id}`} className="edit" style={{ marginRight: "16px", padding: "2px" }}>
-                                  <i className="fas fa-pen fa-xs"></i>
-                                </Link>
-                                <div className="trash"
-                                  style={{ zIndex: "9999", color: "red", padding: "2px", cursor: "pointer" }}
-                                  // onClick={() => handleDelete(post._id)}
-                                  onClick={() => onClickDelete(post._id, post.name)}
-                                >
-                                  <i className="fas fa-trash fa-xs"></i>
-                                </div>
-                              </div>
-                            )}
-                            <div className="contentProducts__text">
-                              <div className="contentProducts__title">
-                                {post.name}
-                              </div>
-                              <p className="contentProducts__desc"
-                                dangerouslySetInnerHTML={{ __html: post.desc.replace(/<[^>]+>/g, ""), }}
-                              ></p>
-                              <div className="contentProducts__info">
-                                <span>
-                                  <svg xmlns="http://www.w3.org/2000/svg" x="0" y="0" enableBackground="new 0 0 512 512" version="1.1" viewBox="0 0 512 512" xmlSpace="preserve">
-                                    <path d="M437.02 330.98c-27.883-27.882-61.071-48.523-97.281-61.018C378.521 243.251 404 198.548 404 148 404 66.393 337.607 0 256 0S108 66.393 108 148c0 50.548 25.479 95.251 64.262 121.962-36.21 12.495-69.398 33.136-97.281 61.018C26.629 379.333 0 443.62 0 512h40c0-119.103 96.897-216 216-216s216 96.897 216 216h40c0-68.38-26.629-132.667-74.98-181.02zM256 256c-59.551 0-108-48.448-108-108S196.449 40 256 40s108 48.448 108 108-48.449 108-108 108z"></path>
-                                  </svg>
-                                  <Link style={{ marginLeft: "4px", color: "green" }} to={`/?user=${post.username}`} >
-                                    {post.username}
-                                  </Link>
-                                </span>
-                                <small>{dayjsFormatFromNow(post.createdAt)}</small>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
+                                  <Col key={index} xs={24} sm={12} md={8} lg={6}>
+
+                                    <Card
+                                      className={item?.status === true ? styles.cardItem : styles.cardItemPending} style={{ width: window.innerWidth < 576 ? 300 : 250 }}
+                                      cover={
+                                        item?.photos[0]?.src ?
+                                          <Link to={item?.status === true ? `/post/${item._id}` : ''}>
+                                            <Image
+                                              className={item?.status === true ? '' : styles.itemCardPending}
+                                              height={170} width={window.innerWidth < 576 ? 300 : 250} src={item?.photos[0]?.src} preview={false} />
+                                          </Link>
+                                          : <NoImage />
+                                      }
+                                      actions={[
+                                        user?.isAdmin || item.username === user?.username &&
+                                        <Tooltip title="Chỉnh sửa thông tin tài liệu">
+
+                                          <EditOutlined style={{ color: 'blue', fontSize: '20px' }} key="edit"
+                                          // onClick={() => handleShowModalUpdate(item)} 
+                                          /> </Tooltip>,
+                                        user?.isAdmin || item.username === user?.username &&
+                                        <Tooltip title="Xóa tài liệu">
+                                          <DeleteOutlined theme="outlined" style={{ color: 'red', fontSize: '20px' }} key="delete"
+                                          // onClick={() => handleShowModalDelete(item)} 
+                                          /></Tooltip>
+                                        , <>Down</>
+
+                                      ]}
+                                    >
+                                      <Meta
+                                        title={
+                                          <div>
+                                            <Link to={item?.status === true ? `/post/${item._id}` : ''}
+                                              className={item?.status === true ? '' : styles.itemCardPending}
+                                              style={{ textDecoration: 'none', color: '#333', fontSize: '22px' }}>{item?.name}
+                                            </Link>
+                                            <div style={{ fontSize: '14px', color: '#898989' }}>
+                                              <span
+                                                className={item?.status === true ? '' : styles.itemCardPending}
+                                                style={{ fontSize: '14px', color: '#aaa' }}>
+                                                Thời gian: {dayjsFormatFromNow(item?.createdAt)}
+                                              </span>
+                                            </div>
+
+                                            <div
+                                              className={item?.status === true ? '' : styles.itemCardPending}
+                                              style={{ fontSize: '14px', color: '#898989' }}>
+                                              Người đăng: {item?.username}
+                                            </div>
+                                            <Tooltip title={<p dangerouslySetInnerHTML={{ __html: item?.desc.replace(/<[^>]+>/g, ""), }}></p>}>
+                                              <div
+                                                className={item?.status === true ? '' : styles.itemCardPending}
+                                                style={{ fontSize: '14px' }}>
+                                                <p dangerouslySetInnerHTML={{ __html: item?.desc.replace(/<[^>]+>/g, ""), }} ></p>
+                                              </div>
+                                            </Tooltip>
+                                          </div>
+                                        }
+                                      />
+                                    </Card>
+                                  </Col>
+                                )
+                              })
+
+                            }
+                          </Row>
+                        </div>
+                 
                       </div>
                   }
 
                 </div>
-                <Pagination page={page} total_pages={totalPages} />
+                {showTable && (
+                  <Pagination page={page} total_pages={totalPages} />)
+                }
               </section>
             </div >
 

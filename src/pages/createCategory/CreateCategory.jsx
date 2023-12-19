@@ -15,7 +15,9 @@ import SpinComponent from "../../components/spin";
 import ModalDeleteCategory from "./components/modal/modalDelete";
 import ModalUpdateCategory from "./components/modal/modalUpdateCategory";
 const CreateCategory = () => {
-
+  useEffect(() => {
+    document.title = "Thể loại tài liệu";
+  }, []);
   const dispatch = useDispatch();
   const listCategory = useSelector(state => state.category.listCategories);
   const isLoading = useSelector(state => state.category.isLoadingGetAllCategory);
@@ -83,8 +85,6 @@ const CreateCategory = () => {
     },
   ];
 
-  // console.log('ịiiji', columns[0].render)
-  ///ant
   const SpinComponentDelayed = () => (
     <div className="spin-container">
       <SpinComponent />
@@ -98,8 +98,8 @@ const CreateCategory = () => {
       setShowSpin(false);
     }, 1000);
 
-    return () => clearTimeout(timeoutId); // Clear timeout when component unmounts
-  }, []); // Run effect only once on mount
+    return () => clearTimeout(timeoutId); 
+  }, []); 
 
   return (
     <Container>

@@ -1,0 +1,141 @@
+.headingWrapper {
+    color: rgb(102, 102, 102);
+    display: flex;
+    justify-content: space-between;
+    // background: linear-gradient(90deg, rgb(239, 240, 241) 0%, rgb(255, 255, 255) 50%, rgb(239, 240, 241) 100%);
+    padding: 20px 0px;
+    // margin-top: 116px;
+    margin-bottom: 44px;
+    border-radius: 10px;
+    box-shadow: rgba(121, 121, 121, 0.3) 0px 7px 29px 0px;
+  
+    .headingIcon {
+      color: #6d7272;
+      font-size: 20px;
+      margin-left: 10px;
+      margin-right: 10px;
+      margin-top: 12px;
+    }
+  
+    .headingTitle {
+      display: flex;
+      margin-top: -7px;
+      margin-left: 16px;
+  
+      &:hover {
+        opacity: 0.8;
+        cursor: pointer;
+      }
+  
+      .title {
+        font-weight: 600;
+        font-size: 20px;
+        line-height: 20px;
+        margin-top: 11px;
+        .titleLink{
+          color: #6d7272;
+        }
+      }
+    }
+  
+    .headingOpption {
+      margin-top: 5px;
+      display: flex;
+      .addText {
+        margin-top: -5px !important;
+        margin-right: 40px;
+        color: #1677ff;
+        font-size: 16px;
+        font-weight: 600;
+        text-decoration: none;
+  
+        &:hover {
+          cursor: pointer;
+          opacity: 0.7;
+        }
+      }
+      .selectCategory{
+  
+        margin: -6px 24px 0 0;
+      }
+      .formInput{
+        margin: -10px 24px 0 0;
+      }
+    }
+  }
+  
+.textUpdating {
+    color: gray;
+    font-style: italic;
+}
+
+.textEmail {
+    color: rgb(0, 162, 255);
+    font-style: italic;
+}
+
+.actionWrap {
+    justify-content: center;
+    text-align: center;
+    margin: 14px auto;
+    display: flex;
+
+
+    .actionIconDelete {
+        color: red;
+        font-size: 20px;
+        margin-left: 8px;
+
+    }
+}
+.btnDelete{
+    color: white;
+    background: red;
+    margin: 0 10px 0 0;
+    padding: 6px 12px 6px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    &:hover {
+        border: none;
+        color: white;
+    }
+}
+.btnCancelDelete{
+    color: white;
+    background: rgb(119, 118, 118);
+     padding: 6px 10px 6px 10px;
+     border-radius: 6px;
+    font-size: 14px;
+
+    &:hover {
+        border: none;
+        color: white;
+    }
+}
+
+.container {
+  margin-top: 50px;
+  margin-bottom: 50px;
+  .cardItem {
+      box-shadow: rgba(100, 100, 109, 0.3) 0px 7px 29px 0px;
+      background: linear-gradient(90deg, rgb(241, 242, 244) 0%, rgb(255, 255, 255) 50%, rgb(243, 244, 245) 100%);
+
+      &:hover {
+          transform: scale(1.04);
+          transition: transform 0.4s ease-in-out; 
+          -webkit-transform: scale(1.04);
+          -moz-transform: scale(1.04);
+          -o-transform: scale(1.04);
+          -ms-transform: scale(1.04);
+      }
+      &:not(:hover) {
+          transform: scale(1);
+          transition: transform 0.6s ease-in-out; 
+      }
+      
+  }
+  .cardItemPending {}
+  .itemCardPending{
+    opacity: 0.4;
+  }
+}

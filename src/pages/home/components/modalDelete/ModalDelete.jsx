@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal } from 'antd';
+import { Button, Modal } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { setOpenModalDelete } from '../../../../states/modules/document';
 import { userRequest } from '../../../../requestMethods';
@@ -47,10 +47,15 @@ const ModalDelete = ({ idDelete, name }) => {
       <Modal
         title="Xóa tài liệu"
         open={isShowModal}
-        onOk={handleOkModal}
         onCancel={handleCLoseModal}
+        footer={
+          <>
+          <button className={styles.btnDelete} onClick={handleOkModal}>Xóa</button>
+          <button className={styles.btnCancelDelete} onClick={handleCLoseModal}>Hủy</button>
+          </>
+        }
       >
-        <p>Bạn có muốn xóa tài liệu
+        <p>Bạn có chắc chắn muốn xóa tài liệu
           <span className={styles.nameDelete}>
             {name}
           </span>
