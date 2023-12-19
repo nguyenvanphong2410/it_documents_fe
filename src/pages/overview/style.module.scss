@@ -1,0 +1,160 @@
+.totalWrap {
+  // margin: 250px 300px 250px 300px;
+  // margin: 300px 0 300px 0;
+
+  .widgetFlat {
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.03);
+    border-radius: 0.625rem;
+
+    .widgetIcon {
+      color: white;
+      text-align: center;
+      border-radius: 0 0.625rem 0.625rem 0;
+      position: absolute;
+      min-width: 100px;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      svg {
+        font-size: 42px;
+      }
+    }
+
+    .title {
+      font-size: 18px;
+      margin: 0;
+    }
+
+    .subTitle {
+      display: block;
+      font-size: 22px;
+      margin: 0;
+    }
+
+    .text {
+      font-size: 16px;
+    }
+  }
+
+  .bgPink {
+    color: #fff !important;
+    background-color: rgb(235 144 111) !important;
+
+    .widgetIcon {
+      background: rgb(241 179 156);
+    }
+  }
+
+  .bgInfo {
+    color: #fff !important;
+    background-color: rgb(51, 176, 224) !important;
+
+    .widgetIcon {
+      background: rgb(116 206 241);
+    }
+  }
+
+  .bgPrimary {
+    color: #fff !important;
+    background-color: rgb(59, 192, 195) !important;
+
+    .widgetIcon {
+      background: rgb(126 213 215);
+      .icon{
+        
+      }
+    }
+  }
+
+}
+
+@media only screen and (max-width: 1200px) {
+  .totalWrap {
+    .widgetFlat {
+      .bgPrimary {
+        background-color: rgb(59, 192, 195) !important;
+      }
+      .widgetIcon {
+        min-width: 32%;
+
+        & svg {
+          width: 30px;
+          height: 30px;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 769px) and (max-width: 992px) {
+  .totalWrap {
+    .widgetFlat {
+      .widgetIcon {
+        min-width: 30%;
+
+        & svg {
+          width: 40px;
+        }
+      }
+
+      .title,
+      .text {
+        font-size: 16px;
+      }
+
+      .subTitle {
+        font-size: 18px;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .totalWrap {
+    .widgetFlat {
+      .widgetIcon {
+        min-width: 32%;
+
+        & svg {
+          width: 40px;
+        }
+      }
+
+      .title,
+      .text {
+        font-size: 14px;
+      }
+
+      .subTitle {
+        font-size: 16px;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 576px) {
+  .totalWrap {
+    .widgetFlat {
+      .widgetIcon {
+        min-width: 32%;
+
+        & svg {
+          width: 30px;
+          height: 30px;
+        }
+      }
+
+      .title,
+      .text {
+        font-size: 14px;
+      }
+
+    }
+  }
+}
