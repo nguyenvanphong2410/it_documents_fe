@@ -4,11 +4,10 @@
   justify-content: space-between;
   // background: linear-gradient(90deg, rgb(239, 240, 241) 0%, rgb(255, 255, 255) 50%, rgb(239, 240, 241) 100%);
   padding: 10px 0px;
-  // margin-top: 116px;
+  margin-top: 10px;
   margin-bottom: 44px;
   border-radius: 10px;
   box-shadow: rgba(121, 121, 121, 0.3) 0px 7px 29px 0px;
-
   .headingIcon {
     color: #6d7272;
     font-size: 20px;
@@ -121,13 +120,12 @@
 }
 
 .container {
-  margin-top: 50px;
-  margin-bottom: 50px;
+  margin-top: -40px;
+  margin-bottom: 30px;
 
   .cardItem {
     box-shadow: rgba(100, 100, 109, 0.3) 0px 7px 29px 0px;
     background: linear-gradient(90deg, rgb(241, 242, 244) 0%, rgb(255, 255, 255) 50%, rgb(243, 244, 245) 100%);
-
     &:hover {
       transform: scale(1.04);
       transition: transform 0.4s ease-in-out;
@@ -216,7 +214,12 @@
     margin-left: 3%;
   }
 
+  .container{
+    margin-top: -50px !important;
+  }
+
   .headingWrapper {
+    margin-top: 10px;
     .headingTitle {
       display: none;
       .title {

@@ -131,14 +131,12 @@ const Users = () => {
           user?.isAdmin ? <></> : <Col span={window.innerWidth <= 1440 ? 1 : 3} ></Col>
         }
 
-        <Col span={user.isAdmin ? 24 : window.innerWidth <= 1440 ? 18 : 20}>
+        <Col span={user.isAdmin ? 24 : window.innerWidth <= 1440 ? 17 : 20}>
           {data ? (
             users.length > 0 ? (
               <>
                 <div className="content read">
-
-
-                  <div className={styles.headingWrapper}>
+                  <div className={styles.headingWrapper }>
                     <div className={styles.headingTitle}>
                       <span >
                         <span >
@@ -159,6 +157,7 @@ const Users = () => {
                       <InputSearchUser usersList={usersList} />
                     </div>
                   </div>
+
 
                   {
                     user?.isAdmin ?
@@ -353,7 +352,7 @@ const Users = () => {
           <PaginationUser usersList={usersList} />
         </Col>
         {
-        user?.isAdmin ? <></> : <Col span={window.innerWidth <= 1440 ? 3 : 3}></Col>
+        user?.isAdmin ? <></> : <Col span={window.innerWidth <= 1440 ? 4 : 3}></Col>
       }
       </Row>
     </>

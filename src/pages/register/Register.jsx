@@ -58,16 +58,10 @@ const Register = () => {
       <form className="register__form" onSubmit={formik.handleSubmit}>
 
         <label htmlFor=""  className={styles.headingTextOriginInput}>Tên người dùng</label>
-        <input
-          className="register__input"
-          type="text"
-          id="username"
-          name="username"
-          placeholder="Tên người dùng"
+        <input className="register__input" type="text" id="username" name="username" placeholder="Tên người dùng"
           value={formik.values.username}
           onChange={formik.handleChange}
-          required
-          autoComplete="off"
+          required autoComplete="off"
         />
         {formik.errors.username && (
           <p className="errorMsg"> {formik.errors.username} </p>
@@ -105,32 +99,22 @@ const Register = () => {
         )} */}
 
         <label htmlFor=""  className={styles.headingTextOriginInput}>Email</label>
-        <input
-          className="register__input"
-          type="email"
-          placeholder="Nhập email của bạn"
-          id="email"
+        <input className="register__input" type="email" placeholder="Nhập email của bạn" id="email"
           name="email"
           value={formik.values.email}
           onChange={formik.handleChange}
-          required
-          autoComplete="off"
+          required autoComplete="off"
         />
         {formik.errors.email && (
           <p className="errorMsg"> {formik.errors.email} </p>
         )}
 
         <label htmlFor=""  className={styles.headingTextOriginInput}>Mật khẩu</label>
-        <input
-          className="register__input"
-          type="text"
-          placeholder="Mật khẩu"
-          id="password"
-          name="password"
+        <input className="register__input" type="text" placeholder="Mật khẩu" id="password"
+           name="password"
           value={formik.values.password}
           onChange={formik.handleChange}
-          required
-          autoComplete="off"
+          required autoComplete="off"
         />
         {formik.errors.password && (
           <p className="errorMsg"> {formik.errors.password} </p>

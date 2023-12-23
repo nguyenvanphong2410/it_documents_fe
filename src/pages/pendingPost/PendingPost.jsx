@@ -58,12 +58,18 @@ const PendingPost = () => {
 
   return (
     <>
-      <Container>
+      
+      <Row className={styles.rowContainer} style={{ backgroundColor: '' }}>
+      {
+        user?.isAdmin ? <></> : <Col span={window.innerWidth <= 1440 ? 1 : 3} ></Col>
+      }
+        
+        <Col span={user.isAdmin? 24 : window.innerWidth <= 1440 ? 18 : 20 }>
         {!isLoading ?
 
           <div className={styles.container}>
             <div className={styles.newDocumentWrap}>
-              <span className={styles.titleNewDocument}><FieldTimeOutlined /> Tài liệu đang chờ phê duyệt của bạn </span>
+              <span className={styles.titleNewDocument}><FieldTimeOutlined /> Tài liệu đang chờ phê duyệt </span>
             </div>
             <Row gutter={gutter}>
               {
@@ -163,8 +169,8 @@ const PendingPost = () => {
                     }) : <NoData />
               }
             </Row>
-          </div> :
-          <SpinComponent />
+          </div> 
+          : <SpinComponent />
         }
 
         {
@@ -175,7 +181,12 @@ const PendingPost = () => {
           idDelete={idDelete}
           nameDelete={nameDelete}
         />
-      </Container>
+       </Col>
+        {
+        user?.isAdmin ? <></> : <Col span={window.innerWidth <= 1440 ? 3 : 3}></Col>
+      }
+      </Row>
+
     </>
   );
 };

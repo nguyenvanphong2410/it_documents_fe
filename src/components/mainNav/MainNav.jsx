@@ -16,6 +16,7 @@ import { requestGetAllDocument } from "../../api/documents";
 import SortIconDocument from "../../pages/home/components/sortIcon/sortIcon";
 import { Button, Card, Col, Empty, Image, Radio, Row, Tooltip } from 'antd';
 import { setDataFilter } from "../../states/modules/document";
+import { name } from "dayjs/locale/vi";
 const { Search } = Input;
 
 const MainNav = () => {
@@ -84,8 +85,6 @@ const MainNav = () => {
 
               <NavLink to="/write" className="mainNav__linkAlt"> Tạo tài liệu </NavLink>
 
-
-
               {
                 user?.isAdmin ? '' : <NavLink to="/intro" className="mainNav__linkAlt">Giới thiệu </NavLink>
               }
@@ -143,8 +142,7 @@ const MainNav = () => {
                   className={styles.headingSelectSort}
                   placeholder={
                     <span className={styles.placeholderSort}>
-                      <PicCenterOutlined /> 
-                      <span className={styles.textSort}>Sắp xếp tài liệu</span>
+                      <PicCenterOutlined /> <span className={styles.textSort}> Sắp xếp tài liệu</span>
                     </span>}
                   options={[
                     {
@@ -215,6 +213,7 @@ const MainNav = () => {
               </div> */}
             </div>
           </div>
+
           {/* Top BarMobile */}
           <div className="mainNav__topBarMobile">
             <div className="mainNav__wrapper">
@@ -223,9 +222,10 @@ const MainNav = () => {
                 {/* <NavLink to="/write" className="mainNav__linkAlt"> Tạo tài liệu </NavLink> */}
                 {user && (
                   <div className="mainNav__linkAlt" >
-                    <NavLink to={`/users/`} > Người đăng tài liệu khác</NavLink>
+                    <NavLink to={`/users/`} > Người đăng </NavLink>
                   </div>
                 )}
+                <NavLink to="/pendingPost" className="mainNav__linkAlt"> Tài liệu đang chờ </NavLink>
                 <NavLink to="/intro" className="mainNav__linkAlt"> Giới thiệu </NavLink>
               </div>
             </div>

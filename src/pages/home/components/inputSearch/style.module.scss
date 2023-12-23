@@ -23,6 +23,7 @@
 
 @media (min-width: 577px) and (max-width: 1440px) {
     .inputSearchWrapper{
+        // margin-right: 1px;
         .ant-input-group {
             width: 66%;
         }
@@ -31,5 +32,10 @@
 
 //Màn hình điện thoại
 @media (min-width: 375px) and(max-width: 576px) {
-
+    .inputSearchWrapper{
+        width: 63%;
+        margin-right: 10px !important;
+        input {
+        }
+    }
 }

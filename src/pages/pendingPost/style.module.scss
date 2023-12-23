@@ -73,3 +73,30 @@
         color: #0f2f7f;
     }
 }
+
+// Màn hình máy tính
+@media (min-width: 1440px) {}
+
+//Màn hình tablet
+@media (max-width: 768px) {
+  .rowContainer {
+    margin-left: 12%;
+    margin-right: -40px;
+  }
+}
+
+@media (min-width: 577px) and (max-width: 1440px) {
+  .rowContainer {
+    margin-left: 12%;
+    margin-right: -40px;
+
+  }
+}
+
+//Màn hình điện thoại
+@media (min-width: 375px) and(max-width: 576px) {
+  .rowContainer {
+    margin-left: 8%;
+  }
+
+}
