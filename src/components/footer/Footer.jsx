@@ -7,38 +7,53 @@ import { SvgInstagram } from '../svgs/SvgInstagram';
 import { Context } from '../../context/Context';
 import logo from "../../assets/images/logo/logormbg.png"
 import styles from './style.module.scss';
+import { Col, Row } from 'antd';
+import { MailOutlined, PhoneOutlined } from '@ant-design/icons';
 
 const Footer = () => {
   const { user } = useContext(Context);
+
   return (
-    <footer className="footer" style={{backgroundColor: user?.isAdmin ? "#333" : "#333"}}>
-      <div className="footer__wrapper">
-        <div className="footer__top">
-          <div className="footer__links anime">
-            <div className="footer__logo"><img className={styles.logo} src={logo} alt="" /></div>
+    <div className={styles.footerWrap}>
+
+      <Row gutter={[16, 16]} className={styles.rowFooterWrap}> {/* Điều chỉnh khoảng cách giữa các cột tùy theo thiết kế của bạn */}
+        <Col xs={24} sm={12} md={8} lg={6} className={styles.colFooterWrap}>
+          <div className={styles.oneFooter}>
+            <div ><img className={styles.logo} src={logo} alt="" /></div>
             <div className="footer__icons anime">
               <Link to="/" className="footer__icon"><SvgFaceBook /></Link>
               <Link to="/" className="footer__icon"><SvgYoutube /></Link>
               <Link to="/" className="footer__icon"><SvgInstagram /></Link>
             </div>
           </div>
-          <div className="footer__links anime">
-            <p className="footer__desc anime">Far far away, behind the world mountains, far from the countries Vokalia and Consonantia, theres</p>
-            <p className="footer__desc anime">Email: Phong@gmail.com</p>
-            <p className="footer__desc anime">Hotline: 0362800771</p>
+        </Col>
+
+        <Col xs={24} sm={12} md={8} lg={6} className={styles.colFooterWrap}>
+          <div className={styles.twoFooter}>
+            <p className={styles.textTwoInfo}>Far far away, behind the world mountains, far from the countries Vokalia and Consonantia, theres nd Consonantia, nd Consonantia, nd Consonantia, nd Consonantia, nd Consonantia, nd Consonantia, nd Consonantia, nd Consonantia, </p>
+            <p className={styles.textTwo}> <MailOutlined /> Email: Phong@gmail.com</p>
+            <p className={styles.textTwo}> <PhoneOutlined  /> Hotline: 0362800771</p>
           </div>
-          <div className="footer__links anime">
-            <Link to="/" className="footer__link anime">Câu hỏi thường gặp</Link>
-            <Link to="/" className="footer__link anime">Tin tức</Link>
-            <Link to="/" className="footer__link anime">Chính sách & bảo mật</Link>
+        </Col>
+
+        <Col xs={24} sm={12} md={8} lg={6} className={styles.colFooterWrap}>
+          <div className={styles.threeFooter}>
+            <ul>
+              <li className={styles.textAsk}> Câu hỏi thường gặp</li>
+              <li className={styles.textAsk}>Câu hỏi bảo mật? </li>
+              <li className={styles.textAsk}>Câu hỏi thường gặp</li>
+            </ul>
+
           </div>
-        </div>
-        <div className="footer__bottom anime">
-          <p className="footer__text">© Nguyễn Văn Phong - Học viện Nông nghiệp Việt Nam</p>
-        </div>
+        </Col>
+      </Row>
+
+      <div className="footer__bottom anime" style={{marginTop: '30px', paddingBottom: '20px'}}>
+        <p className="footer__text">© Nguyễn Văn Phong - Học viện Nông nghiệp Việt Nam</p>
       </div>
-    </footer>
+    </div>
+
   )
 }
 
-export default Footer
+export default Footer;

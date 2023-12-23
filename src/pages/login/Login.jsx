@@ -5,7 +5,7 @@ import { Context } from "../../context/Context";
 import { userRequest } from "../../requestMethods";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-
+import styles from './style.module.scss'
 const Login = () => {
   useEffect(() => {
     document.title = "Đăng nhập.";
@@ -48,52 +48,57 @@ const Login = () => {
   });
 
   return (
+
     <div className="login">
-      <h2 className="login__title">Đăng nhập</h2>
-      <form className="login__form" onSubmit={formik.handleSubmit}>
-        <label htmlFor="">Email của bạn</label>
-        <input
-          className="login__input"
-          type="email"
-          placeholder="Email"
-          id="email"
-          name="email"
-          value={formik.values.email}
-          onChange={formik.handleChange}
-          required
-          autoComplete="off"
-        />
-        {formik.errors.email && (
-          <p className="errorMsg"> {formik.errors.email} </p>
+      <div className={styles.loginWrap}>
+        <h2 className={styles.headingTextlogin}>Đăng nhập</h2>
+        <form className="login__form" onSubmit={formik.handleSubmit}>
+          <label htmlFor="" className={styles.headingTextOriginInput}>Email của bạn</label>
+          <input
+            className="login__input"
+            type="email"
+            placeholder="Email"
+            id="email"
+            name="email"
+            value={formik.values.email}
+            onChange={formik.handleChange}
+            required
+            autoComplete="off"
+          />
+          {formik.errors.email && (
+            <p className="errorMsg"> {formik.errors.email} </p>
+          )}
+          <label htmlFor="" className={styles.headingTextOriginInput}>Mật khẩu</label>
+          <input
+            className="register__input"
+            type="text"
+            placeholder="Mật khẩu"
+            id="password"
+            name="password"
+            value={formik.values.password}
+            onChange={formik.handleChange}
+            required
+            autoComplete="off"
+          />
+          {formik.errors.password && (
+            <p className="errorMsg"> {formik.errors.password} </p>
+          )}
+          <button className="login__button" type="submit" disabled={isFetching}>
+            Đăng nhập
+          </button>
+        </form>
+        <div className={styles.noAccountText}>
+          Chưa có tài khoản? 
+          <Link to="/register" className={styles.switchText}> Đăng ký</Link>
+        </div>
+        {error && (
+          <span className="login__error">
+            Email người dùng hoặc mật khẩu chưa đúng!
+          </span>
         )}
-        <label htmlFor="">Mật khẩu</label>
-        <input
-          className="register__input"
-          type="text"
-          placeholder="Mật khẩu"
-          id="password"
-          name="password"
-          value={formik.values.password}
-          onChange={formik.handleChange}
-          required
-          autoComplete="off"
-        />
-        {formik.errors.password && (
-          <p className="errorMsg"> {formik.errors.password} </p>
-        )}
-        <button className="login__button" type="submit" disabled={isFetching}>
-          Đăng nhập
-        </button>
-      </form>
-      <div className="login__link">
-        Chưa có tài khoản? <Link to="/register">Đăng ký</Link>
       </div>
-      {error && (
-        <span className="login__error">
-          Email người dùng hoặc mật khẩu chưa đúng!
-        </span>
-      )}
     </div>
+
   );
 };
 

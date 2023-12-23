@@ -5,223 +5,177 @@ import Pagination from "../../components/pagination/Pagination";
 import EmptyResults from "../../components/emptyResults/EmptyResults";
 import { domainApi } from "../../requestMethods";
 import { Context } from "../../context/Context";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { userRequest } from "../../requestMethods";
 import ImgPlaceholder from "../../assets/images/placeholder.jpg";
+import { Card, Col, Image, Row, Tag, Tooltip } from "antd";
+import { ClockCircleOutlined, DeleteOutlined, DownloadOutlined, EditOutlined, ExclamationCircleOutlined, EyeOutlined, FieldTimeOutlined, UserOutlined } from "@ant-design/icons";
+import styles from "./style.module.scss"
+import { useDispatch, useSelector } from "react-redux";
+import { requestGetAllDocument, requestGetAllPendingDocument } from "../../api/documents";
+import { setDataFilter, setDataPendingFilter, setOpenModalDelete } from "../../states/modules/document";
+import NoImage from "../../components/notImage";
+import Meta from "antd/es/card/Meta";
+import { dayjsFormatFromNow } from "../../utils/dayjsFormat";
+import NoData from "../../components/notData";
+import SpinComponent from "../../components/spin";
+import PaginationDocument from "../home/components/panigation/paginationDocument";
+import ModalDeletePending from "./components/modalDeletePending/ModalDeletePending";
+import PaginationPending from "./components/panigation/PaginationPending";
+import { Container } from "react-bootstrap";
 
 const PendingPost = () => {
   const { user } = useContext(Context);
-  const { search, pathname } = useLocation();
-  const cat = pathname.split("/")[3];
-  const subCat = pathname.split("/")[4];
-  const pagePath = search.split("=")[1] || 1;
+  const [gutter, setGutter] = useState([30, 30]);
 
-  const fetcher = (...args) => fetch(...args).then((res) => res.json());
-  const { data, error } = useSWR(
-    subCat
-      ? `${domainApi}/post/all?cat=${subCat}&page=${pagePath}&num_results_on_page=3`
-      : cat
-      ? `${domainApi}/post/all?cat=${cat}&page=${pagePath}&num_results_on_page=3`
-      : search
-      ? `${domainApi}/post/all${search}&num_results_on_page=3`
-      : `${domainApi}/post/all?num_results_on_page=20`,
-    fetcher
-  );
-  if (error) return <div className="error">Failed to load</div>;
-
-  const posts = data?.posts;
-  const page = data?.page;
-  const totalPages = data?.total_pages;
-  const handleDelete = async (id) => {
-    try {
-      await userRequest.delete(`/posts/${id}`, {
-        data: { username: user.username },
-      });
-      window.location.replace("/");
-    } catch (err) {
-      console.log(err);
+  useEffect(() => {
+    if (window.innerWidth < 576) {
+      setGutter([20, 20])
     }
-  };
+  }, [])
+  const dispatch = useDispatch();
+  const filter = useSelector(state => state.document.dataPendingFilter)
+  const listDocuments = useSelector(state => state.document.listDocumentsPending);
+  console.log('listDocumentsStatus false', listDocuments)
+  const isLoading = useSelector(state => state.document.isLoadingGetAll);
+  const documents = listDocuments.documents
+  const [idDelete, setIdDelete] = useState('');
+  const [nameDelete, setNameDelete] = useState('');
 
-  const handleUpdate = async (id) => {
-    try {
-      await userRequest.put(`/post/updatedStatus/${id}`, {
-        status: true,
-      });
-      alert("Đã xác nhận");
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  
+  useEffect(() => {
+    dispatch(setDataPendingFilter({ status_document: false, name_user: user?.username }))
+    dispatch(requestGetAllPendingDocument())
+  }, [])
+
+
+
+
+  const onClickDelete = async (id, name) => {
+    setIdDelete(id);
+    setNameDelete(name)
+    dispatch(setOpenModalDelete(true));
+  }
+
   return (
     <>
-      {data ? (
-        posts.length > 0 ? (
-          <>
-            <div className="content read">
-              <h2>Xem Bài Viết</h2>
-              <Link to="/write" className="create-contact">
-                Tạo tài liệu
-              </Link>
-              <table>
-                <thead>
-                  <tr>
-                    <td>STT</td>
-                    <td>Hình ảnh</td>
-                    <td>Tên bài viết</td>
-                    <td>Đăng bởi</td>
-                    <td>Thể loại</td>
-                    <td>Năm sáng tác</td>
-                    <td>Mô tả</td>
-                    <td>Trạng thái</td>
-                    {user?.isAdmin && <td></td>}
-                    <td></td>
-                  </tr>
-                </thead>
-                <tbody>
-                  {posts
-                    .filter((post) => post.status === false)
-                    .map((post, index) => (
-                      <tr key={post._id}>
-                        <td data-label="STT">
-                          <span>{index +1}</span>
-                        </td>
-                        <td data-label="Hình ảnh">
-                          <span>
-                            <img
-                              style={{ width: "100px" }}
-                              src={post.photos[0]?.src || ImgPlaceholder}
-                              alt="alt"
-                            />
-                          </span>
-                        </td>
-                        <td data-label="Tên bài viết">
-                          <span>{post.name}</span>
-                        </td>
-                        <td data-label="Đăng bởi">
-                          <span>
-                            <Link
-                              className="linkTable"
-                              to={`/?user=${post.username}`}
-                            >
-                              {post.username}
-                            </Link>
-                          </span>
-                        </td>
-                        <td data-label="Thể loại">
-                          <span>
-                            <Link
-                              className="linkTable"
-                              to={`/articles/category/${post.category}`}
-                            >
-                              {post.category}
-                            </Link>
-                          </span>
-                        </td>
-                        <td data-label="Năm sáng tác">
-                          <span>{post.year}</span>
-                        </td>
-                        <td data-label="Mô tả">
-                          <span
-                            dangerouslySetInnerHTML={{
-                              __html: post.desc.replace(/<[^>]+>/g, ""),
-                            }}
-                          ></span>
-                        </td>
-                        <td data-label="">
-                          <span>
-                            {post.status === false && user.isAdmin === true ? (
-                              <Link to={`/post/${post._id}`}>
-                                <button
-                                  className="create-contact"
-                                  style={{
-                                    backgroundColor: "#868686",
-                                  }}
-                                >
-                                  Chờ
-                                </button>
-                              </Link>
-                            ) : post.status === false ? (
-                              <button
-                                className="create-contact"
-                                style={{
-                                  backgroundColor: "#868686",
-                                  cursor: "default",
-                                }}
-                              >
-                                Chờ
-                              </button>
-                            ) : (
-                              <Link to={`/post/${post._id}`}>
-                                <button className="create-contact">
-                                  Xem bài viết
-                                </button>
-                              </Link>
-                            )}
-                          </span>
-                        </td>
-                        {user.isAdmin && post.status === false && (
-                          <td>
-                            <span>
-                              <button
-                                className="create-contact"
-                                onClick={() => handleUpdate(post._id)}
-                              >
-                                Duyệt
-                              </button>
-                            </span>
-                          </td>
-                        )}
+      <Container>
+        {!isLoading ?
 
-                        {user.isAdmin && post.status === true && (
-                          <td>
-                            <span>
-                              <button
-                                className="create-contact"
-                                style={{
-                                  backgroundColor: "#868686",
-                                  cursor: "default",
-                                }}
-                              >
-                                Duyệt
-                              </button>
-                            </span>
-                          </td>
-                        )}
-                        {(user?.isAdmin ||
-                          post.username === user?.username) && (
-                          <td className="actions">
-                            <Link
-                              to={`/post/edit/${post._id}`}
-                              className="edit"
-                            >
-                              <i className="fas fa-pen fa-xs"></i>
-                            </Link>
-                            <div
-                              className="trash"
-                              onClick={() => handleDelete(post._id)}
-                            >
-                              <i className="fas fa-trash fa-xs"></i>
-                            </div>
-                          </td>
-                        )}
-                        {!(
-                          user?.isAdmin || post.username === user?.username
-                        ) && <td></td>}
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
-              <Pagination page={page} total_pages={totalPages} />
+          <div className={styles.container}>
+            <div className={styles.newDocumentWrap}>
+              <span className={styles.titleNewDocument}><FieldTimeOutlined /> Tài liệu đang chờ phê duyệt của bạn </span>
             </div>
-          </>
-        ) : (
-          <EmptyResults />
-        )
-      ) : (
-        <Loading />
-      )}
+            <Row gutter={gutter}>
+              {
+                documents?.length ?
+                  documents?.filter((post) => post.status === false && post.username === user?.username)
+                    .map((item, index) => {
+                      return (
+
+                        <Col key={index} xs={24} sm={12} md={8} lg={6}>
+
+                          <Card
+                            className={item?.status === false ? styles.cardItem : styles.cardItemPending} style={{ width: window.innerWidth < 576 ? 300 : 250 }}
+                            cover={
+                              item?.photos[0]?.src ?
+                                <Link to={item?.status === false ? `/post/${item._id}` : ''}>
+                                  <Image
+                                    className={item?.status === false ? '' : styles.itemCardPending}
+                                    height={170} width={window.innerWidth < 576 ? 300 : 250} src={item?.photos[0]?.src} preview={false} />
+                                </Link>
+                                : <NoImage />
+                            }
+                            actions={[
+                              <Tooltip title={`Tài liệu này có ${item.view} lượt xem`} color="purple">
+                                <Link to={`/post/${item._id}`} >
+
+                                  <EyeOutlined style={{ color: 'purple', fontSize: '18px' }} key="view" />
+                                  <span style={{ color: 'purple', fontSize: '18px', marginLeft: '2px' }}>
+                                    {item.view}
+
+                                  </span>
+                                </Link>
+                              </Tooltip>,
+                              user?.isAdmin || item.username === user?.username &&
+                              <Tooltip title="Chỉnh sửa thông tin tài liệu" color="#2646ba">
+                                <Link to={`/post/edit/${item._id}`} >
+                                  <EditOutlined style={{ color: 'blue', fontSize: '20px' }} key="edit" />
+                                </Link>
+                              </Tooltip>,
+
+                              user?.isAdmin || item.username === user?.username &&
+                              <Tooltip title="Xóa tài liệu" color="red">
+                                <DeleteOutlined theme="outlined" style={{ color: 'red', fontSize: '20px' }} key="delete"
+                                  // onClick={() => handleShowModalDelete(item)} 
+                                  onClick={() => onClickDelete(item._id, item.name)}
+                                /></Tooltip>
+                              ,
+                              <Tooltip title="Tải xuống tài liệu" color="green">
+                                <a
+                                  href={`http://localhost:5000/files/${item.pdf}`}
+                                  download
+                                  target="_blank"
+                                // onClick={(e) => e.stopPropagation()}
+                                >
+                                  {/* Sử dụng thuộc tính download của thẻ <a> */}
+                                  <DownloadOutlined style={{ color: 'green', fontSize: '20px' }} />
+                                </a>
+                              </Tooltip>,
+
+
+                            ]}
+                          >
+                            <Meta
+                              title={
+                                <div>
+                                  <Tooltip title={item?.name} color="#2646ba" >
+                                    <Link to={item?.status === true ? `/post/${item._id}` : ''}
+                                      className={styles.nameDocumentCard}
+                                    >{item?.name}
+                                    </Link>
+                                  </Tooltip>
+                                  <div className={styles.itemCard}>
+                                    <span >
+                                      <FieldTimeOutlined className={styles.iconOriginCard} />
+                                      <span className={styles.textOriginCard}> Thời gian: </span>
+                                      <span className={styles.infoOriginCard}> {dayjsFormatFromNow(item?.createdAt)}</span>
+                                    </span>
+                                  </div>
+
+                                  <div className={styles.itemCard} >
+                                    <UserOutlined className={styles.iconOriginCard} />
+                                    <span className={styles.textOriginCard}> Người đăng: </span>
+                                    <span className={styles.infoOriginCard}> {item?.username}</span>
+                                  </div>
+                                  <div className={styles.itemCard} >
+                                    <FieldTimeOutlined className={styles.iconOriginCard} />
+                                    <span className={styles.textOriginCard}> Trạng thái: </span>
+                                    {/* <span className={styles.infoOriginCard}> {item?.username}</span> */}
+                                    <Tag color="warning">Chờ duyệt</Tag>
+                                  </div>
+
+                                </div>
+                              }
+                            />
+                          </Card>
+                        </Col>
+                      )
+                    }) : <NoData />
+              }
+            </Row>
+          </div> :
+          <SpinComponent />
+        }
+
+        {
+          user.isAdmin ? <></> :
+            <PaginationPending listDocuments={listDocuments} />
+        }
+        <ModalDeletePending
+          idDelete={idDelete}
+          nameDelete={nameDelete}
+        />
+      </Container>
     </>
   );
 };

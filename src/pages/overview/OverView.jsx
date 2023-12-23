@@ -9,43 +9,43 @@ import { domainApi } from "../../requestMethods";
 import { useDispatch, useSelector } from 'react-redux';
 // import { requestGetAllDocument } from '../../api/documents';
 import { requestGetAllCategory } from '../../api/category';
+import { requestGetAllUser } from '../../api/user';
+import { setDataPendingFilter } from '../../states/modules/document';
+import { requestGetAllDocument, requestGetAllPendingDocument } from '../../api/documents';
 const OverView = () => {
-
-
 
     const dispatch = useDispatch();
 
+    const listUser = useSelector(state => state.user.listUsers);
     const listCategory = useSelector(state => state.category.listCategories);
+    // const listDocumentPending = useSelector(state => state.document.listDocumentsPending);
+    const listDocumentChecked = useSelector(state => state.document.listDocuments);
 
+
+
+    useEffect(() => {
+        dispatch(requestGetAllUser())
+    }, [])
 
     useEffect(() => {
         dispatch(requestGetAllCategory())
     }, [])
+    useEffect(() => {
+        dispatch(requestGetAllDocument())
+      }, [])
+    
 
+    // console.log('listtjbkvj', listDocumentPending)
+
+    // useEffect(() => {
+    //     dispatch(setDataPendingFilter({ status_document: false }))
+    //     dispatch(requestGetAllPendingDocument())
+    // }, [])
     useEffect(() => {
         document.title = "Tổng quan";
-      }, []);
-
-    // const [categories, setCategories] = useState([]);
-    const { search, pathname } = useLocation();
-    const cat = pathname.split("/")[3];
-    const subCat = pathname.split("/")[4];
-    const pagePath = search.split("=")[1] || 1;
+    }, []);
 
 
-    const fetcher = (...args) => fetch(...args).then((res) => res.json());
-    const { data, error } = useSWR(
-        subCat
-            ? `${domainApi}/post/all?cat=${subCat}&page=${pagePath}&num_results_on_page=100`
-            : cat
-                ? `${domainApi}/post/all?cat=${cat}&page=${pagePath}&num_results_on_page=100`
-                : search
-                    ? `${domainApi}/post/all${search}&num_results_on_page=100`
-                    : `${domainApi}/post/all?num_results_on_page=8`,
-        fetcher
-    );
-    const posts = data?.total_documents ;
-    console.log('posst', posts, error)
     return (
         <>
             <div className={styles.totalWrap}>
@@ -66,7 +66,7 @@ const OverView = () => {
                                     </svg>
                                 </div>
                                 <h6 className={styles.title}>Tổng người dùng</h6>
-                                <h2 className={styles.subTitle}>10</h2>
+                                <h2 className={styles.subTitle}>{listUser?.total}</h2>
 
                             </div>
                         </Card>
@@ -97,8 +97,8 @@ const OverView = () => {
                                         </g>
                                     </svg>
                                 </div>
-                                <h6 className={styles.title}>Tài liệu hợp lệ</h6>
-                                <h2 className={styles.subTitle}>{posts}</h2>
+                                <h6 className={styles.title}>Tổng tài liệu</h6>
+                                <h2 className={styles.subTitle}>{listDocumentChecked.total}</h2>
                             </div>
                         </Card>
                     </Col>

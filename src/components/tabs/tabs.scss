@@ -4,6 +4,7 @@
 .tabs {
   position: sticky;
   top: 156px;
+  width: 370px;
 
   @include md {
     margin-top: 32px;
@@ -25,7 +26,8 @@
   }
 
   &__mainTitle {
-    font-size: 24px;
+    color: grey;
+    font-size: 20px;
     font-weight: 600;
     line-height: 1;
     padding: 0 20px;
@@ -51,7 +53,9 @@
     }
 
     &.active {
-      font-weight: 800;
+      font-weight: 700;
+      color: #0f2f7f;
+
       &:after {
         background-color: $m-01;
       }
@@ -64,6 +68,7 @@
     &.show {
       display: block;
     }
+
   }
 
   &__listItem {
@@ -73,6 +78,12 @@
     &:last-child {
       border-bottom: none;
     }
+
+    &:hover {
+      background: #f8f6f6;
+      border-radius: 4px;
+    }
+
   }
 
   &__tag {
@@ -99,7 +110,7 @@
     line-height: 22px;
     margin-bottom: 5px;
     transition: color 200ms linear 0s;
-    
+
     &:hover {
       color: $m-01;
     }

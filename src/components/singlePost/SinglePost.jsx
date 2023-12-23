@@ -15,6 +15,8 @@ import dayjs from "dayjs";
 import "dayjs/locale/vi";
 import PdfComp from "../PdfComp/PdfComp";
 import { pdfjs } from "react-pdf";
+import styles from './style.module.scss'
+import { CommentOutlined, DownloadOutlined, FieldTimeOutlined, PicLeftOutlined, UserOutlined } from "@ant-design/icons";
 dayjs.locale("vi");
 var localizedFormat = require("dayjs/plugin/localizedFormat");
 dayjs.extend(localizedFormat);
@@ -124,30 +126,37 @@ export default function SinglePost() {
         <div className="singlePost">
           <div className="singlePost__wrapper">
             <div className="singlePost__heading">
-              <div>
-                <Link
-                  to={`/articles/category/${post.category}`}
-                  className="singlePost__tag"
-                >
-                  <span>Thể loại: {post.category}</span>
+              <h1 className="singlePost__mainTitle">{name} </h1>
+              <div className={styles.infoItem}>
+                <span className={styles.titleOrigin}><PicLeftOutlined /> Thể loại: </span>
+                <Link to={`/articles/category/${post.category}`}>
+                  <span className={styles.info}>
+                    {post.category}
+                  </span>
                 </Link>
               </div>
-
-              <h1 className="singlePost__mainTitle">{name}</h1>
-              <ul className="singlePost__info">
-                <li className="singlePost__date">
-                  {dayjs(post.createdAt).format("LL")}
-                </li>
-                <li className="singlePost__author">
-                  <b>
-                    <Link to={`/?user=${post.username}`}>{post.username}</Link>
-                  </b>
-                </li>
-                <li className="singlePost__type">
-                  <img src={IconNews} alt="" />
-                  <b>Tài liệu IT</b>
-                </li>
-              </ul>
+              <div className={styles.infoItem}>
+                <span className={styles.titleOrigin}><UserOutlined /> Người đăng: </span>
+                <Link to={`/?user=${post.username}`}>
+                  <span className={styles.info}>
+                    {post.username}
+                  </span>
+                </Link>
+              </div>
+              <div className={styles.infoItem}>
+                <span className={styles.titleOrigin}><FieldTimeOutlined /> Thời gian: </span>
+                {dayjs(post.createdAt).format("LL")}
+              </div>
+              <div className={styles.infoItem}>
+                <a
+                  href={`http://localhost:5000/files/${post.pdf}`}
+                  download
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  <span className={styles.titleDown}><DownloadOutlined /> Tải xuống tại đây </span>
+                </a>
+              </div>
             </div>
             <div className="singlePost__container">
               <div className="singlePost__leftContent">
@@ -184,11 +193,12 @@ export default function SinglePost() {
                   );
                 })}
                 <div className="singlePost__text">
-                  <p
-                    className="singlePost__description"
+                  <span className={styles.titleOriginDescription}>Mô tả của tài liệu </span>
+                  <span
+                    className={styles.textDescription}
                     dangerouslySetInnerHTML={{ __html: desc }}
-                  ></p>
-
+                  ></span>
+                  <span className={styles.titleOriginContent}>Nội dung</span>
                   <canvas
                     style={{ display: "none" }}
                     id="canvas"
@@ -208,12 +218,13 @@ export default function SinglePost() {
                     rel="noreferrer"
                     target="_blank"
                   >
-                    Tải xuống
+                    <span className={styles.iconBtnDownload}> <DownloadOutlined />  </span>
+                    <span className={styles.textBtnDownload}> Tải xuống</span>
                   </a>
                 </div>
 
                 <div className="comments">
-                  <p>Bình Luận:</p>
+                  <p className={styles.titleOriginComment}> <CommentOutlined /> Bình Luận:</p>
                   <form onSubmit={handleSubmit}>
                     <div className="comments__input">
                       <textarea
@@ -224,7 +235,9 @@ export default function SinglePost() {
                       ></textarea>
                     </div>
                     <div className="comments__btn">
-                      <button type="submit">Bình luận</button>
+                      <button type="submit">
+                        Bình luận
+                      </button>
                     </div>
                   </form>
                   <div className="comments__posts">

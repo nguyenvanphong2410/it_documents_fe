@@ -27,6 +27,7 @@ import Users from "./pages/users/Users";
 import OverView from "./pages/overview/OverView";
 import SidebarAdmin from "./components/sidebarAdmin/SidebarAdmin";
 import { Col, Row } from "antd";
+import styles from './styles/styleApp/styles.modules.scss'
 
 function App() {
   const { user } = useContext(Context);
@@ -40,9 +41,9 @@ function App() {
             <ScrollToTop />
 
             <MainNav />
-            <Row>
+            {/* <Row className={styles.rowContainerGeneral} style={{backgroundColor: ''}}>
               <Col span={3}></Col>
-              <Col span={18}>
+              <Col span={18}> */}
               <Routes>
                 <Route path="*" element={<PageNotFound />} />
                 <Route path="/" element={user ? <Home /> : <Login />} />
@@ -73,9 +74,9 @@ function App() {
                   element={user ? <CreateCategory /> : <Register />}
                 />
               </Routes>
-              </Col>
+              {/* </Col>
               <Col span={3}></Col>
-            </Row>
+            </Row> */}
           </>
       }
 

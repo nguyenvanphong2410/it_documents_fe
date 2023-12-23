@@ -25,7 +25,7 @@ const ModalDelete = ({ idDelete, name }) => {
       handleCLoseModal();
       
       // Hiện toast message
-      toast.success('Xóa thành công tác tác giả ', name);
+      toast.success('Xóa thành công tài liệu ', name);
   
       // Đặt thời gian chờ 2 giây trước khi tải lại trang
       setTimeout(() => {

@@ -1,0 +1,35 @@
+.registerWrap{
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 50px;
+  border-radius: 6px;
+
+  .headingTextRegister{
+    color: #12266e;
+    font-size: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .headingTextOriginInput{
+    font-weight: 700;
+    color: #12266e;
+    font-size: 16px;
+  }
+
+  .noAccountText{
+    margin-top: 10px;
+    // font-weight: 700;
+    color: rgb(10, 65, 117);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    .switchText{
+      margin-left: 6px;
+      // color: green;
+    }
+  }
+}

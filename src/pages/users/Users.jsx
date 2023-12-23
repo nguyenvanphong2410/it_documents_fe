@@ -8,13 +8,82 @@ import { userRequest } from "../../requestMethods";
 import { Context } from "../../context/Context";
 import { useContext, useEffect, useState } from "react";
 import styles from './style.module.scss'
-import { Avatar, Card, Col, Modal, Row, Tag } from "antd";
+import { Avatar, Card, Col, Modal, Row, Tag, Tooltip } from "antd";
 import { DeleteOutlined, EditOutlined, EllipsisOutlined, EyeOutlined, SettingOutlined, UserOutlined } from "@ant-design/icons";
 import Search from "antd/es/input/Search";
+import { useDispatch, useSelector } from "react-redux";
+import { setDataDocumentOfNameAdminFilter, setDataDocumentOfNameFilter, setOpenModalDocumentOfName, setOpenModalDocumentOfNameAdmin } from "../../states/modules/document";
+import { requestGetAllDocumentOfName, requestGetAllDocumentOfNameAdmin } from "../../api/documents";
+import ModalDocumentOfName from "./components/modal/modalDocumentOfName/modalDocumentOfName";
+import ModalDocumentOfNameAdmin from "./components/modal/modalDocumentOfNameAdmin/modalDocumentOfNameAdmin";
+import { requestGetAllUser } from "../../api/user";
+import PaginationUser from "./components/pagination/paginationUser";
+import InputSearchUser from "./components/inputSearch/inputSearchUser";
+import NoData from "../../components/notData";
+import SpinComponent from "../../components/spin";
+import { Slide, ToastContainer, toast } from "react-toastify";
 const { Meta } = Card;
 const Users = () => {
+
+  const dispatch = useDispatch();
+  const filter = useSelector(state => state.document.dataPendingFilter)
+  const isLoading = useSelector(state => state.document.isLoadingGetAllDocumentOfName);
+  const isLoadingListUser = useSelector(state => state.user.isLoadingGetAllUser);
+  const usersList = useSelector(state => state.user.listUsers);
+  const listUsers = usersList.users
+  console.log('listUser', listUsers);
+  const listDocumentOfName = useSelector(state => state.document.listDocumentsDocumentOfName);
+  const listDocumentOfNameAdmin = useSelector(state => state.document.listDocumentsDocumentOfNameAdmin);
+  console.log('User.jsx nhes', listDocumentOfNameAdmin)
+  const documents = listDocumentOfName.documents
+  const [nameClick, setNameClick] = useState(null);
+  const [nameClickAdmin, setNameClickAdmin] = useState(null);
+
+  const SpinComponentDelayed = () => (
+
+    <SpinComponent />
+
+  );
+
+  const [showSpin, setShowSpin] = useState(true);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setShowSpin(false);
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+  }, []);
+
+  useEffect(() => {
+    dispatch(requestGetAllUser())
+  }, [])
+
+  useEffect(() => {
+    dispatch(setDataDocumentOfNameFilter({ name_user: nameClick }))
+    dispatch(requestGetAllDocumentOfName())
+  }, [nameClick])
+
+  useEffect(() => {
+    dispatch(setDataDocumentOfNameAdminFilter({ name_user: nameClickAdmin }))
+    dispatch(requestGetAllDocumentOfNameAdmin())
+  }, [nameClickAdmin])
+
+  const onClickName = async (nameOnClick) => {
+    console.log('fdjfdfdjflalaaaaaaaaaaaaa', nameClick)
+    setNameClick(nameOnClick)
+    dispatch(setOpenModalDocumentOfName(true));
+  }
+
+  //onClickNameAdmin
+  const onClickNameAdmin = async (nameOnClickAdmin) => {
+    console.log('nameClickAdminfff5', nameOnClickAdmin)
+    setNameClickAdmin(nameOnClickAdmin)
+    dispatch(setOpenModalDocumentOfNameAdmin(true));
+  }
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [idDelete, setIdDelete] = useState(null);
+  const [nameDelete, setNameDelete] = useState(null);
 
   useEffect(() => {
     document.title = "Người dùng";
@@ -32,15 +101,16 @@ const Users = () => {
       await userRequest.delete(`/user/deleteByAdmin/${id}`, {
         data: { _id: id },
       });
-      // window.location.replace("/users/");
-      alert("Đã xoá thành công!");
+      toast.success('Xóa thành công người dùng');
+      dispatch(requestGetAllUser())
     } catch (err) {
       console.log(err);
     }
   };
 
-  const showModal = (idDelete) => {
+  const showModal = (idDelete, name) => {
     setIdDelete(idDelete)
+    setNameDelete(name)
     setIsModalOpen(true);
   };
   const handleOk = () => {
@@ -56,13 +126,18 @@ const Users = () => {
 
   return (
     <>
-      {data ? (
-        users.length > 0 ? (
-          <>
-            <div className="content read">
+      <Row className={styles.rowContainer} style={{ backgroundColor: '' }}>
+        {
+          user?.isAdmin ? <></> : <Col span={window.innerWidth <= 1440 ? 1 : 3} ></Col>
+        }
 
-              {
-                user?.isAdmin ?
+        <Col span={user.isAdmin ? 24 : window.innerWidth <= 1440 ? 18 : 20}>
+          {data ? (
+            users.length > 0 ? (
+              <>
+                <div className="content read">
+
+
                   <div className={styles.headingWrapper}>
                     <div className={styles.headingTitle}>
                       <span >
@@ -75,162 +150,212 @@ const Users = () => {
                         </span>
                       </span>
                       <span className={styles.title}>
-                        <Link className={styles.titleLink} to="/documents">Thông tin người dùng</Link>
+                        <p className={styles.titleLink} to="/users">Thông tin người dùng</p>
                       </span>
                     </div>
 
                     <div className={styles.headingOpption}>
 
-                      <form className={styles.formInput}>
-                        <Search placeholder="Tìm kiếm người dùng" allowClear size="large"
-                        // onChange={(e) => setKeyword(e.target.value)} 
-                        />
-                      </form>
+                      <InputSearchUser usersList={usersList} />
                     </div>
                   </div>
-                  :
-                  <></>
-              }
-              {
-                user?.isAdmin ?
-                  <table style={{ marginBottom: "32px" }}>
-                    <thead>
-                      <tr>
-                        <td>STT</td>
-                        <td>Hình ảnh</td>
-                        <td>Tên </td>
-                        <td>Mã SV/CB</td>
-                        <td>Email</td>
-                        <td>Quyền</td>
-                        <td>Tài liệu sở hữu</td>
-                        <td></td>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {users.map((userData, index) => (
-                        <tr key={userData._id}>
-                          <td data-label="STT"><span>{index + 1}</span></td>
-                          <td data-label="Hình ảnh">
-                            <span>
-                              <img style={{ width: "100px", height: "50px" }} src={userData.profilePic ? userData.profilePic : ImgDefault} alt="alt" />
-                            </span>
-                          </td>
-                          <td data-label="Tên thành viên">
-                            <span>
-                              <Link className="linkTable" to={`/?user=${userData.username}`}>
-                                {userData.username}
-                              </Link>
-                            </span>
-                          </td>
-                          <td>{userData?.mssv ? userData?.mssv : <span className={styles.textUpdating}>Đang cập nhật</span>}</td>
-                          <td data-label="Email"><span className={styles.textEmail}>{userData.email}</span></td>
-                          <td data-label="Quyền">
-                            <span>
-                              {userData.isAdmin ? <Tag color="red">Admin</Tag> : <Tag color="green">Người dùng</Tag>}
-                            </span>
-                          </td>
 
-                          <td data-label="Tất cả bài viết">
-                            <span>
-                              <Link className="linkTable" to={`/?user=${userData.username}`}>
-                                <Tag color="#2db7f5" icon={<EyeOutlined />}>Xem tài liệu của {userData.username}</Tag>
-                              </Link>
-                            </span>
-                          </td>
-                          {(user?.isAdmin) ? (
-                            <td className={userData?.isAdmin === true ? "hide" : "actions"}>
-                              <div className={styles.actionWrap}  >
-                                <DeleteOutlined className={styles.actionIconDelete}
-                                  // onClick={() => handleDelete(userData._id)}
-                                  onClick={() => showModal(userData._id)}
-                                />
-                              </div>
-                            </td>
-                          ) : (
-                            <td></td>
-                          )}
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                  : <>
-                    <div className={styles.container}>
-                      <Row gutter={[20, 7]}>
+                  {
+                    user?.isAdmin ?
+                      <>
+                        <ModalDocumentOfNameAdmin
+                          nameClickAdmin={nameClickAdmin}
+                          listDocumentOfNameAdmin={listDocumentOfNameAdmin}
+
+                        />
                         {
-                          users?.map((item, index) => {
-                            return (
-                              <Col key={index} xs={24} sm={12} md={8} lg={6}>
+                          listUsers?.length > 0 ?
+                            <>
+                              {showSpin && <SpinComponentDelayed />}
+                              {!isLoadingListUser && !showSpin && (
+                                <table style={{ marginBottom: "32px" }}>
+                                  <thead>
+                                    <tr>
+                                      <td>STT</td>
+                                      <td>Hình ảnh</td>
+                                      <td>Tên hiển thị</td>
+                                      <td>Họ tên đầy đủ</td>
+                                      <td>Mã SV/CB</td>
+                                      <td>Email</td>
+                                      <td>Địa chỉ</td>
+                                      <td>Quyền</td>
+                                      <td>Tài liệu sở hữu</td>
+                                      <td></td>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
 
-                                <Card
-                                  className={styles.cardItem}
-                                  key={index}
-                                  style={{ width: 270, marginTop: 16 }}
-                                  actions={[
-                                    <Link className="linkTable" to={`/?user=${item.username}`}>
-                                      <Tag color="#2db7f5" icon={<EyeOutlined />}>Xem tài liệu </Tag>
-                                    </Link>
+                                    {
 
-                                  ]}
-                                >
+                                      listUsers.map((userData, index) => (
+                                        <tr key={userData._id}>
+                                          <td data-label="STT"><span>{index + 1}</span></td>
+                                          <td data-label="Hình ảnh">
+                                            <span>
+                                              <img style={{ width: "100px", height: "50px" }} src={userData.profilePic ? userData.profilePic : ImgDefault} alt="alt" />
+                                            </span>
+                                          </td>
+                                          <td data-label="Tên thành viên">
+                                            <span>
+                                              {userData.username}
+                                            </span>
+                                          </td>
+                                          <td>{userData?.fullName ? userData?.fullName : <span className={styles.textUpdating}>- Đang cập nhật -</span>}</td>
+                                          <td>{userData?.mssv ? userData?.mssv : <span className={styles.textUpdating}>- Đang cập nhật -</span>}</td>
+                                          <td data-label="Email"><span className={styles.textEmail}>{userData.email}</span></td>
+                                          <td>{userData?.address ? userData?.address : <span className={styles.textUpdating}>- Đang cập nhật -</span>}</td>
+                                          <td data-label="Quyền">
+                                            <span>
+                                              {userData.isAdmin ? <Tag color="red">Admin</Tag> : <Tag color="green">Người dùng</Tag>}
+                                            </span>
+                                          </td>
 
-                                  <Meta
-                                    avatar={<Avatar size="large" src={item?.profilePic} icon={<UserOutlined />} />}
-                                    title={item.username}
-                                    description={
-                                      <div>
-                                        <div>
-                                          <span style={{ fontSize: '14px', color: '#898989', fontWeight: 600 }}>Mã SV/CB: </span>
-                                          <span style={{ fontSize: '14px', color: '#2646ba' }}>{item.mssv ? item.mssv :  <span style={{ fontSize: '14px', color: '#898989' }}>Đang cập nhật</span>}</span>
-                                        </div>
-                                        <div>
-                                          <span style={{ fontSize: '14px', color: '#898989', fontWeight: 600 }}>Email: </span>
-                                          <span style={{ fontSize: '14px', color: '#2646ba' }}>{item.email}</span>
-                                        </div>
-                                      </div>
+                                          <td data-label="Tài liệu">
+                                            <span className={styles.btnWrapView}>
+                                              <Tooltip title={`Xem những tài liệu của ${userData.username} `} color="#2646ba">
+                                                <Tag color="#2646ba" icon={<EyeOutlined />}
+                                                  onClick={() => onClickNameAdmin(userData.username)}
+                                                >Xem</Tag>
+                                              </Tooltip>
+                                            </span>
+                                          </td>
+                                          {(user?.isAdmin) ? (
+                                            <td className={userData?.isAdmin === true ? "hide" : "actions"}>
+                                              <div className={styles.actionWrap}  >
+                                                <Tooltip title={`Xóa người dùng ${userData.username} `} color="red">
+                                                  <DeleteOutlined className={styles.actionIconDelete}
+                                                    onClick={() => showModal(userData._id, userData.username)}
+                                                  />
+                                                </Tooltip>
+                                              </div>
+                                            </td>
+                                          ) : (
+                                            <td></td>
+                                          )}
+                                        </tr>
+                                      ))
                                     }
-                                  />
-                                </Card>
-                              </Col>
-                            )
-                          })
+
+
+                                  </tbody>
+                                </table>
+                              )
+                              }
+                            </>
+                            : <NoData />
                         }
-                      </Row>
+                      </>
 
-                    </div>
+                      : <>
+
+                        <div className={styles.container}>
+                          <Row gutter={[20, 7]}>
+                            {
+                              listUsers?.map((item, index) => {
+                                return (
+                                  <Col key={index} xs={24} sm={12} md={12} lg={6}>
+
+                                    <Card
+                                      className={styles.cardItem}
+                                      key={index}
+                                      style={{ width: 270, marginTop: 16 }}
+                                      actions={[
+                                        // <Link to={`/?user=${item.username}`}>
+
+                                        <Tag color="#2646ba" icon={<EyeOutlined />}
+                                          onClick={() => onClickName(item.username)}
+                                        >Xem tài liệu của
+                                          <span className={styles.userNameText}>{item.username}</span>
+                                        </Tag>
+                                        // </Link>
+
+                                      ]}
+                                    >
+
+                                      <Meta
+                                        avatar={<Avatar size="large" src={item?.profilePic} icon={<UserOutlined />} />}
+                                        title={item.username}
+                                        description={
+                                          <div>
+                                            <div>
+                                              <span style={{ fontSize: '14px', color: '#898989', fontWeight: 600 }}>Mã SV/CB: </span>
+                                              <span style={{ fontSize: '14px', color: '#2646ba' }}>{item.mssv ? item.mssv : <span style={{ fontSize: '14px', color: '#898989' }}>Đang cập nhật</span>}</span>
+                                            </div>
+                                            <div>
+                                              <span style={{ fontSize: '14px', color: '#898989', fontWeight: 600 }}>Email: </span>
+                                              <span style={{ fontSize: '14px', color: '#2646ba' }}>{item.email}</span>
+                                            </div>
+                                          </div>
+                                        }
+                                      />
+                                    </Card>
+                                  </Col>
+                                )
+                              })
+                            }
+                          </Row>
+
+                        </div>
 
 
-                  </>
-              }
-            </div>
-            <Modal
-              title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}
-              footer={
-                <>
-                  <button className={styles.btnDelete}
-                    onClick={handleOk}
-                  >Xóa</button>
-                  <button className={styles.btnCancelDelete}
-                    onClick={handleCancel}
-                  >Hủy</button>
-                </>
-              }
-            >
-              <p>Bạn có chắc chắn muốn xóa người dùng {idDelete}
-                {/* <span className={styles.nameDelete}>
-                  {name}
-                </span>
-                <span className={styles.iconDelete}>
-                  ?
-                </span> */}
-              </p>
-            </Modal>
-          </>
-        ) : (
-          <EmptyResults />
-        )
-      ) : (
-        <Loading />
-      )}
+                      </>
+                  }
+                </div>
+                <ToastContainer
+                  transition={Slide}
+                  autoClose={2500}
+                  hideProgressBar={false}
+                />
+                <Modal
+                  title="Xóa người dùng ?" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}
+                  footer={
+                    <>
+                      <button className={styles.btnDelete}
+                        onClick={handleOk}
+                      >Xóa</button>
+                      <button className={styles.btnCancelDelete}
+                        onClick={handleCancel}
+                      >Hủy</button>
+                    </>
+                  }
+                >
+                  <p>Bạn có chắc chắn muốn xóa người dùng
+                    <span className={styles.nameDelete}>
+                      {nameDelete}
+                    </span>
+                    <span className={styles.iconDelete}>
+                      ?
+                    </span>
+                  </p>
+                </Modal>
+              </>
+            ) : (
+              <EmptyResults />
+            )
+          ) : (
+            <Loading />
+          )}
+
+          {
+            user.isAdmin ?
+              <></>
+              :
+              <ModalDocumentOfName
+                nameClick={nameClick}
+                listDocumentOfName={listDocumentOfName}
+              />
+          }
+          <PaginationUser usersList={usersList} />
+        </Col>
+        {
+        user?.isAdmin ? <></> : <Col span={window.innerWidth <= 1440 ? 3 : 3}></Col>
+      }
+      </Row>
     </>
   );
 };

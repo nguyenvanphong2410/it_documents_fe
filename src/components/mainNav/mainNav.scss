@@ -108,9 +108,10 @@
   }
 
   &__linkAlt {
+    // color: #000;
     padding: 10px 8px 6px;
     margin-right: 14px;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 500;
     line-height: 19px;
     transition: all 0.2s ease;
@@ -147,8 +148,8 @@
   }
 
   &__aside {
-    display: flex;
-    align-items: center;
+    // display: flex;
+    // align-items: center;
   }
 
   &__search {

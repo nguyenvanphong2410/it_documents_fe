@@ -37,10 +37,10 @@ const SidebarAdmin = () => {
     }
     const items = [
         // <Image />,
-        getItem(<Link to="/" onClick={ () => handleBreadcrumb('Tổng quan')}>Tổng quan</Link>, '1', <PieChartOutlined />),
-        getItem(<Link to="/users" onClick={ () => handleBreadcrumb('Người dùng')}>Người dùng</Link>, '2', <UserOutlined />),
-        getItem(<Link to="/documents" onClick={ () => handleBreadcrumb('Tài liệu')} >Tài liệu</Link>, '3', <FileTextOutlined />),
-        getItem(<Link to="/createCategory" onClick={ () => handleBreadcrumb('Thể loại tài liệu')}>Thể loại tài liệu</Link>, '4', <ProfileOutlined />),
+        getItem(<Link to="/" onClick={() => handleBreadcrumb('Tổng quan')}>Tổng quan</Link>, '1', <PieChartOutlined />),
+        getItem(<Link to="/users" onClick={() => handleBreadcrumb('Người dùng')}>Người dùng</Link>, '2', <UserOutlined />),
+        getItem(<Link to="/documents" onClick={() => handleBreadcrumb('Tài liệu')} >Tài liệu</Link>, '3', <FileTextOutlined />),
+        getItem(<Link to="/createCategory" onClick={() => handleBreadcrumb('Thể loại tài liệu')}>Thể loại tài liệu</Link>, '4', <ProfileOutlined />),
     ];
     const [titleBreadcrumb, setTitleBreadcrumb] = useState('Tổng quan');
 
@@ -146,6 +146,7 @@ const SidebarAdmin = () => {
                             <Route path="/intro" element={<Intro />} />
                             <Route path="/contacts" element={user ? <Contacts /> : <Login />} />
                             <Route path="/write" element={user ? <Write /> : <Register />} />
+                            <Route path="/register" element={user ? <Home /> : <Register />} />
                             <Route path="/login" element={user ? <OverView /> : <Login />} />
 
                             <Route
