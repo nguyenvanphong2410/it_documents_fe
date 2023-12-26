@@ -15,9 +15,13 @@ import Meta from "antd/es/card/Meta";
 import { dayjsFormatFromNow } from "../../utils/dayjsFormat";
 import NoData from "../../components/notData";
 import NoImage from "../../components/notImage";
+import ModalDeleteArticles from "./components/modalDeleteArtiles/ModalDeleteArticles";
+import { setOpenModalDelete } from "../../states/modules/document";
+import { useDispatch } from "react-redux";
 
 
 const Articles = () => {
+  const dispatch = useDispatch();
   // const [nameCategory, setNameDelete] = useState('');
   const { user } = useContext(Context);
   const { search, pathname } = useLocation();
@@ -25,6 +29,8 @@ const Articles = () => {
   const subCat = pathname.split("/")[4];
   const pagePath = search.split("=")[1] || 1;
   const [gutter, setGutter] = useState([30, 30]);
+  const [idDelete, setIdDelete] = useState('');
+  const [nameDelete, setNameDelete] = useState('');
 
   useEffect(() => {
     if (window.innerWidth < 576) {
@@ -69,6 +75,11 @@ const Articles = () => {
       console.log(err);
     }
   };
+  const onClickDelete = async (id, name) => {
+    setIdDelete(id);
+    setNameDelete(name)
+    dispatch(setOpenModalDelete(true));
+  }
   return (
     <>
       <Row className={styles.rowContainer} style={{ backgroundColor: '' }}>
@@ -131,7 +142,6 @@ const Articles = () => {
                               <td>Trạng thái</td>
                               <td></td>
                               {user?.isAdmin && <td></td>}
-                              <td></td>
                             </tr>
                           </thead>
                           <tbody>
@@ -217,7 +227,7 @@ const Articles = () => {
                                       <EditOutlined className={styles.actionIconEdit} />
                                     </Link>
                                     <div
-                                      onClick={() => handleDelete(post._id)}
+                                      onClick={() => onClickDelete(post._id, post.name)}
                                     >
                                       <DeleteOutlined className={styles.actionIconDelete}
                                       // onClick={() => handleDelete(post._id)}
@@ -282,8 +292,8 @@ const Articles = () => {
                                             user?.isAdmin || item.username === user?.username &&
                                             <Tooltip title="Xóa tài liệu" color="red">
                                               <DeleteOutlined theme="outlined" style={{ color: 'red', fontSize: '20px' }} key="delete"
-                                              // onClick={() => handleShowModalDelete(item)} 
-                                              // onClick={() => onClickDelete(item._id, item.name)}
+                                                // onClick={() => handleShowModalDelete(item)} 
+                                                onClick={() => onClickDelete(item._id, item.name)}
                                               /></Tooltip>
                                             ,
                                             <Tooltip title="Tải xuống tài liệu" color="green">
@@ -359,6 +369,11 @@ const Articles = () => {
           user?.isAdmin ? <></> : <Col span={window.innerWidth <= 1440 ? 3 : 3}></Col>
         }
       </Row>
+      <ModalDeleteArticles
+        // nameCategory = {posts[0]?.category.replace(/-/g, ' ')}
+        idDelete={idDelete}
+        nameDelete={nameDelete}
+      ></ModalDeleteArticles>
     </>
   );
 };

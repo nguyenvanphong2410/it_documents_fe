@@ -1,0 +1,36 @@
+.titleCreateDocument {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    color: #213ea7;
+    margin-top: -50px; // (Tùy chọn) Để tạo khoảng cách giữa title và nội dung khác
+    padding: 10px;
+}
+.nameFileWrap {
+    color: rgb(82, 8, 8);
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 6px;
+    margin-right: 14px;
+    font-style: italic;
+  }
+.selectCategory {
+    margin-top: 30px;
+    padding: 5px;
+    border: solid 1px rgb(212, 212, 212);
+    border-radius: 6px;
+}
+.iconUploadFile{
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.textUploadFile {
+    margin-top: 8px;
+    margin-left: 18px;
+    font-size: 15px;
+    font-weight: 600;
+}
+

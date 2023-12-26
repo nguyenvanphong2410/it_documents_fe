@@ -22,6 +22,7 @@ import Articles from '../../pages/articles/Articles';
 import PendingPost from '../../pages/pendingPost/PendingPost';
 import Users from '../../pages/users/Users';
 import CreateCategory from '../../pages/createCategory/CreateCategory';
+import CheckedPost from '../../pages/checkedPost/CheckedPost';
 
 
 
@@ -140,7 +141,7 @@ const SidebarAdmin = () => {
                     <div style={{ padding: 24, minHeight: 360, background: colorBgContainer, borderRadius: borderRadiusLG, }} >
                         <Routes>
                             <Route path="*" element={<PageNotFound />} />
-                            <Route path="/documents" element={<Home />} />
+                            <Route path="/documents" element={user ? <Home /> : <Login/>} />
 
                             <Route path="/search" element={<Home />} />
                             <Route path="/intro" element={<Intro />} />
@@ -163,6 +164,10 @@ const SidebarAdmin = () => {
                             <Route
                                 path="/pendingPost"
                                 element={user ? <PendingPost /> : <Register />}
+                            />
+                             <Route
+                                path="/checkedPost"
+                                element={user ? <CheckedPost /> : <Login />}
                             />
                             <Route path="/users" element={user ? <Users /> : <Register />} />
                             <Route

@@ -139,20 +139,47 @@
     align-items: center;
     justify-content: center;
     text-align: center; 
-    margin-bottom: 70px; // (Tùy chọn) Để tạo khoảng cách dưới element
+    margin-bottom: 70px; 
+    .titleHotDocument{
+      font-size: 36px;
+      font-weight: bold;
+      color: #873fa8;
+      margin-bottom: 10px; 
+    }
+
   }
 
-  // Thêm styles cho titleNewDocument (Tùy chọn)
   .titleNewDocument {
     font-size: 36px;
     font-weight: bold;
     color: #c24e4e;
-    margin-bottom: 10px; // (Tùy chọn) Để tạo khoảng cách giữa title và nội dung khác
+    margin-bottom: 10px; 
   }
 
   .cardItem {
     box-shadow: rgba(100, 100, 109, 0.3) 0px 7px 29px 0px;
     background: linear-gradient(90deg, rgb(227, 238, 255) 0%, rgb(255, 255, 255) 50%, rgb(227, 238, 255) 100%);
+
+
+
+    &:hover {
+      transform: scale(1.04);
+      transition: transform 0.2s ease-in-out;
+      -webkit-transform: scale(1.04);
+      -moz-transform: scale(1.04);
+      -o-transform: scale(1.04);
+      -ms-transform: scale(1.04);
+    }
+
+    &:not(:hover) {
+      transform: scale(1);
+      transition: transform 0.6s ease-in-out;
+    }
+
+  }
+  .cardItemNew {
+    box-shadow: rgba(100, 100, 109, 0.3) 0px 7px 29px 0px;
+    background: linear-gradient(90deg, rgb(234, 216, 255) 0%, rgb(255, 255, 255) 50%, rgb(236, 219, 255) 100%);
 
 
 
@@ -204,7 +231,6 @@
     color: #0f2f7f;
   }
 }
-
 
 .mainNavRightOption {
   display: flex;

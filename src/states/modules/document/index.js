@@ -4,7 +4,10 @@ const document = createSlice({
   name: "document",
   initialState: {
     isLoadingGetAll: false,
+    isLoadingGetAllDocumentNew: false,
     isLoadingGetAllPending: false,
+    isLoadingGetAllPendingOver: false,
+    isLoadingGetAllChecked: false,
     isLoadingGetAllDocumentOfName: false,
     isLoadingUpdateView: false,
     isShowModalDocumentOfName: false,
@@ -14,7 +17,10 @@ const document = createSlice({
 
 
     listDocuments: [],
+    listDocumentsNew: [],
     listDocumentsPending: [],
+    listDocumentsPendingOver: [],
+    listDocumentsChecked: [],
     listDocumentsDocumentOfName: [],
     listDocumentsDocumentOfNameAdmin: [],
 
@@ -36,6 +42,16 @@ const document = createSlice({
       number_view: null,
       compare_view: null,
       page_size: 8,
+    },
+
+    dataCheckedFilter: {
+      search: "",
+      sort_by: "",
+      sort_order: "",
+      page: 1,
+      number_view: null,
+      compare_view: null,
+      page_size: 1,
     },
 
     dataDocumentOfNameFilter: {
@@ -115,6 +131,21 @@ const document = createSlice({
       isLoadingGetAll: false
     }),
 
+    //GET ALL Documents New
+    getAllDocumentNew: (state) => ({
+      ...state,
+      isLoadingGetAllDocumentsNew: true
+    }),
+    getAllDocumentNewSuccess: (state, action) => ({
+      ...state,
+      listDocumentsNew: action.payload,
+      isLoadingGetAllDocumentsNew: false
+    }),
+    getAllDocumentNewFail: (state) => ({
+      ...state,
+      isLoadingGetAllDocumentsNew: false
+    }),
+
     //GET ALL Documents Pending
     getAllPendingDocument: (state) => ({
       ...state,
@@ -130,6 +161,35 @@ const document = createSlice({
       isLoadingGetAllPending: false
     }),
 
+    //GET ALL Documents Checked
+    getAllCheckedDocument: (state) => ({
+      ...state,
+      isLoadingGetAllChecked: true
+    }),
+    getAllCheckedDocumentSuccess: (state, action) => ({
+      ...state,
+      listDocumentsChecked: action.payload,
+      isLoadingGetAllChecked: false
+    }),
+    getAllCheckedDocumentFail: (state) => ({
+      ...state,
+      isLoadingGetAllChecked: false
+    }),
+
+    //GET ALL Documents Pending Over
+    getAllPendingDocumentOver: (state) => ({
+      ...state,
+      isLoadingGetAllPendingOver: true
+    }),
+    getAllPendingDocumentOverSuccess: (state, action) => ({
+      ...state,
+      listDocumentsPendingOver: action.payload,
+      isLoadingGetAllPendingOver: false
+    }),
+    getAllPendingDocumentOverFail: (state) => ({
+      ...state,
+      isLoadingGetAllPendingOver: false
+    }),
     //GET ALL DocumentsOfName
     getAllDocumentOfName: (state) => ({
       ...state,
@@ -185,6 +245,11 @@ const document = createSlice({
       ...state,
       dataPendingFilter: { ...action.payload }
     }),
+    //Pending Filter
+    setDataCheckedFilter: (state, action) => ({
+      ...state,
+      dataCheckedFilter: { ...action.payload }
+    }),
     //DocumentOfName Filter
     setDataDocumentOfNameFilter: (state, action) => ({
       ...state,
@@ -205,11 +270,14 @@ export const {
   setOpenModalDocumentOfName,
   setOpenModalDocumentOfNameAdmin,
   getAllDocument, getAllDocumentSuccess, getAllDocumentFail,
+  getAllDocumentNew, getAllDocumentNewSuccess, getAllDocumentNewFail,
   getAllPendingDocument, getAllPendingDocumentSuccess, getAllPendingDocumentFail,
+  getAllCheckedDocument, getAllCheckedDocumentSuccess, getAllCheckedDocumentFail,
+  getAllPendingDocumentOver, getAllPendingDocumentOverSuccess, getAllPendingDocumentOverFail,
   getAllDocumentOfName, getAllDocumentOfNameSuccess, getAllDocumentOfNameFail,
   getAllDocumentOfNameAdmin, getAllDocumentOfNameAdminSuccess, getAllDocumentOfNameAdminFail,
   updateViewPost, updateViewPostSuccess, updateViewPostFail,
-  setDataFilter, setDataPendingFilter, setDataDocumentOfNameFilter, setDataDocumentOfNameAdminFilter
+  setDataFilter, setDataPendingFilter, setDataCheckedFilter, setDataDocumentOfNameFilter, setDataDocumentOfNameAdminFilter
 
 
 } = document.actions

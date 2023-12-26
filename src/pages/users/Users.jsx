@@ -22,11 +22,12 @@ import InputSearchUser from "./components/inputSearch/inputSearchUser";
 import NoData from "../../components/notData";
 import SpinComponent from "../../components/spin";
 import { Slide, ToastContainer, toast } from "react-toastify";
+import { setDataFilterUser } from "../../states/modules/user";
 const { Meta } = Card;
 const Users = () => {
 
   const dispatch = useDispatch();
-  const filter = useSelector(state => state.document.dataPendingFilter)
+  const filter = useSelector(state => state.user.dataFilterUser)
   const isLoading = useSelector(state => state.document.isLoadingGetAllDocumentOfName);
   const isLoadingListUser = useSelector(state => state.user.isLoadingGetAllUser);
   const usersList = useSelector(state => state.user.listUsers);
@@ -119,11 +120,17 @@ const Users = () => {
       handleDelete(idDelete)
     }
     setIsModalOpen(false);
+    dispatch(requestGetAllUser())
   };
   const handleCancel = () => {
     setIsModalOpen(false);
   };
 
+  //hanleClickTitleHeading
+  const hanleClickTitleHeading = () => {
+    dispatch(setDataFilterUser({ ...filter, search: null }))
+    dispatch(requestGetAllUser())
+  }
   return (
     <>
       <Row className={styles.rowContainer} style={{ backgroundColor: '' }}>
@@ -131,32 +138,40 @@ const Users = () => {
           user?.isAdmin ? <></> : <Col span={window.innerWidth <= 1440 ? 1 : 3} ></Col>
         }
 
-        <Col span={user.isAdmin ? 24 : window.innerWidth <= 1440 ? 17 : 20}>
+        <Col span={user.isAdmin ? 24 : window.innerWidth <= 1440 ? 17 : 19}>
           {data ? (
             users.length > 0 ? (
               <>
                 <div className="content read">
-                  <div className={styles.headingWrapper }>
-                    <div className={styles.headingTitle}>
-                      <span >
-                        <span >
-                          <svg className={styles.headingIcon} xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512">
-                            <g fill="currentColor">
-                              <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
-                            </g>
-                          </svg>
-                        </span>
-                      </span>
-                      <span className={styles.title}>
-                        <p className={styles.titleLink} to="/users">Thông tin người dùng</p>
-                      </span>
-                    </div>
+                  {
+                    user.isAdmin ?
+                      <div className={styles.headingWrapper}>
+                        <div className={styles.headingTitle}>
+                          <span >
+                            <span >
+                              <svg className={styles.headingIcon} xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512">
+                                <g fill="currentColor">
+                                  <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
+                                </g>
+                              </svg>
+                            </span>
+                          </span>
+                          <span className={styles.title}>
+                            <p className={styles.titleLink} to="/users" onClick={hanleClickTitleHeading}>Thông tin người dùng</p>
+                          </span>
+                        </div>
 
-                    <div className={styles.headingOpption}>
+                        <div className={styles.headingOpption}>
 
-                      <InputSearchUser usersList={usersList} />
-                    </div>
-                  </div>
+                          <InputSearchUser usersList={usersList} />
+                        </div>
+                      </div>
+                      :
+                      <>
+
+
+                      </>
+                  }
 
 
                   {
@@ -196,7 +211,7 @@ const Users = () => {
                                           <td data-label="STT"><span>{index + 1}</span></td>
                                           <td data-label="Hình ảnh">
                                             <span>
-                                              <img style={{ width: "100px", height: "50px" }} src={userData.profilePic ? userData.profilePic : ImgDefault} alt="alt" />
+                                              <img style={{ width: "60px", height: "60px" }} src={userData.profilePic ? userData.profilePic : ImgDefault} alt="alt" />
                                             </span>
                                           </td>
                                           <td data-label="Tên thành viên">
@@ -253,23 +268,36 @@ const Users = () => {
                       : <>
 
                         <div className={styles.container}>
+                          <div className={styles.headingUserWrapper}>
+                            <div className={styles.headingTitle}>
+                              <span className={styles.titleNewDocument}><UserOutlined />
+                                <span className={styles.textUser} onClick={hanleClickTitleHeading}>Người đăng tài liệu</span>
+                              </span>
+                            </div>
+                            <div className={styles.headingOpption}>
+
+                              <InputSearchUser usersList={usersList} />
+                            </div>
+                          </div>
                           <Row gutter={[20, 7]}>
+
                             {
-                              listUsers?.map((item, index) => {
+                              listUsers?.filter((item) => item.username !== 'admin')
+                              .map((item, index) => {
                                 return (
                                   <Col key={index} xs={24} sm={12} md={12} lg={6}>
 
                                     <Card
                                       className={styles.cardItem}
                                       key={index}
-                                      style={{ width: 270, marginTop: 16 }}
+                                      style={{ width: 280, marginTop: 16 }}
                                       actions={[
                                         // <Link to={`/?user=${item.username}`}>
 
                                         <Tag color="#2646ba" icon={<EyeOutlined />}
-                                          onClick={() => onClickName(item.username)}
+                                          onClick={() => onClickName(item.fullName)}
                                         >Xem tài liệu của
-                                          <span className={styles.userNameText}>{item.username}</span>
+                                          <span className={styles.userNameText}>{item.fullName}</span>
                                         </Tag>
                                         // </Link>
 
@@ -278,7 +306,7 @@ const Users = () => {
 
                                       <Meta
                                         avatar={<Avatar size="large" src={item?.profilePic} icon={<UserOutlined />} />}
-                                        title={item.username}
+                                        title={item.fullName}
                                         description={
                                           <div>
                                             <div>
@@ -352,8 +380,8 @@ const Users = () => {
           <PaginationUser usersList={usersList} />
         </Col>
         {
-        user?.isAdmin ? <></> : <Col span={window.innerWidth <= 1440 ? 4 : 3}></Col>
-      }
+          user?.isAdmin ? <></> : <Col span={window.innerWidth <= 1440 ? 4 : 3}></Col>
+        }
       </Row>
     </>
   );

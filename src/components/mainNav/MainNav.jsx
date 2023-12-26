@@ -6,10 +6,10 @@ import ImgDefault from "../../assets/images/img_default.jpg";
 import { Context } from "../../context/Context";
 import logo from "../../assets/images/logo/logormbg.png"
 import styles from './style.module.scss';
-import { Input, Select } from 'antd';
+import { Input, List, Select } from 'antd';
 import { Popover } from 'antd';
 import "./mainNav.scss";
-import { FilterOutlined, FunnelPlotOutlined, InfoCircleOutlined, LogoutOutlined, PicCenterOutlined } from "@ant-design/icons";
+import { CheckCircleOutlined, FieldTimeOutlined, FilterOutlined, FunnelPlotOutlined, InfoCircleOutlined, LogoutOutlined, PicCenterOutlined } from "@ant-design/icons";
 import InputSearch from "../../pages/home/components/inputSearch/inputSearch";
 import { useDispatch, useSelector } from "react-redux";
 import { requestGetAllDocument } from "../../api/documents";
@@ -57,16 +57,17 @@ const MainNav = () => {
     dispatchDocument(setDataFilter())
     dispatchDocument(requestGetAllDocument());
   }
-
+  const data = [
+    'Racing car sprays burning ',
+    'Racing car sprays burning ',
+    'Japanese princess t',
+    'Australian walks ',
+  ];
   return (
     <nav className="mainNav">
       <div className="mainNav__sticky">
         {/* Top Bar */}
-        <section className="mainNav__topBar" style={{
-          background: user?.isAdmin
-            ? "linear-gradient(to right, #333, #555)" // Gradient cho admin
-            : "linear-gradient(to right, #a2c9eb, #1a478d)" // Gradient cho người dùng thông thường
-        }}>
+        <section className="mainNav__topBar" >
           <div className="mainNav__wrapper">
             <div className="mainNav__linksLeft">
               <NavLink to="/" className="mainNav__logo" onClick={handleClickLogo} >
@@ -183,16 +184,52 @@ const MainNav = () => {
                     <img src={user.profilePic ? user.profilePic : ImgDefault} alt="" />
                   </NavLink>
                   <Popover style={{ width: '50px' }} title={
-                    <div className={styles.popoverMainNavWrap}>
-                      <div> <Link to="/settings" className={styles.textMyInfo}>
-                        <InfoCircleOutlined className={styles.iconInfo} /> Hồ sơ của bạn
-                      </Link></div>
-                      <span className={styles.line}></span>
-                      <div onClick={handleLogout} className={styles.textLogout}>
-                        <LogoutOutlined className={styles.iconLogout} />
-                        Đăng xuất
-                      </div>
-                    </div>
+                    // <div className={styles.popoverMainNavWrap}>
+                    //   <div>
+                    //     <Link to="/settings" className={styles.textMyInfo}>
+                    //       <InfoCircleOutlined className={styles.iconInfo} /> Tài liệu chờ duyệt
+                    //     </Link>
+                    //   </div>
+                    //   <div>
+                    //     <Link to="/settings" className={styles.textMyInfo}>
+                    //       <InfoCircleOutlined className={styles.iconInfo} /> Hồ sơ của bạn
+                    //     </Link>
+                    //   </div>
+
+                    //   {/* <span className={styles.line}></span> */}
+                    //   <div onClick={handleLogout} className={styles.textLogout}>
+                    //     <LogoutOutlined className={styles.iconLogout} />
+                    //     Đăng xuất
+                    //   </div>
+                    // </div>
+                    <List
+                      size="small"
+                      children={
+                        <div className={styles.popoverMainNavWrap}>
+                          <List.Item>
+                            <Link to="/pendingPost" className={styles.textMyInfo}>
+                              <FieldTimeOutlined className={styles.iconPending} /> Tài liệu chờ duyệt
+                            </Link>
+                          </List.Item>
+                          <List.Item>
+                            <Link to="/checkedPost" className={styles.textMyInfo}>
+                              <CheckCircleOutlined className={styles.iconChecked} /> Tài liệu đã duyệt
+                            </Link>
+                          </List.Item>
+                          <List.Item>
+                            <Link to="/settings" className={styles.textMyInfo}>
+                              <InfoCircleOutlined className={styles.iconInfo} /> Hồ sơ của bạn
+                            </Link>
+                          </List.Item>
+                          <List.Item>
+                            <div onClick={handleLogout} className={styles.textLogout}>
+                              <LogoutOutlined className={styles.iconLogout} />
+                              Đăng xuất
+                            </div>
+                          </List.Item>
+                        </div>
+                      }
+                    />
                   }>
                     <p style={{ color: "white", marginLeft: "8px" }}>
                       {user.username}
@@ -238,10 +275,13 @@ const MainNav = () => {
               <NavLink to={`/settings`} className="mainNav__link"> Hồ sơ của bạn </NavLink>
             </li>
             <li className="mainNav__menuItem">
-              <NavLink to={`/users/`} className="mainNav__link"> Người đăng tài liệu khác</NavLink>
+              <NavLink to={`/users/`} className="mainNav__link"> Người đăng tài liệu</NavLink>
             </li>
             <li className="mainNav__menuItem">
-              <NavLink to="/pendingPost" className="mainNav__link"> Tài liệu đang chờ </NavLink>
+              <NavLink to="/pendingPost" className="mainNav__link"> Tài liệu đang chờ của bạn</NavLink>
+            </li>
+            <li className="mainNav__menuItem">
+              <NavLink to="/checkedPost" className="mainNav__link"> Tài liệu đã duyệt của bạn</NavLink>
             </li>
           </ul>
         </section>

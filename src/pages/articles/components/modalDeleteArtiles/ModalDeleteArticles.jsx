@@ -1,37 +1,37 @@
 import React from 'react';
-import { Modal } from 'antd';
+import { Button, Modal } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-// import { userRequest } from '../../../../requestMethods';
-// import { Context } from '../../../../context/Context';
-import styles from './styleModalDelete.module.scss'
+import { setOpenModalDelete } from '../../../../states/modules/document';
+import { userRequest } from '../../../../requestMethods';
+import styles from './style.module.scss'
 import { Slide, ToastContainer, toast } from 'react-toastify';
-import { setOpenModalDelete } from '../../../../states/modules/category';
-import { handleDeleteCategory } from '../../../../api/category';
-
-const ModalDeleteCategory = ({ idDelete, name }) => {
-  const isShowModal = useSelector(state => state.category.modalCategoryDelete.isShowModalDelete);
-
+import { requestGetAllCheckedDocument } from '../../../../api/documents';
+const ModalDeleteArticles = ({nameCategory,  idDelete, nameDelete }) => {
+  
   const dispatch = useDispatch();
+  const isShowModal = useSelector(state => state.document.modalDocumentDelete.isShowModalDelete);
+  const name = nameDelete
   const handleCLoseModal = () => {
     dispatch(setOpenModalDelete(false));
+    // dispatch(requestGetAllCheckedDocument())
+
   };
 
   const handleOkModal = async () => {
     try {
-      await dispatch(handleDeleteCategory(idDelete));
-      console.log('Xóa thành công');
+      userRequest.delete(`/post/${idDelete}`);
       handleCLoseModal();
       
       // Hiện toast message
-      toast.success('Xóa thành công  ', name);
-  
-      // Đặt thời gian chờ 2 giây trước khi tải lại trang
+      toast.success('Xóa thành công tài liệu ');
+      dispatch(requestGetAllCheckedDocument())      
+      // // Đặt thời gian chờ 2 giây trước khi tải lại trang
       setTimeout(() => {
         // Tải lại trang sau 2 giây
         window.location.reload();
-      }, 2000);
+      }, 1500);
     } catch (err) {
-      console.log(err);
+      toast.error('Xóa thất bại !');
     }
   };
   
@@ -43,9 +43,8 @@ const ModalDeleteCategory = ({ idDelete, name }) => {
         hideProgressBar={false}
       />
       <Modal
-        title="Xóa tài liệu"
+        title="Xóa tài liệu đã phê duyệt"
         open={isShowModal}
-        onOk={handleOkModal}
         onCancel={handleCLoseModal}
         footer={
           <>
@@ -54,7 +53,7 @@ const ModalDeleteCategory = ({ idDelete, name }) => {
           </>
         }
       >
-        <p>Bạn có muốn xóa thể loại tài liệu
+        <p>Bạn có chắc chắn muốn xóa tài liệu 
           <span className={styles.nameDelete}>
             {name}
           </span>
@@ -66,4 +65,4 @@ const ModalDeleteCategory = ({ idDelete, name }) => {
     </>
   );
 };
-export default ModalDeleteCategory;
+export default ModalDeleteArticles;

@@ -1,8 +1,6 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import useSWR from "swr";
-import Loading from "../../components/loading/Loading";
 import Pagination from "../../components/pagination/Pagination";
-import EmptyResults from "../../components/emptyResults/EmptyResults";
 import { domainApi } from "../../requestMethods";
 import { Context } from "../../context/Context";
 import { useContext, useEffect, useState } from "react";
@@ -11,12 +9,18 @@ import ImgPlaceholder from "../../assets/images/placeholder.jpg";
 import MainHeading from "../../components/MainHeading/MainHeading";
 import { dayjsFormatFromNow } from "../../utils/dayjsFormat";
 import styles from './style.module.scss';
-import { requestGetAllDocument, requestUpdateViewPost } from "../../api/documents";
+import { requestGetAllDocument, requestGetAllDocumentNew, requestUpdateViewPost } from "../../api/documents";
 import { useDispatch, useSelector } from "react-redux";
 import { setDataFilter, setOpenModalDelete } from "../../states/modules/document";
 import ModalDelete from "./components/modalDelete/ModalDelete";
-import { Avatar, Button, Card, Col, FloatButton, Image, Popover, Radio, Row, Select, Tag, Tooltip } from "antd";
-import { CheckCircleOutlined, CheckOutlined, ClockCircleOutlined, DeleteOutlined, DownloadOutlined, EditOutlined, EyeOutlined, FieldTimeOutlined, FunnelPlotOutlined, PicCenterOutlined, PlusOutlined, QuestionCircleOutlined, SyncOutlined, UserOutlined } from "@ant-design/icons";
+import { Button, Card, Col, FloatButton, Image, Popover, Radio, Row, Select, Tag, Tooltip } from "antd";
+import {
+  CheckCircleOutlined, CheckOutlined, ClockCircleOutlined,
+  DeleteOutlined, DownloadOutlined, EditOutlined,
+  EyeOutlined, FieldTimeOutlined, FunnelPlotOutlined,
+  PicCenterOutlined, PlusOutlined, ProfileOutlined, QuestionCircleOutlined,
+  UserOutlined
+} from "@ant-design/icons";
 import Search from "antd/es/input/Search";
 import SpinComponent from "../../components/spin";
 import NoImage from "../../components/notImage";
@@ -24,6 +28,8 @@ import PaginationDocument from "./components/panigation/paginationDocument";
 import InputSearch from "./components/inputSearch/inputSearch";
 import NoData from "../../components/notData";
 import SortIconDocument from "./components/sortIcon/sortIcon";
+import { Slide, ToastContainer, toast } from "react-toastify";
+const { Meta } = Card;
 
 //Phong ưi
 const Home = () => {
@@ -32,13 +38,19 @@ const Home = () => {
   const dispatch = useDispatch();
   const filter = useSelector(state => state.document.dataFilter)
   const listDocuments = useSelector(state => state.document.listDocuments);
+  const listDocumentsNew = useSelector(state => state.document.listDocumentsNew);
   // console.log('listDocuments', listDocuments)
   const isLoading = useSelector(state => state.document.isLoadingGetAll);
   const documents = listDocuments.documents
+  const documentsNew = listDocumentsNew.documents
 
   useEffect(() => {
     dispatch(setDataFilter({ status_document: false }))
     dispatch(requestGetAllDocument())
+  }, [])
+
+  useEffect(() => {
+    dispatch(requestGetAllDocumentNew())
   }, [])
 
   const navigate = useNavigate();
@@ -54,19 +66,13 @@ const Home = () => {
   const [gutter, setGutter] = useState([30, 30]);
   const [comPareValue, setComPareValue] = useState('$gt');
 
-  const { Meta } = Card;
-  const SpinComponentDelayed = () => (
-    <div className="spin-container">
-      <SpinComponent />
-    </div>
-  );
-
 
   useEffect(() => {
     if (window.innerWidth < 576) {
       setGutter([20, 20])
     }
   }, [])
+
   useEffect(() => {
     document.title = user?.isAdmin ? "Tài liệu" : "IT Documents";
   }, []);
@@ -128,9 +134,9 @@ const Home = () => {
       await userRequest.put(`/post/updatedStatus/${id}`, {
         status: true,
       });
-      alert("Đã xác nhận");
+      toast.success('Duyệt thành công ');
     } catch (err) {
-      console.log(err);
+      toast.error('Xóa thất bại !');
     }
   };
 
@@ -141,9 +147,9 @@ const Home = () => {
   };
 
   //const handleDetails
-  const handleDetails = (id) => {
-    navigate(`/post/${id}`)
-  }
+  // const handleDetails = (id) => {
+  //   navigate(`/post/${id}`)
+  // }
 
   //handleUpdateView
   const handleUpdateView = (id) => {
@@ -160,93 +166,100 @@ const Home = () => {
 
   return (
     <>
+      <ToastContainer
+        transition={Slide}
+        autoClose={2500}
+        hideProgressBar={false}
+      />
       <MainHeading />
+      {
+        user.isAdmin ? <></> :
+          <div className={styles.optionRight}>
+            <Popover placement="bottom" title={'Lọc theo lượt xem :'}
+              trigger='click'
 
-      <div className={styles.optionRight}>
-        <Popover placement="bottom" title={'Lọc theo lượt xem :'}
-          trigger='click'
+              content={
+                <>
+                  <div style={{ marginBottom: '12px' }}>
+                    <Radio.Group
+                      defaultValue="$gt"
+                      buttonStyle="solid"
+                      value={comPareValue}
+                      onChange={(e) => setComPareValue(e.target.value)}
+                    >
+                      <Radio.Button value="$eq">Bằng</Radio.Button>
+                      <Radio.Button value="$gt">Lớn hơn</Radio.Button>
+                      <Radio.Button value="$lt">Nhỏ hơn</Radio.Button>
+                      <br />
+                      <Radio.Button value="$gte">Lớn -& bằng </Radio.Button>
+                      <Radio.Button value="$lte">Nhỏ -&- bằng </Radio.Button>
+                    </Radio.Group>
+                  </div>
+                  <Search
+                    className={styles.headingInputFilter}
+                    placeholder="Nhập số lượng sách cần lọc"
+                    allowClear
+                    enterButton="Lọc"
+                    style={{ width: 200 }}
+                    onSearch={onSearch}
+                  />
+                </>
+              }
+            >
+              <Button className={styles.headingFilter}>
+                <span style={{ marginRight: '5px' }}>
+                  <FunnelPlotOutlined className={styles.iconViewFilter} />
+                </span>
+                <span className={styles.textViewFilter}></span>
+              </Button>
+            </Popover>
+            <InputSearch />
 
-          content={
-            <>
-              <div style={{ marginBottom: '12px' }}>
-                <Radio.Group
-                  defaultValue="$gt"
-                  buttonStyle="solid"
-                  value={comPareValue}
-                  onChange={(e) => setComPareValue(e.target.value)}
-                >
-                  <Radio.Button value="$eq">Bằng</Radio.Button>
-                  <Radio.Button value="$gt">Lớn hơn</Radio.Button>
-                  <Radio.Button value="$lt">Nhỏ hơn</Radio.Button>
-                  <br />
-                  <Radio.Button value="$gte">Lớn -& bằng </Radio.Button>
-                  <Radio.Button value="$lte">Nhỏ -&- bằng </Radio.Button>
-                </Radio.Group>
-              </div>
-              <Search
-                className={styles.headingInputFilter}
-                placeholder="Nhập số lượng sách cần lọc"
-                allowClear
-                enterButton="Lọc"
-                style={{ width: 200 }}
-                onSearch={onSearch}
-              />
-            </>
-          }
-        >
-          <Button className={styles.headingFilter}>
-            <span style={{ marginRight: '5px' }}>
-              <FunnelPlotOutlined className={styles.iconViewFilter} />
-            </span>
-            <span className={styles.textViewFilter}></span>
-          </Button>
-        </Popover>
-        <InputSearch />
+            <Popover placement="bottom" title={''}
+              trigger='click'
 
-        <Popover placement="bottom" title={''}
-          trigger='click'
-
-          content={
-            <>
-              <Select
-                className={styles.headingSelectSort}
-                placeholder={
-                  <span className={styles.placeholderSort}>
-                    {/* <PicCenterOutlined />  */}
-                    <span className={styles.textSort}>Sắp xếp tài liệu</span>
-                  </span>}
-                options={[
-                  {
-                    label: <><SortIconDocument type="name" /> </>
-                  },
-                  {
-                    label: <><SortIconDocument type="date" /> </>
-                  },
-                  {
-                    label: <> <SortIconDocument type="view" /> </>
-                  },
-                ]}
-              />
-            </>
-          }
-        >
-          <Button className={styles.headingFilter}>
-            <span style={{ marginRight: '5px' }}>
-              <PicCenterOutlined className={styles.iconViewFilter} />
-            </span>
-            <span className={styles.textViewFilter}></span>
-          </Button>
-        </Popover>
+              content={
+                <>
+                  <Select
+                    className={styles.headingSelectSort}
+                    placeholder={
+                      <span className={styles.placeholderSort}>
+                        {/* <PicCenterOutlined />  */}
+                        <span className={styles.textSort}>Sắp xếp tài liệu</span>
+                      </span>}
+                    options={[
+                      {
+                        label: <><SortIconDocument type="name" /> </>
+                      },
+                      {
+                        label: <><SortIconDocument type="date" /> </>
+                      },
+                      {
+                        label: <> <SortIconDocument type="view" /> </>
+                      },
+                    ]}
+                  />
+                </>
+              }
+            >
+              <Button className={styles.headingFilter}>
+                <span style={{ marginRight: '5px' }}>
+                  <PicCenterOutlined className={styles.iconViewFilter} />
+                </span>
+                <span className={styles.textViewFilter}></span>
+              </Button>
+            </Popover>
 
 
-      </div>
+          </div>
+      }
 
       <Row className={styles.rowContainer} style={{ backgroundColor: '' }}>
         {
           user?.isAdmin ? <></> : <Col span={window.innerWidth <= 1440 ? 1 : 3} ></Col>
         }
 
-        <Col span={user.isAdmin ? 24 : window.innerWidth <= 1440 ? 18 : 20}>
+        <Col span={user.isAdmin ? 24 : window.innerWidth <= 1440 ? 18 : 19}>
           {data ? (
 
             <>
@@ -254,7 +267,7 @@ const Home = () => {
 
                 <>
                   <FloatButton.Group shape="circle" style={{ right: 24 }}>
-                    <FloatButton icon={<QuestionCircleOutlined />} />
+                    {/* <FloatButton icon={<QuestionCircleOutlined />} /> */}
 
                     <Link to="/write"> <FloatButton icon={<PlusOutlined />} /> </Link>
                   </FloatButton.Group>
@@ -516,6 +529,11 @@ const Home = () => {
                                                       >{item?.name}
                                                       </Link>
                                                     </Tooltip>
+                                                    <div className={styles.itemCard} >
+                                                      <ProfileOutlined className={styles.iconOriginCard} />
+                                                      <span className={styles.textOriginCard}> Thể loại: </span>
+                                                      <span className={styles.infoOriginCard}> {item?.category.replace(/-/g, ' ')}</span>
+                                                    </div>
                                                     <div className={styles.itemCard}>
                                                       <span >
                                                         <FieldTimeOutlined className={styles.iconOriginCard} />
@@ -566,18 +584,18 @@ const Home = () => {
                             {!isLoading ?
                               <div className={styles.container}>
                                 <div className={styles.newDocumentWrap}>
-                                  <span className={styles.titleNewDocument}>Tài liệu nổi bật </span>
+                                  <span className={styles.titleHotDocument}>Tài liệu nổi bật </span>
                                 </div>
                                 <Row gutter={gutter}>
                                   {
-                                    documents?.length > 0 ?
-                                      documents?.map((item, index) => {
+                                    documentsNew?.length > 0 ?
+                                      documentsNew?.map((item, index) => {
                                         return (
 
                                           <Col key={index} xs={24} sm={24} md={12} lg={6}>
 
                                             <Card
-                                              className={item?.status === true ? styles.cardItem : styles.cardItemPending} style={{ width: window.innerWidth < 576 ? 300 : 250 }}
+                                              className={item?.status === true ? styles.cardItemNew : styles.cardItemPending} style={{ width: window.innerWidth < 576 ? 300 : 250 }}
                                               cover={
                                                 item?.photos[0]?.src ?
                                                   <Link to={item?.status === true ? `/post/${item._id}` : ''}>

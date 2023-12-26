@@ -9,24 +9,22 @@ import { useContext, useEffect, useState } from "react";
 import { userRequest } from "../../requestMethods";
 import ImgPlaceholder from "../../assets/images/placeholder.jpg";
 import { Card, Col, Image, Row, Tag, Tooltip } from "antd";
-import { ClockCircleOutlined, DeleteOutlined, DownloadOutlined, EditOutlined, ExclamationCircleOutlined, EyeOutlined, FieldTimeOutlined, UserOutlined } from "@ant-design/icons";
+import { CheckCircleOutlined, ClockCircleOutlined, DeleteOutlined, DownloadOutlined, EditOutlined, ExclamationCircleOutlined, EyeOutlined, FieldTimeOutlined, UserOutlined } from "@ant-design/icons";
 import styles from "./style.module.scss"
 import { useDispatch, useSelector } from "react-redux";
-import { requestGetAllDocument, requestGetAllPendingDocument } from "../../api/documents";
-import { setDataFilter, setDataPendingFilter, setOpenModalDelete } from "../../states/modules/document";
+import { requestGetAllCheckedDocument, requestGetAllDocument, requestGetAllPendingDocument } from "../../api/documents";
+import { setDataCheckedFilter, setDataFilter, setDataPendingFilter, setOpenModalDelete } from "../../states/modules/document";
 import NoImage from "../../components/notImage";
 import Meta from "antd/es/card/Meta";
 import { dayjsFormatFromNow } from "../../utils/dayjsFormat";
 import NoData from "../../components/notData";
 import SpinComponent from "../../components/spin";
-import PaginationDocument from "../home/components/panigation/paginationDocument";
-import ModalDeletePending from "./components/modalDeletePending/ModalDeletePending";
-import PaginationPending from "./components/panigation/PaginationPending";
-import { Container } from "react-bootstrap";
+import PaginationChecked from "./components/panigation/PaginationChecked";
+import ModalDeleteChecked from "./components/modalDeletePending/ModalDeleteChecked";
 import InputSearchUser from "../users/components/inputSearch/inputSearchUser";
-import InputSearchPendingPost from "./components/inputSearch/inputSearchPendingPost";
+import InputSearchCheckedPost from "./components/inputSearch/inputSearchCheckedPost";
 
-const PendingPost = () => {
+const CheckedPost = () => {
   const { user } = useContext(Context);
   const [gutter, setGutter] = useState([30, 30]);
 
@@ -37,28 +35,29 @@ const PendingPost = () => {
   }, [])
   const dispatch = useDispatch();
   const filter = useSelector(state => state.document.dataPendingFilter)
-  const listDocuments = useSelector(state => state.document.listDocumentsPending);
-  console.log('listDocumentsStatus false', listDocuments)
-  const isLoading = useSelector(state => state.document.isLoadingGetAll);
+  const listDocuments = useSelector(state => state.document.listDocumentsChecked);
+  console.log('Tai lieu checked cuaban', listDocuments)
+  const isLoading = useSelector(state => state.document.isLoadingGetAllChecked);
   const documents = listDocuments.documents
   const [idDelete, setIdDelete] = useState('');
   const [nameDelete, setNameDelete] = useState('');
 
   useEffect(() => {
-    dispatch(setDataPendingFilter({ status_document: false, name_user: user?.username }))
-    dispatch(requestGetAllPendingDocument())
+    dispatch(setDataCheckedFilter({ status_document: true, name_user: user?.username }))
+    dispatch(requestGetAllCheckedDocument())
   }, [])
 
-  //onClickDelete
+
   const onClickDelete = async (id, name) => {
     setIdDelete(id);
     setNameDelete(name)
     dispatch(setOpenModalDelete(true));
   }
+
   //hanleClickTitleHeading
   const hanleClickTitleHeading = () => {
-    dispatch(setDataPendingFilter({ ...filter, search: null }))
-    dispatch(requestGetAllPendingDocument())
+    dispatch(setDataCheckedFilter({ ...filter, search: null }))
+    dispatch(requestGetAllCheckedDocument())
   }
   return (
     <>
@@ -67,40 +66,35 @@ const PendingPost = () => {
         {
           user?.isAdmin ? <></> : <Col span={window.innerWidth <= 1440 ? 1 : 3} ></Col>
         }
-
         <Col span={user.isAdmin ? 24 : window.innerWidth <= 1440 ? 18 : 19}>
           {!isLoading ?
 
             <div className={styles.container}>
               <div className={styles.headingUserWrapper}>
                 <div className={styles.headingTitle}>
-                  <div className={styles.newDocumentWrap}>
-                    <span className={styles.titleNewDocument} onClick={hanleClickTitleHeading}><FieldTimeOutlined />
-                      Tài liệu đang chờ phê duyệt
-                    </span>
-                  </div>
+                  <span className={styles.titleNewDocument} onClick={hanleClickTitleHeading}><CheckCircleOutlined /> Tài liệu đã phê duyệt </span>
                 </div>
 
                 <div className={styles.headingOpption}>
-                  <InputSearchPendingPost />
+                  <InputSearchCheckedPost />
                 </div>
               </div>
               <Row gutter={gutter}>
                 {
                   documents?.length ?
-                    documents?.filter((post) => post.status === false && post.username === user?.username)
+                    documents?.filter((post) => post.status === true && post.username === user?.username)
                       .map((item, index) => {
                         return (
 
                           <Col key={index} xs={24} sm={12} md={8} lg={6}>
 
                             <Card
-                              className={item?.status === false ? styles.cardItem : styles.cardItemPending} style={{ width: window.innerWidth < 576 ? 300 : 250 }}
+                              className={item?.status === true ? styles.cardItem : styles.cardItemPending} style={{ width: window.innerWidth < 576 ? 300 : 250 }}
                               cover={
                                 item?.photos[0]?.src ?
-                                  <Link to={item?.status === false ? `/post/${item._id}` : ''}>
+                                  <Link to={item?.status === true ? `/post/${item._id}` : ''}>
                                     <Image
-                                      className={item?.status === false ? '' : styles.itemCardPending}
+                                      className={item?.status === true ? '' : styles.itemCardPending}
                                       height={170} width={window.innerWidth < 576 ? 300 : 250} src={item?.photos[0]?.src} preview={false} />
                                   </Link>
                                   : <NoImage />
@@ -171,7 +165,7 @@ const PendingPost = () => {
                                       <FieldTimeOutlined className={styles.iconOriginCard} />
                                       <span className={styles.textOriginCard}> Trạng thái: </span>
                                       {/* <span className={styles.infoOriginCard}> {item?.username}</span> */}
-                                      <Tag color="warning">Chờ duyệt</Tag>
+                                      <Tag color="success" icon={<CheckCircleOutlined />}>Đã duyệt</Tag>
                                     </div>
 
                                   </div>
@@ -189,11 +183,10 @@ const PendingPost = () => {
 
           {
             user.isAdmin ? <></> :
-              <PaginationPending listDocuments={listDocuments} />
+              <PaginationChecked listDocuments={listDocuments} />
           }
-          <ModalDeletePending
-            idDelete={idDelete}
-            nameDelete={nameDelete}
+          <ModalDeleteChecked
+           
           />
         </Col>
         {
@@ -205,4 +198,4 @@ const PendingPost = () => {
   );
 };
 
-export default PendingPost;
+export default CheckedPost;

@@ -4,13 +4,11 @@
 
   .cardItem {
     box-shadow: rgba(100, 100, 109, 0.3) 0px 7px 29px 0px;
-    background: linear-gradient(90deg, rgb(253, 255, 238) 0%, rgb(255, 255, 255) 50%, rgb(253, 255, 238) 100%);
-
-
+    background: linear-gradient(90deg, rgb(223, 250, 223) 0%, rgb(255, 255, 255) 50%, rgb(223, 250, 228) 100%);
 
     &:hover {
       transform: scale(1.04);
-      transition: transform 0.2s ease-in-out;
+      transition: transform 0.4s ease-in-out;
       -webkit-transform: scale(1.04);
       -moz-transform: scale(1.04);
       -o-transform: scale(1.04);
@@ -21,12 +19,9 @@
       transform: scale(1);
       transition: transform 0.6s ease-in-out;
     }
-
   }
 
   .itemCard {
-
-
     .iconOriginCard {
       color: #0f2f7f;
     }
@@ -34,8 +29,6 @@
     .textOriginCard {
       color: #0f2f7f;
       font-size: 14px;
-
-
     }
 
     .infoOriginCard {
@@ -43,32 +36,22 @@
       font-size: 14px;
     }
   }
-  .nameDocumentCard {
-    color: #0f2f7f;
-    font-size: 20px;
-    font-weight: 700;
-  
-    &:hover {
-      opacity: 0.8;
-      color: #0f2f7f;
-    }
-  }
+
 }
 
 .headingUserWrapper {
   width: calc(100vh - -490px);
   color: rgb(102, 102, 102);
-  background-color: #f9faec;
+  background-color: #e7f7e5;
   display: flex;
   justify-content: space-between;
-  padding: 10px 0px;
+  padding: 7px 0px;
   margin-bottom: 44px;
   border-radius: 10px;
   box-shadow: rgba(121, 121, 121, 0.3) 0px 7px 29px 0px;
 
   .headingTitle {
     display: flex;
-    margin-top: 5px;
     margin-left: 22px;
 
     &:hover {
@@ -81,7 +64,7 @@
       font-weight: bold;
       padding: 10px;
       border-radius: 6px;
-      color: rgb(160, 157, 10);
+      color: #28a00a;
     }
   }
 
@@ -113,7 +96,16 @@
   }
 }
 
+.nameDocumentCard {
+  color: #0f2f7f;
+  font-size: 20px;
+  font-weight: 700;
 
+  &:hover {
+    opacity: 0.8;
+    color: #0f2f7f;
+  }
+}
 
 // Màn hình máy tính
 @media (min-width: 1440px) {}
@@ -129,6 +121,9 @@
     .headingTitle{
       display: none;
     }
+    .headingOpption{
+      margin-left: 30%;
+    }
   }
 }
 
@@ -136,6 +131,7 @@
   .rowContainer {
     margin-left: 12%;
     margin-right: -40px;
+
   }
   .headingUserWrapper{
     width: 100%;

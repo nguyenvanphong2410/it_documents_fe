@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import "./createCategory.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { setCategoryActive, setOpenModalAddCategory, setOpenModalDelete, setOpenModalUpdateCategory } from "../../states/modules/category";
+import { setCategoriesDataFilter, setCategoryActive, setOpenModalAddCategory, setOpenModalDelete, setOpenModalUpdateCategory } from "../../states/modules/category";
 import styles from './style.module.scss';
 import ModalAddCategory from "./components/modal/modalAdd";
 import { Container } from "react-bootstrap";
-import {Image, Select, Space, Table } from 'antd';
+import { Image, Select, Space, Table } from 'antd';
 import { requestGetAllCategory } from "../../api/category";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import PaginationCategory from "./components/pagination/paginationCategory";
@@ -21,6 +21,7 @@ const CreateCategory = () => {
   const dispatch = useDispatch();
   const listCategory = useSelector(state => state.category.listCategories);
   const isLoading = useSelector(state => state.category.isLoadingGetAllCategory);
+  const filter = useSelector(state => state.category.dataFilter)
   const [idDelete, setIdDelete] = useState('');
   const [idEdit, setIdEdit] = useState('');
   const [nameDelete, setNameDelete] = useState('');
@@ -78,7 +79,7 @@ const CreateCategory = () => {
       key: 'action',
       render: (_, record) => (
         <Space size="middle" className={styles.action}>
-          <EditOutlined className={styles.actionIconEdit } onClick={() => onClickEdit(record._id, record)}/>
+          <EditOutlined className={styles.actionIconEdit} onClick={() => onClickEdit(record._id, record)} />
           <DeleteOutlined className={styles.actionIconDelete} onClick={() => onClickDelete(record._id, record.name)} />
         </Space>
       ),
@@ -98,9 +99,13 @@ const CreateCategory = () => {
       setShowSpin(false);
     }, 500);
 
-    return () => clearTimeout(timeoutId); 
-  }, []); 
+    return () => clearTimeout(timeoutId);
+  }, []);
 
+  const hanleClickTitleHeading = () => {
+    dispatch(setCategoriesDataFilter({ ...filter, search: null }))
+    dispatch(requestGetAllCategory())
+  }
   return (
     <Container>
       <div className="createCategory">
@@ -113,7 +118,7 @@ const CreateCategory = () => {
                 </g>
               </svg>
             </span>
-            <span className={styles.title}>Thông tin thể loại tài liệu</span>
+            <span className={styles.title} onClick={hanleClickTitleHeading}>Thông tin thể loại tài liệu</span>
           </div>
 
           <div className={styles.headingOpption}>

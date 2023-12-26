@@ -1,9 +1,14 @@
-.registerWrap{
+.registerWrap {
   background-color: rgba(255, 255, 255, 0.8);
-  padding: 50px;
+  padding: 30px 65px 40px 50px;
   border-radius: 6px;
 
-  .headingTextRegister{
+  .inputItem {
+    margin-top: 10px;
+  }
+
+  .headingTextRegister {
+    margin-bottom: 10px;
     color: #12266e;
     font-size: 50px;
     display: flex;
@@ -12,24 +17,46 @@
     text-align: center;
   }
 
-  .headingTextOriginInput{
+  .headingTextOriginInput {
     font-weight: 700;
     color: #12266e;
     font-size: 16px;
+    margin-bottom: 5px !important;
   }
 
-  .noAccountText{
+  .noAccountText {
     margin-top: 10px;
-    // font-weight: 700;
     color: rgb(10, 65, 117);
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
+    text-decoration: dotted;
 
-    .switchText{
+    .switchText {
       margin-left: 6px;
       // color: green;
+    }
+  }
+
+  .btnRegister {
+    background: #082f69;
+    color: #fff;
+    padding: 10px;
+    width: 100%;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center; 
+    margin-left: 8px;
+
+    &:hover{
+      opacity: 0.8;
+      cursor: pointer;
     }
   }
 }

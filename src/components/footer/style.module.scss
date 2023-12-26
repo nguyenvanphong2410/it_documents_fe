@@ -57,6 +57,11 @@
 
 //Màn hình tablet
 @media (max-width: 768px) {
+    .footerWrap{
+        .logo {
+            width: 200px !important;
+        }
+    }
     .oneFooter {
         margin-left: 30% !important; 
         margin-right: 14%;
@@ -68,7 +73,14 @@
     }
 }
 
-@media (min-width: 577px) and (max-width: 1440px) {}
+@media (min-width: 577px) and (max-width: 1440px) {
+    .footerWrap{
+        .logo {
+            top: -25px;
+            width: 200px !important;
+        }
+    }
+}
 
 //Màn hình điện thoại
 @media (min-width: 375px) and(max-width: 576px) {

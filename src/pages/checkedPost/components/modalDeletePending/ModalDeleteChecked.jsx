@@ -5,15 +5,15 @@ import { setOpenModalDelete } from '../../../../states/modules/document';
 import { userRequest } from '../../../../requestMethods';
 import styles from './style.module.scss'
 import { Slide, ToastContainer, toast } from 'react-toastify';
-import { requestGetAllPendingDocument } from '../../../../api/documents';
-const ModalDeletePending = ({ idDelete, nameDelete }) => {
+import { requestGetAllCheckedDocument } from '../../../../api/documents';
+const ModalDeleteChecked = ({ idDelete, nameDelete }) => {
   
   const dispatch = useDispatch();
   const isShowModal = useSelector(state => state.document.modalDocumentDelete.isShowModalDelete);
   const name = nameDelete
   const handleCLoseModal = () => {
     dispatch(setOpenModalDelete(false));
-    // dispatch(requestGetAllPendingDocument())
+    // dispatch(requestGetAllCheckedDocument())
 
   };
 
@@ -22,8 +22,9 @@ const ModalDeletePending = ({ idDelete, nameDelete }) => {
       userRequest.delete(`/post/${idDelete}`);
       handleCLoseModal();
       
-      dispatch(requestGetAllPendingDocument())      
-      toast.success('Xóa tài liệu thành công ');
+      // Hiện toast message
+      toast.success('Xóa thành công tài liệu ');
+      dispatch(requestGetAllCheckedDocument())      
       // // Đặt thời gian chờ 2 giây trước khi tải lại trang
       // setTimeout(() => {
       //   // Tải lại trang sau 2 giây
@@ -42,7 +43,7 @@ const ModalDeletePending = ({ idDelete, nameDelete }) => {
         hideProgressBar={false}
       />
       <Modal
-        title="Xóa tài liệu đang chờ phê duyệt"
+        title="Xóa tài liệu đã phê duyệt"
         open={isShowModal}
         onCancel={handleCLoseModal}
         footer={
@@ -52,7 +53,7 @@ const ModalDeletePending = ({ idDelete, nameDelete }) => {
           </>
         }
       >
-        <p>Bạn có chắc chắn muốn xóa tài liệu chờ phê duyệt 
+        <p>Bạn có chắc chắn muốn xóa tài liệu đã duyệt
           <span className={styles.nameDelete}>
             {name}
           </span>
@@ -64,4 +65,4 @@ const ModalDeletePending = ({ idDelete, nameDelete }) => {
     </>
   );
 };
-export default ModalDeletePending;
+export default ModalDeleteChecked;

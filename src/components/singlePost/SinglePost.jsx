@@ -1,22 +1,23 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "./singlePost.scss";
-// import axios from "axios";
 import { Context } from "../../context/Context";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import Loading from "../loading/Loading";
-import IconNews from "../../assets/icons-base/news.svg";
 import { publicRequest } from "../../requestMethods";
 import LazyLoad from "react-lazyload";
 import Tabs from "../../components/tabs/Tabs";
-// dayjs
 import dayjs from "dayjs";
 import "dayjs/locale/vi";
 import PdfComp from "../PdfComp/PdfComp";
 import { pdfjs } from "react-pdf";
 import styles from './style.module.scss'
 import { CommentOutlined, DownloadOutlined, FieldTimeOutlined, PicLeftOutlined, UserOutlined } from "@ant-design/icons";
+import { Slide, ToastContainer, toast } from "react-toastify";
+import { dayjsFormatFromNow } from "../../utils/dayjsFormat";
+import { List } from "antd";
+
 dayjs.locale("vi");
 var localizedFormat = require("dayjs/plugin/localizedFormat");
 dayjs.extend(localizedFormat);
@@ -54,7 +55,8 @@ export default function SinglePost() {
     e.preventDefault();
     try {
       await publicRequest.post("/comments", newComment);
-      alert("Đã thêm bình luận thành công!");
+      toast.success('Bình luận thành công');
+      setComment(" ")
       setIsComment(!isComment);
     } catch (error) {
       console.log(error);
@@ -120,6 +122,7 @@ export default function SinglePost() {
 
   return (
     <>
+      <ToastContainer transition={Slide} autoClose={1500} />
       {loading ? (
         <Loading />
       ) : (
@@ -131,7 +134,7 @@ export default function SinglePost() {
                 <span className={styles.titleOrigin}><PicLeftOutlined /> Thể loại: </span>
                 <Link to={`/articles/category/${post.category}`}>
                   <span className={styles.info}>
-                    {post.category}
+                    {post.category.replace(/-/g, ' ')}
                   </span>
                 </Link>
               </div>
@@ -232,6 +235,7 @@ export default function SinglePost() {
                         rows="10"
                         onChange={(e) => setComment(e.target.value)}
                         placeholder="Viết bình luận của bạn"
+                        value={comment}
                       ></textarea>
                     </div>
                     <div className="comments__btn">
@@ -241,18 +245,41 @@ export default function SinglePost() {
                     </div>
                   </form>
                   <div className="comments__posts">
-                    {comments.map((item) => (
-                      <div key={item._id} style={{ marginBottom: "8px" }}>
-                        <Link
-                          to={`/?user=${item.username}`}
-                          className="comments__username"
-                        >
-                          {item.username}
-                        </Link>
-                        <p className="comments__desc">{item.desc}</p>
-                        <small>{dayjs(item.createdAt).format("LL")}</small>
-                      </div>
-                    ))}
+                    <div className={styles.itemCommentWrap}>
+                      {comments.map((item) => (
+                        <div key={item._id} style={{ marginBottom: "8px" }}>
+                          {/* <div className={styles.nameComment}>
+                            {item.username}
+                          </div>
+
+                          <span className={styles.timeCommentComment}>
+                            <span className={styles.iconTimeComment}><FieldTimeOutlined /></span>
+                            <span className={styles.textTimeComment}>{dayjsFormatFromNow(item.createdAt)}</span>
+
+                          </span>
+
+                          <div className={styles.commentWrap}>
+                            <span className={styles.iconTimeComment}><CommentOutlined /></span>
+                            <span className={styles.textTimeComment}> {item.desc}</span>
+
+                          </div> */}
+                          <List.Item className={styles.commentWrap}>
+                            <List.Item.Meta
+                              title={
+                                <>
+                                  <span className={styles.name}><UserOutlined /> {item.username}</span>
+                                  <span className={styles.timeCommentComment}>
+                                    <span className={styles.iconTimeComment}><FieldTimeOutlined /></span>
+                                    <span className={styles.textTimeComment}>{dayjsFormatFromNow(item.createdAt)}</span>
+                                  </span>
+                                </>}
+                              description={<p className={styles.textComment}> {item.desc}</p>}
+                            />
+                          </List.Item>
+                        </div>
+
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
