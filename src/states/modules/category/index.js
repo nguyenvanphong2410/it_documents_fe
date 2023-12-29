@@ -108,11 +108,13 @@ const category = createSlice({
       ...state,
       isLoadingGetAllCategory: true
     }),
+
     getAllCategorySuccess: (state, action) => ({
       ...state,
       listCategories: action.payload.data,
       isLoadingGetAllCategory: false
     }),
+    
     getAllCategoryFail: (state) => ({
       ...state,
       isLoadingGetAllCategory: false

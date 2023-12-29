@@ -12,6 +12,7 @@ import Spinner from "../../components/spinner/Spinner";
 import { Col, Input, Row, Typography } from "antd";
 import styles from './style.module.scss'
 import { FileTextOutlined, FolderOpenOutlined } from "@ant-design/icons";
+import { Slide, ToastContainer, toast } from "react-toastify";
 
 const Write = () => {
   useEffect(() => {
@@ -19,6 +20,8 @@ const Write = () => {
   }, []);
 
   const [name, setName] = useState("");
+  const [author, setAuthor] = useState("");
+  const [publisher, setPublisher] = useState("");
   const [categories, setCategories] = useState([]);
   const [category, setCategory] = useState("");
   const [year, setYear] = useState("");
@@ -28,7 +31,6 @@ const Write = () => {
   const { user } = useContext(Context);
   const navigate = useNavigate();
   const [isUploading, setIsUploading] = useState(false);
-  // console.log(base64);
   const fileTypes = ["JPG", "JPEG", "PNG", "GIF", "jfif"];
 
   // Upload Pdf
@@ -49,7 +51,7 @@ const Write = () => {
     getCats();
   }, []);
 
-  // blob images selected
+  // images selected
   const handleFiles = (e) => {
     setFiles([...files, ...e]);
     const blob = [...e].map((file) => URL.createObjectURL(file));
@@ -94,9 +96,11 @@ const Write = () => {
           const newPost = {
             username: user.username,
             name,
+            author,
             desc,
             category,
             year,
+            publisher,
             photos: list,
           };
           console.log(newPost);
@@ -108,7 +112,10 @@ const Write = () => {
           setIsUploading(true);
           thumbs.map((thumb) => URL.revokeObjectURL(thumb));
           // navigate("/room/" + res.data.name);
-          navigate("/");
+          setTimeout(() => {
+            toast.success('Tạo mới tài liệu thành công')
+          }, 1000);
+          navigate("/pendingPost");
         } catch (err) {
           console.log(err);
         }
@@ -120,8 +127,11 @@ const Write = () => {
 
   return (
     <div className="write">
-      <h3 className={styles.titleCreateDocument}> <FolderOpenOutlined /> Tạo mới tài liệu</h3>
+      <ToastContainer transition={Slide} autoClose={1000} />
+      <h3 className={styles.titleCreateDocument}> <FolderOpenOutlined /> Tạo mới tài liệu </h3>
       <div className="write__wrapper">
+        <span className={styles.suggest}>Chú thích:</span>
+        <span className={styles.Obligatory}>* ( bắt buộc )</span>
         <form className="write__form" onSubmit={handleSubmit}>
           <div className="write__formGroup">
             <div className="write__formWrapper">
@@ -152,11 +162,9 @@ const Write = () => {
                 handleChange={(e) => handleFiles(e)}
               />
               <div className="pdfFileWrapper">
-                {/* <Typography.Title level={5}>Tải lên tệp</Typography.Title> */}
-
                 <label className="pdfFile" htmlFor="pdfFile">
-                  <Row>    
-                      <span className={styles.textUploadFile}> <FileTextOutlined className={styles.iconUploadFile} />Tải lên tệp PDF +</span>
+                  <Row>
+                    <span className={styles.textUploadFile}> <FileTextOutlined className={styles.iconUploadFile} />Tải lên tệp PDF + <span className={styles.Obligatory}>*</span></span>
                     <Col span={1}></Col>
                     <Col span={18}>
                       <div className={file?.name ? styles.nameFileWrap : ''} >
@@ -164,7 +172,7 @@ const Write = () => {
                           {file?.name}
                         </span>
                       </div>
-                      
+
                     </Col>
                   </Row>
 
@@ -188,7 +196,7 @@ const Write = () => {
                   autoFocus={true}
                   onChange={(e) => setName(e.target.value)}
                 /> */}
-                <Typography.Title level={5} style={{ color: '#213ea7' }}>Tên tài liệu</Typography.Title>
+                <Typography.Title level={5} style={{ color: '#213ea7' }}>Tên tài liệu<span className={styles.Obligatory}> *</span></Typography.Title>
                 <Input placeholder="Nhập tên tài liệu" onChange={(e) => setName(e.target.value)} />
               </Col>
               <Col md={2} lg={2}></Col>
@@ -196,29 +204,42 @@ const Write = () => {
                 {/* <input type="number" className="write__input" style={{ fontSize: "14px" }} placeholder="Nhập năm xuất bản"
                   onChange={(e) => setYear(e.target.value)}
                 /> */}
-                <Typography.Title level={5} style={{ color: '#213ea7' }}>Năm xuất bản:</Typography.Title>
-                <Input type="number" placeholder="Nhập năm xuất bản" onChange={(e) => setYear(e.target.value)} />
+                <Typography.Title level={5} style={{ color: '#213ea7' }}>Tác giả <span className={styles.ifExists}>(nếu có)</span>:</Typography.Title>
+                <Input placeholder="Nhập tên tác giả nếu có" onChange={(e) => setAuthor(e.target.value)} />
               </Col>
             </Row>
 
             <Row>
               <Col xs={24} sm={24} md={11} lg={11}>
-                <div className={styles.selectCategory}>
-                  <select onChange={(e) => { setCategory(e.target.value); }}>
-                    <option style={{ display: "none" }}>Thể loại</option>
-                    {categories &&
-                      categories.map((category) => (
-                        <option key={category._id} value={category.slug}>
-                          {category.name}
-                        </option>
-                      ))}
-                  </select>
-                </div>
+                <Row>
+                  <Col xs={24} sm={24} md={11} lg={10}>
+
+                    <Typography.Title level={5} style={{ color: '#213ea7' }}>Năm xuất bản<span className={styles.Obligatory}> *</span></Typography.Title>
+                    <Input type="number" placeholder="Nhập năm xuất bản" onChange={(e) => setYear(e.target.value)} />
+                  </Col>
+                  <Col md={2} lg={2}></Col>
+                  <Col xs={24} sm={24} md={11} lg={12}>
+                    <div className={styles.selectCategory}>
+                      <select onChange={(e) => { setCategory(e.target.value); }}>
+                        <option style={{ display: "none" }}>Thể loại</option>
+                        {categories &&
+                          categories.map((category) => (
+                            <option key={category._id} value={category.slug}>
+                              {category.name}
+                            </option>
+                          ))}
+                      </select>
+                    </div>
+                  </Col>
+
+
+                </Row>
+
               </Col>
               <Col md={2} lg={2}></Col>
               <Col xs={24} sm={24} md={11} lg={11}>
-                <Typography.Title level={5} style={{ color: '#213ea7' }}>Nhà xuất bản:</Typography.Title>
-                <Input placeholder="Nhập nhà xuất bản" />
+                <Typography.Title level={5} style={{ color: '#213ea7' }}>Nhà xuất bản <span className={styles.ifExists}>(nếu có)</span>:</Typography.Title>
+                <Input placeholder="Nhập nhà xuất bản nếu có" onChange={(e) => setPublisher(e.target.value)} />
               </Col>
             </Row>
 

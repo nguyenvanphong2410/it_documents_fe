@@ -13,3 +13,7 @@ export const dayjsFormat = (createdAt) => {
 export const dayjsFormatFromNow = (createdAt) => {
   return dayjs(createdAt).fromNow();
 };
+
+export const dayjsFormatSort = (createdAt) => {
+  return dayjs(createdAt).format("DD/MM/YYYY");
+};

@@ -7,13 +7,15 @@ import { setOpenModalDocumentOfName, setOpenModalDocumentOfNameAdmin } from '../
 import NoData from '../../../../../components/notData';
 import { FieldTimeOutlined, FolderOpenFilled } from '@ant-design/icons';
 import { dayjsFormatFromNow } from '../../../../../utils/dayjsFormat';
-import {  EyeOutlined} from "@ant-design/icons";
+import { EyeOutlined } from "@ant-design/icons";
+import { useNavigate } from 'react-router-dom';
 
 
 
 const ModalDocumentOfNameAdmin = ({ nameClickAdmin, listDocumentOfNameAdmin }) => {
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const isShowModalDocumentOfName = useSelector(state => state.document.modalDocumentOfNameAdmin.isShowModalDocumentOfNameAdmin);
   console.log('isShowModalDocumentOfNamdAdmin', isShowModalDocumentOfName)
   const documents = listDocumentOfNameAdmin?.documents
@@ -22,6 +24,9 @@ const ModalDocumentOfNameAdmin = ({ nameClickAdmin, listDocumentOfNameAdmin }) =
   const handleCLoseModal = () => {
     dispatch(setOpenModalDocumentOfNameAdmin(false));
 
+  }
+  const handleClickView = (id) => {
+    navigate(`/post/${id}`);
   }
   return (
     <>
@@ -33,7 +38,7 @@ const ModalDocumentOfNameAdmin = ({ nameClickAdmin, listDocumentOfNameAdmin }) =
         open={isShowModalDocumentOfName}
         onCancel={handleCLoseModal}
         footer={false}
-      width={800}
+        width={800}
       >
         <div className={styles.appointmentsWrapper}>
           <span className={styles.totalDocument}>Tổng số tài liệu của {nameClickAdmin} là {documents?.length} tài liệu</span>
@@ -47,7 +52,7 @@ const ModalDocumentOfNameAdmin = ({ nameClickAdmin, listDocumentOfNameAdmin }) =
                         label: <Row>
                           <Col span={20}>
                             <div className={styles.appointmentTimeWrapper}>
-                            <FolderOpenFilled className={styles.iconRecentDocuments}/> 
+                              <FolderOpenFilled className={styles.iconRecentDocuments} />
                               <span className={styles.nameDocument}>{item.name}</span>
                             </div>
                             <div className={styles.appointmentUserCountWrapper}>
@@ -67,7 +72,9 @@ const ModalDocumentOfNameAdmin = ({ nameClickAdmin, listDocumentOfNameAdmin }) =
                           </Col>
                           <Col span={4}>
                             <button className={styles.appointmentsBooking} >
-                              <a className={styles.appointmentsBookingText} >Xem</a>
+                              <a className={styles.appointmentsBookingText}
+                                onClick={() => handleClickView(item._id)}
+                              >Xem</a>
                             </button>
                           </Col>
 

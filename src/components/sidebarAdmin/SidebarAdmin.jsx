@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { CompressOutlined, FileOutlined, FileTextOutlined, FullscreenOutlined, InfoCircleOutlined, LogoutOutlined, PieChartOutlined, ProfileOutlined, UserOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, CheckSquareOutlined, CompressOutlined, FieldTimeOutlined, FileOutlined, FileTextOutlined, FullscreenOutlined, HolderOutlined, InfoCircleOutlined, LogoutOutlined, PieChartOutlined, ProfileOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Breadcrumb, Image, Layout, Menu, Popover, theme } from 'antd';
 // import MainNav from '../mainNav/MainNav';
 import styles from './style.module.scss'
@@ -23,7 +23,8 @@ import PendingPost from '../../pages/pendingPost/PendingPost';
 import Users from '../../pages/users/Users';
 import CreateCategory from '../../pages/createCategory/CreateCategory';
 import CheckedPost from '../../pages/checkedPost/CheckedPost';
-
+import CheckedDocumentAdmin from './checkedDocument/CheckedDocuments'
+import PendingDocumentAdmin from './pendingDocument/PendingDocuments';
 
 
 const SidebarAdmin = () => {
@@ -39,9 +40,14 @@ const SidebarAdmin = () => {
     const items = [
         // <Image />,
         getItem(<Link to="/" onClick={() => handleBreadcrumb('Tổng quan')}>Tổng quan</Link>, '1', <PieChartOutlined />),
-        getItem(<Link to="/users" onClick={() => handleBreadcrumb('Người dùng')}>Người dùng</Link>, '2', <UserOutlined />),
-        getItem(<Link to="/documents" onClick={() => handleBreadcrumb('Tài liệu')} >Tài liệu</Link>, '3', <FileTextOutlined />),
-        getItem(<Link to="/createCategory" onClick={() => handleBreadcrumb('Thể loại tài liệu')}>Thể loại tài liệu</Link>, '4', <ProfileOutlined />),
+        getItem(<Link to="/users" onClick={() => handleBreadcrumb('Quản lý người dùng')}>Quản lý người dùng</Link>, '2', <UserOutlined />),
+        // getItem(<Link to="/documents" onClick={() => handleBreadcrumb('Quản lý tài liệu')} >Quản lý tài liệu</Link>, '3', <FileTextOutlined />),
+        getItem('Quản lý tài liệu', 'sub1', <FileTextOutlined />, [
+            getItem(<Link to="/documents" onClick={() => handleBreadcrumb('Tất cả tài liệu')}>Tất cả tài liệu</Link>, '3', <HolderOutlined />),
+            getItem(<Link to="/pendingPostAdmin" onClick={() => handleBreadcrumb('Tài liệu chờ')}>Tài liệu chờ</Link>, '4', <FieldTimeOutlined />),
+            getItem(<Link to="/checkedPostAdmin" onClick={() => handleBreadcrumb('Tài liệu đã duyệt')}>Tài liệu đã duyệt</Link>, '5', <CheckCircleOutlined />),
+        ]),
+        getItem(<Link to="/createCategory" onClick={() => handleBreadcrumb('Quản lý thể loại')}>Quản lý thể loại</Link>, '6', <ProfileOutlined />),
     ];
     const [titleBreadcrumb, setTitleBreadcrumb] = useState('Tổng quan');
 
@@ -141,7 +147,7 @@ const SidebarAdmin = () => {
                     <div style={{ padding: 24, minHeight: 360, background: colorBgContainer, borderRadius: borderRadiusLG, }} >
                         <Routes>
                             <Route path="*" element={<PageNotFound />} />
-                            <Route path="/documents" element={user ? <Home /> : <Login/>} />
+                            <Route path="/documents" element={user ? <Home /> : <Login />} />
 
                             <Route path="/search" element={<Home />} />
                             <Route path="/intro" element={<Intro />} />
@@ -165,7 +171,15 @@ const SidebarAdmin = () => {
                                 path="/pendingPost"
                                 element={user ? <PendingPost /> : <Register />}
                             />
+                            <Route
+                                path="/checkedPostAdmin"
+                                element={user ? <CheckedDocumentAdmin /> : <Register />}
+                            />
                              <Route
+                                path="/pendingPostAdmin"
+                                element={user ? <PendingDocumentAdmin /> : <Register />}
+                            />
+                            <Route
                                 path="/checkedPost"
                                 element={user ? <CheckedPost /> : <Login />}
                             />

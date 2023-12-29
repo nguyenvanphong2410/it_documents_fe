@@ -1,7 +1,33 @@
-import { getAllCheckedDocument, getAllCheckedDocumentFail, getAllCheckedDocumentSuccess, getAllDocument, getAllDocumentFail, getAllDocumentNew, getAllDocumentNewFail, getAllDocumentNewSuccess, getAllDocumentOfName, getAllDocumentOfNameAdmin, getAllDocumentOfNameAdminFail, getAllDocumentOfNameAdminSuccess, getAllDocumentOfNameFail, getAllDocumentOfNameSuccess, getAllDocumentSuccess, getAllPendingDocument, getAllPendingDocumentFail, getAllPendingDocumentOver, getAllPendingDocumentOverFail, getAllPendingDocumentOverSuccess, getAllPendingDocumentSuccess, updateViewPost, updateViewPostFail, updateViewPostSuccess } from "../../states/modules/document";
+import { getAllCheckedDocument, getAllCheckedDocumentFail, getAllCheckedDocumentSuccess, getAllDocument, getAllDocumentFail, getAllDocumentNew, getAllDocumentNewFail, getAllDocumentNewSuccess, getAllDocumentOfName, getAllDocumentOfNameAdmin, getAllDocumentOfNameAdminFail, getAllDocumentOfNameAdminSuccess, getAllDocumentOfNameFail, getAllDocumentOfNameSuccess, getAllDocumentSuccess, getAllDocumentView, getAllDocumentViewFail, getAllDocumentViewSuccess, getAllPendingDocument, getAllPendingDocumentFail, getAllPendingDocumentOver, getAllPendingDocumentOverFail, getAllPendingDocumentOverSuccess, getAllPendingDocumentSuccess, getDocuments, getDocumentsChecked, getDocumentsCheckedFail, getDocumentsCheckedSuccess, getDocumentsFail, getDocumentsSuccess, updateViewPost, updateViewPostFail, updateViewPostSuccess } from "../../states/modules/document";
 import callApi from "../../api/callApi";
 // import store from "@/states/configureStore";
 // import store from "../../states/configureStore";
+
+export const requestGetDocuments = () => async (dispatch, getState) => {
+    const filterDocuments = getState().document.dataDocumentsFilter
+    console.log('fiter api requestGetDocuments', filterDocuments)
+    return callApi({
+        method: 'get',
+        apiPath: `api/post/documents`,
+        actionTypes: [getDocuments, getDocumentsSuccess, getDocumentsFail],
+        variables: { ...filterDocuments },
+        dispatch,
+        getState
+    })
+}
+
+export const requestGetDocumentsChecked = () => async (dispatch, getState) => {
+    const filterDocumentsChecked = getState().document.dataDocumentsCheckedFilter
+    console.log('fiter api requestGetDocumentsChecked', filterDocumentsChecked)
+    return callApi({
+        method: 'get',
+        apiPath: `api/post/documents_checked`,
+        actionTypes: [getDocumentsChecked, getDocumentsCheckedSuccess, getDocumentsCheckedFail],
+        variables: { ...filterDocumentsChecked },
+        dispatch,
+        getState
+    })
+}
 
 export const requestGetAllDocument = () => async (dispatch, getState) => {
     const filter = getState().document.dataFilter
@@ -22,6 +48,18 @@ export const requestGetAllDocumentNew = () => async (dispatch, getState) => {
         method: 'get',
         apiPath: `api/post/all_document_new`,
         actionTypes: [getAllDocumentNew, getAllDocumentNewSuccess, getAllDocumentNewFail],
+        variables: {},
+        dispatch,
+        getState
+    })
+}
+
+export const requestGetAllDocumentView = () => async (dispatch, getState) => {
+
+    return callApi({
+        method: 'get',
+        apiPath: `api/post/all_document_view`,
+        actionTypes: [getAllDocumentView, getAllDocumentViewSuccess, getAllDocumentViewFail],
         variables: {},
         dispatch,
         getState
@@ -55,11 +93,12 @@ export const requestGetAllCheckedDocument = () => async (dispatch, getState) => 
 }
 
 export const requestGetAllPendingDocumentOver = () => async (dispatch, getState) => {
+    const filterPending = getState().document.dataPendingOverFilter
     return callApi({
         method: 'get',
         apiPath: `api/post/all_document_pending_over`,
         actionTypes: [getAllPendingDocumentOver, getAllPendingDocumentOverSuccess, getAllPendingDocumentOverFail],
-        variables: {},
+        variables: { ...filterPending },
         dispatch,
         getState
     })

@@ -24,25 +24,25 @@ const OverView = () => {
     const data = [
         {
             name: 'Tổng số người dùng',
-            uv: listUser.total,
+            'Số lượng': listUser.total,
             pv: 2400,
             amt: 2400,
         },
         {
             name: 'Tổng số thể loại',
-            uv: listCategory.total,
+            'Số lượng': listCategory.total,
             pv: 1398,
             amt: 2210,
         },
         {
             name: 'Tổng số tài liệu duyệt',
-            uv: listDocumentChecked.total,
+            'Số lượng': listDocumentChecked.total,
             pv: 9800,
             amt: 2290,
         },
         {
             name: 'Tổng số tài liệu chờ',
-            uv: listDocumentPending.total,
+            'Số lượng': listDocumentPending.total,
             pv: 3908,
             amt: 2000,
         },
@@ -90,7 +90,6 @@ const OverView = () => {
     useEffect(() => {
         dispatch(requestGetAllPendingDocumentOver())
     }, [])
-
 
 
     useEffect(() => {
@@ -174,7 +173,7 @@ const OverView = () => {
                                     <XAxis dataKey="name" />
                                     <YAxis />
                                     <Tooltip />
-                                    <Bar dataKey="uv" fill="#8884d8" label={{ position: 'top' }}>
+                                    <Bar dataKey="Số lượng" fill="#8884d8" label={{ position: 'top' }}>
                                         {data.map((entry, index) => (
                                             <Cell key={`cell-${index}`} fill={colors[index % 20]} />
                                         ))}

@@ -10,7 +10,7 @@ import { dayjsFormatFromNow } from "../../utils/dayjsFormat";
 import styles from './style.module.scss'
 import { EyeOutlined, FieldTimeOutlined, FileTextOutlined, FolderOpenFilled, FolderOpenOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
-import { requestGetAllDocument, requestGetAllDocumentNew } from "../../api/documents";
+import { requestGetAllDocument, requestGetAllDocumentNew, requestGetAllDocumentView } from "../../api/documents";
 import { setDataFilter } from "../../states/modules/document";
 const Tabs = () => {
   const dispatch = useDispatch();
@@ -20,9 +20,11 @@ const Tabs = () => {
 
   const listDocumentsNew = useSelector(state => state.document.listDocumentsNew);
   const listDocuments = useSelector(state => state.document.listDocuments);
+  const listDocumentsView = useSelector(state => state.document.listDocumentsView);
 
   const documentsNew = listDocumentsNew.documents
   const documents = listDocuments.documents
+  const documentsView = listDocumentsView.documents
 
   useEffect(() => {
     dispatch(requestGetAllDocumentNew())
@@ -33,6 +35,9 @@ const Tabs = () => {
     dispatch(requestGetAllDocument())
   }, [])
 
+  useEffect(() => {
+    dispatch(requestGetAllDocumentView())
+  }, [])
 
   return (
     <>
@@ -60,7 +65,7 @@ const Tabs = () => {
               ))}
             </div>
             <div className={cx("tabs__list", { show: active === "tab2" })}>
-              {documents.slice(0, 6).map((post) => (
+              {documentsView.slice(0, 6).map((post) => (
                 <div className="tabs__listItem" key={post._id}>
                   <Link to={`/post/${post._id}`}>
                   <FolderOpenFilled className={styles.iconRecentDocuments}/> 

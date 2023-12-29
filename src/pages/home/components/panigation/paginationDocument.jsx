@@ -19,7 +19,7 @@ function PaginationDocument({ listDocuments }) {
                 responsive
                 onChange={handleChangePage}
                 current={listDocuments?.page}
-                pageSize={listDocuments?.page_size || 5}
+                pageSize={listDocuments?.page_size || 12}
                 total={listDocuments?.total}
                 showSizeChanger={false}
             />

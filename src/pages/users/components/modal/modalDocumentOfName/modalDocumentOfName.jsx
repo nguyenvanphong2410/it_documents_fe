@@ -8,14 +8,12 @@ import NoData from '../../../../../components/notData';
 import { FieldTimeOutlined, FolderOpenFilled } from '@ant-design/icons';
 import { dayjsFormatFromNow } from '../../../../../utils/dayjsFormat';
 import {  EyeOutlined} from "@ant-design/icons";
-import { Navigate } from 'react-router-dom';
-
-
+import { useNavigate } from 'react-router-dom';
 
 const ModalDocumentOfName = ({ nameClick, listDocumentOfName }) => {
 
   const dispatch = useDispatch();
-  // const navigate = Navigate();
+  const navigate = useNavigate();
   const isShowModalDocumentOfName = useSelector(state => state.document.modalDocumentOfName.isShowModalDocumentOfName);
   console.log('isShowModalDocumentOfNamdffff', isShowModalDocumentOfName)
   const documents = listDocumentOfName?.documents
@@ -25,9 +23,9 @@ const ModalDocumentOfName = ({ nameClick, listDocumentOfName }) => {
     dispatch(setOpenModalDocumentOfName(false));
 
   }
-  // const handleClickView = (id) => {
-  //   navigate(`/post/${id}`);
-  // }
+  const handleClickView = (id) => {
+    navigate(`/post/${id}`);
+  }
   return (
     <>
 
@@ -73,7 +71,7 @@ const ModalDocumentOfName = ({ nameClick, listDocumentOfName }) => {
                           <Col span={4}>
                             <button className={styles.appointmentsBooking} >
                               <a 
-                              // onClick={() => handleClickView(item._id)} 
+                              onClick={() => handleClickView(item._id)} 
                               className={styles.appointmentsBookingText} >Xem</a>
                             </button>
                           </Col>

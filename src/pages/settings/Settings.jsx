@@ -74,7 +74,7 @@ const Settings = () => {
               </div>
               <label htmlFor="">Tên đầy đủ</label>
               <input type="text" placeholder={user?.fullName} value={fullName} onChange={e => setFullName(e.target.value)} />
-              <label htmlFor="">MSSV / MSCB</label>
+              <label htmlFor="">Mã số</label>
               <input type="text" placeholder={user?.mssv} value={mssv} onChange={e => setMssv(e.target.value)} />
               <label htmlFor="">Địa chỉ</label>
               <input type="text" placeholder={user?.address} value={address} onChange={e => setAddress(e.target.value)} />

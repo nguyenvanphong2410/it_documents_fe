@@ -10,6 +10,9 @@ import { FileUploader } from "react-drag-drop-files";
 import { SvgDelete } from "../../components/svgs/SvgDelete";
 import Spinner from "../../components/spinner/Spinner";
 import { useLocation } from "react-router-dom";
+import styles from './style.module.scss'
+import { EditOutlined } from "@ant-design/icons";
+import { Col, Input, Row, Typography } from "antd";
 
 const EditPost = () => {
   useEffect(() => {
@@ -19,6 +22,8 @@ const EditPost = () => {
   const path = location.pathname.split("/")[3];
   const [post, setPost] = useState([]);
   const [name, setName] = useState("");
+  const [author, setAuthor] = useState("");
+  const [publisher, setPublisher] = useState("");
   const [photos, setPhotos] = useState([]);
   const [photosDelete, setPhotosDelete] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -42,7 +47,9 @@ const EditPost = () => {
       document.title = `${res.data?.name}`;
       setPost(res.data);
       setName(res.data?.name);
+      setAuthor(res.data?.author);
       setPhotos(res.data?.photos);
+      setPublisher(res.data?.publisher);
       setDesc(res.data?.desc);
       setYear(res.data?.year);
       setCategory(res.data?.category);
@@ -125,6 +132,8 @@ const EditPost = () => {
             desc,
             category,
             year,
+            author,
+            publisher,
             photos: [...photos, ...list],
             photosDelete,
           };
@@ -135,7 +144,7 @@ const EditPost = () => {
             headers: { "Content-Type": "multipart/form-data" },
           });
           setIsUploading(false);
-          navigate(user?.isAdmin ? '/documents': '/');
+          navigate(user?.isAdmin ? '/documents' : '/');
         } catch (err) {
           setError(true);
           setIsUploading(false);
@@ -151,11 +160,13 @@ const EditPost = () => {
 
   return (
     <div className="write">
+      <h3 className={styles.titleCreateDocument}><EditOutlined /> Chỉnh sửa thông tin tài liệu </h3>
       <div className="write__wrapper">
+        <span className={styles.suggest}>Chú thích:</span>
+        <span className={styles.Obligatory}>* ( bắt buộc )</span>
         <form className="write__form" onSubmit={handleUpdate}>
           <div className="write__formGroup">
             <div className="write__formWrapper">
-              Thêm Hình Ảnh
               <div className="write__imageWrapper">
                 {thumbs &&
                   thumbs.map((thumb, index) => (
@@ -170,22 +181,11 @@ const EditPost = () => {
                     </figure>
                   ))}
               </div>
-              <FileUploader
-                id="fileInput"
-                classes="drop_area"
-                type="file"
-                label="Tải lên hoặc thả tệp ngay tại đây"
-                name="file"
-                multiple
-                hoverTitle="Thả ở đây"
-                types={fileTypes}
-                handleChange={(e) => handleFiles(e)}
-              />
               {photos && (
-                <>
+                <div className={styles.figureImageHistoryWrap}>
                   {photos.map((img, index) => {
                     return (
-                      <figure key={index} className="singlePost__image">
+                      <figure key={index} className={styles.figureImageHistory}>
                         <img src={img.src} alt={"alt"} />
 
                         <span
@@ -198,55 +198,91 @@ const EditPost = () => {
                       </figure>
                     );
                   })}
-                </>
+                </div>
               )}
+              <FileUploader
+                id="fileInput" classes="drop_area" type="file"
+                label="Tải lên ảnh tại đây" name="file"
+                multiple hoverTitle="Thả ở đây"
+                types={fileTypes} handleChange={(e) => handleFiles(e)}
+              />
+              <div className="pdfFileWrapper">
+                <label className="pdfFile" htmlFor="pdfFile">
+                  Tải lên tệp PDF <span>+</span>
+                </label>
+                <span style={{ color: "#46c046" }}>{file?.name}</span>
+                <input
+                  id="pdfFile" type="file" className="form-control" accept="application/pdf"
+                  onChange={(e) => setFile(e.target.files[0])} style={{ display: "none" }}
+                />
+              </div>
             </div>
           </div>
 
           <div className="write__formGroup" style={{ marginBottom: "24px" }}>
-            <input
-              type="text"
-              className="write__input"
-              placeholder="Tên tài liệu"
-              autoFocus={true}
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-            <input
-              type="number"
-              className="write__input"
-              style={{ fontSize: "16px" }}
-              placeholder="Năm xuất bản"
-              value={year}
-              onChange={(e) => setYear(e.target.value)}
-            />
-            <div className="pdfFileWrapper">
-              <label className="pdfFile" htmlFor="pdfFile">
-                Tải lên tệp PDF <span>+</span>
-              </label>
-              <span style={{ color: "#46c046" }}>{file?.name}</span>
-              <input
-                id="pdfFile"
-                type="file"
-                className="form-control"
-                accept="application/pdf"
-                onChange={(e) => setFile(e.target.files[0])}
-                style={{ display: "none" }}
-              />
-            </div>
-            <select
-              onChange={(e) => {
-                setCategory(e.target.value);
-              }}
-            >
-              <option style={{ display: "none" }}>Thể loại</option>
-              {categories &&
-                categories.map((category) => (
-                  <option key={category._id} value={category.slug}>
-                    {category.name}
-                  </option>
-                ))}
-            </select>
+            <Row>
+              <Col xs={24} sm={24} md={11} lg={11}>
+                <Typography.Title level={5} style={{ color: '#213ea7' }}>Tên tài liệu<span className={styles.Obligatory}> *</span></Typography.Title>
+                {/* <input
+                  type="text"
+                  className="write__input"
+                  placeholder="Tên tài liệu"
+                  autoFocus={true} value={name}
+                  onChange={(e) => setName(e.target.value)}
+                /> */}
+                <Input placeholder="Nhập tên tài liệu" value={name} onChange={(e) => setName(e.target.value)} />
+
+              </Col>
+              <Col md={2} lg={2}></Col>
+              <Col xs={24} sm={24} md={11} lg={11}>
+                <Typography.Title level={5} style={{ color: '#213ea7' }}>Tác giả <span className={styles.ifExists}>(nếu có)</span>:</Typography.Title>
+                <Input placeholder="Nhập tên tác giả nếu có" value={author} onChange={(e) => setAuthor(e.target.value)} />
+              </Col>
+            </Row>
+
+            <Row>
+              <Col xs={24} sm={24} md={11} lg={11}>
+                <Row>
+                  <Col xs={24} sm={24} md={11} lg={10}>
+                    <Typography.Title level={5} style={{ color: '#213ea7' }}>Năm xuất bản<span className={styles.Obligatory}> *</span></Typography.Title>
+                    {/* <input
+                      type="number" className="write__input" style={{ fontSize: "16px" }}
+                      placeholder="Năm xuất bản" value={year}
+                      onChange={(e) => setYear(e.target.value)}
+                    /> */}
+                    <Input type="number" value={year} placeholder="Nhập năm xuất bản" onChange={(e) => setYear(e.target.value)} />
+
+                  </Col>
+                  <Col md={2} lg={2}></Col>
+                  <Col xs={24} sm={24} md={11} lg={12}>
+                    <div className={styles.selectCategory}>
+                      <select
+                        onChange={(e) => {
+                          setCategory(e.target.value);
+                        }}
+                      >
+                        <option style={{ display: "none" }}>{category}</option>
+                        {categories &&
+                          categories.map((category) => (
+                            <option key={category._id} value={category.slug}>
+                              {category.name}
+                            </option>
+                          ))}
+                      </select>
+                    </div>
+                  </Col>
+                </Row>
+              </Col>
+              <Col md={2} lg={2}></Col>
+              <Col xs={24} sm={24} md={11} lg={11}>
+                <Typography.Title level={5} style={{ color: '#213ea7' }}>Nhà xuất bản <span className={styles.ifExists}>(nếu có)</span>:</Typography.Title>
+                <Input placeholder="Nhập nhà xuất bản nếu có" value={publisher} onChange={(e) => setPublisher(e.target.value)} />
+              </Col>
+
+            </Row>
+
+
+
           </div>
 
           <div className="write__formGroup">

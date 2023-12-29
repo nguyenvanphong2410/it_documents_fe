@@ -1,5 +1,5 @@
 .registerWrap {
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255, 0.9);
   padding: 30px 65px 40px 50px;
   border-radius: 6px;
 
@@ -26,6 +26,7 @@
 
   .noAccountText {
     margin-top: 10px;
+    font-size: 14px;
     color: rgb(10, 65, 117);
     display: flex;
     align-items: center;
@@ -35,7 +36,12 @@
 
     .switchText {
       margin-left: 6px;
-      // color: green;
+      color: blue;
+       &:hover{
+        opacity: 0.8;
+        cursor: pointer;
+        text-decoration: underline;
+       }
     }
   }
 

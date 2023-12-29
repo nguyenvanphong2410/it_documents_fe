@@ -13,10 +13,10 @@ import "dayjs/locale/vi";
 import PdfComp from "../PdfComp/PdfComp";
 import { pdfjs } from "react-pdf";
 import styles from './style.module.scss'
-import { CommentOutlined, DownloadOutlined, FieldTimeOutlined, PicLeftOutlined, UserOutlined } from "@ant-design/icons";
+import { CommentOutlined, DownloadOutlined, EyeOutlined, FieldTimeOutlined, HighlightOutlined, PicLeftOutlined, SolutionOutlined, UserOutlined } from "@ant-design/icons";
 import { Slide, ToastContainer, toast } from "react-toastify";
 import { dayjsFormatFromNow } from "../../utils/dayjsFormat";
-import { List } from "antd";
+import { Col, List, Row } from "antd";
 
 dayjs.locale("vi");
 var localizedFormat = require("dayjs/plugin/localizedFormat");
@@ -130,36 +130,107 @@ export default function SinglePost() {
           <div className="singlePost__wrapper">
             <div className="singlePost__heading">
               <h1 className="singlePost__mainTitle">{name} </h1>
-              <div className={styles.infoItem}>
-                <span className={styles.titleOrigin}><PicLeftOutlined /> Thể loại: </span>
-                <Link to={`/articles/category/${post.category}`}>
-                  <span className={styles.info}>
-                    {post.category.replace(/-/g, ' ')}
-                  </span>
-                </Link>
-              </div>
-              <div className={styles.infoItem}>
-                <span className={styles.titleOrigin}><UserOutlined /> Người đăng: </span>
-                <Link to={`/?user=${post.username}`}>
-                  <span className={styles.info}>
-                    {post.username}
-                  </span>
-                </Link>
-              </div>
-              <div className={styles.infoItem}>
-                <span className={styles.titleOrigin}><FieldTimeOutlined /> Thời gian: </span>
-                {dayjs(post.createdAt).format("LL")}
-              </div>
-              <div className={styles.infoItem}>
-                <a
-                  href={`http://localhost:5000/files/${post.pdf}`}
-                  download
-                  rel="noreferrer"
-                  target="_blank"
-                >
-                  <span className={styles.titleDown}><DownloadOutlined /> Tải xuống tại đây </span>
-                </a>
-              </div>
+
+
+              <Row>
+                <Col xs={24} sm={24} md={8} lg={8}>
+                  <div className={styles.infoItem}>
+                    <span className={styles.titleOrigin}><PicLeftOutlined /> Thể loại: </span>
+                    <Link to={`/articles/category/${post.category}`}>
+                      <span className={styles.info}>
+                        {post.category.replace(/-/g, ' ')}
+                      </span>
+                    </Link>
+                  </div>
+                </Col>
+                <Col xs={24} sm={24} md={8} lg={8} className={styles.colRight}>
+                  <div className={styles.infoItem}>
+                    <span className={styles.titleOrigin}><FieldTimeOutlined /> Thời gian đăng: </span>
+                    <span className={styles.info}>
+                      {dayjs(post.createdAt).format("LL")}
+
+                    </span>
+                  </div>
+                </Col>
+                <Col md={8} lg={8}></Col>
+              </Row>
+
+              <Row>
+                <Col xs={24} sm={24} md={8} lg={8}>
+                  <div className={styles.infoItem}>
+                    <span className={styles.titleOrigin}><UserOutlined /> Người đăng: </span>
+                    <span className={styles.info}>
+                      {post.username}
+                    </span>
+                  </div>
+                </Col>
+                <Col xs={24} sm={24} md={8} lg={8} className={styles.colRight}>
+                  <div className={styles.infoItem}>
+                    <span className={styles.titleOrigin}><SolutionOutlined /> Nhà xuất bản: </span>
+                    {post?.publisher ?
+                      <span className={styles.info}>
+                        {post?.publisher}
+
+                      </span>
+                      :
+                      <span className={styles.textUpdating}>Đang cập nhật</span>}
+
+                  </div>
+                </Col>
+                <Col md={8} lg={8}></Col>
+              </Row>
+
+
+              <Row>
+                <Col xs={24} sm={24} md={8} lg={8}>
+                  <div className={styles.infoItem}>
+                    <span className={styles.titleOrigin}><HighlightOutlined /> Tác giả: </span>
+                    {
+                      post?.author ?
+                        <span className={styles.info}> {post.author} </span>
+                        :
+                        <span className={styles.textUpdating}>Đang cập nhật</span>
+
+                    }
+                  </div>
+                </Col>
+                <Col xs={24} sm={24} md={8} lg={8} className={styles.colRight}>
+                  <div className={styles.infoItem}>
+                    <span className={styles.titleOrigin}><HighlightOutlined /> Năm xuất bản: </span>
+                    {
+                      post?.year ?
+                        <span className={styles.info}> {post.year} </span>
+                        :
+                        <span className={styles.textUpdating}>Đang cập nhật</span>
+                    }
+                  </div>
+                </Col>
+                <Col md={8} lg={8}></Col>
+              </Row>
+              <Row>
+                <Col xs={24} sm={24} md={8} lg={8}>
+                <div className={styles.infoItem}>
+                  <a
+                    // style={{ marginLeft: '10px' }}
+                    href={`http://localhost:5000/files/${post.pdf}`}
+                    download
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    <span className={styles.titleDown}><DownloadOutlined /> Tải xuống tại đây </span>
+                  </a>
+                  </div>
+                </Col>
+                <Col xs={24} sm={24} md={8} lg={8} className={styles.colRight}>
+                  <div className={styles.infoItem}>
+                    <span className={styles.titleOrigin}>
+                      <EyeOutlined /> Lượt xem {post.view}
+                    </span>
+                  </div>
+                </Col>
+                <Col md={8} lg={8}></Col>
+              </Row>
+
             </div>
             <div className="singlePost__container">
               <div className="singlePost__leftContent">
@@ -277,7 +348,6 @@ export default function SinglePost() {
                             />
                           </List.Item>
                         </div>
-
                       ))}
                     </div>
                   </div>

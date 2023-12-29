@@ -295,7 +295,7 @@ const Users = () => {
                                         // <Link to={`/?user=${item.username}`}>
 
                                         <Tag color="#2646ba" icon={<EyeOutlined />}
-                                          onClick={() => onClickName(item.fullName)}
+                                          onClick={() => onClickName(item.username)}
                                         >Xem tài liệu của
                                           <span className={styles.userNameText}>{item.fullName}</span>
                                         </Tag>

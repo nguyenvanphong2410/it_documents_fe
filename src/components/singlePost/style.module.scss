@@ -1,14 +1,20 @@
+.colRight {
+    display: flex;
+    justify-content: end;
+    padding-right: 10px;
+}
+
 .infoItem {
     margin: 10px 0;
 
     .titleOrigin {
         font-size: 15px;
-        color: gray;
-        font-weight: 600;
+        color: rgb(58, 58, 58);
+        font-weight: 700;
     }
 
     .info {
-        color: brown;
+        color: rgb(114, 108, 108);
         font-size: 14px;
         font-weight: 500;
 
@@ -63,6 +69,12 @@
     font-weight: 600;
 }
 
+.textUpdating {
+    color: gray;
+    font-style: italic;
+    font-size: 15px;
+}
+
 .itemCommentWrap {
     .commentWrap {
         .name {
@@ -84,7 +96,6 @@
                 font-size: 14px;
                 margin-right: 4px;
             }
-
         }
 
         .textComment {
@@ -95,4 +106,15 @@
             text-align: justify;
         }
     }
+}
+
+.titleDown {
+    color:blue;
+    font-size: 14px;
+}
+
+.textUpdating {
+
+  color: gray;
+  font-style: italic;
 }
