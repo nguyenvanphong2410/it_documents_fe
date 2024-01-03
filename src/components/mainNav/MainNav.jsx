@@ -231,7 +231,7 @@ const MainNav = () => {
                       }
                     />
                   }>
-                    <p style={{ color: "white", marginLeft: "8px" }}>
+                    <p className={styles.nameLogin}>
                       {user.username}
                     </p>
                   </Popover>

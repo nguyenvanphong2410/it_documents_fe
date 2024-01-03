@@ -4,6 +4,7 @@ const document = createSlice({
   name: "document",
   initialState: {
     isLoadingGetAll: false,
+    isLoadingGetDocumentsCategory: false,
     isLoadingGetDocuments: false,
     isLoadingGetDocumentsChecked: false,
     isLoadingGetAllDocumentNew: false,
@@ -18,6 +19,7 @@ const document = createSlice({
     isLoadingGetAllDocumentOfNameAdmin: false,
 
     documents: [],
+    documentsCategory: [],
     documentsChecked: [],
     listDocuments: [],
     listDocumentsNew: [],
@@ -35,6 +37,15 @@ const document = createSlice({
       page: 1,
       number_view: null,
       compare_view: null,
+      page_size: 12,
+    },
+
+    dataDocumentsCategoryFilter: {
+      search: "",
+      sort_by: "",
+      sort_order: "",
+      page: 1,
+      name_category: null,
       page_size: 12,
     },
 
@@ -163,6 +174,21 @@ const document = createSlice({
     getAllDocumentFail: (state) => ({
       ...state,
       isLoadingGetAll: false
+    }),
+
+    //GET Documents Category
+    getDocumentCategory: (state) => ({
+      ...state,
+      isLoadingGetDocumentsCategory: true
+    }),
+    getDocumentCategorySuccess: (state, action) => ({
+      ...state,
+      documentsCategory: action.payload,
+      isLoadingGetDocumentsCategory: false
+    }),
+    getDocumentCategoryFail: (state) => ({
+      ...state,
+      isLoadingGetDocumentsCategory: false
     }),
 
     //GET Documents
@@ -321,6 +347,12 @@ const document = createSlice({
     }),
 
     //DocumentsFilter
+    setDataDocumentsCategoryFilter: (state, action) => ({
+      ...state,
+      dataDocumentsCategoryFilter: { ...action.payload }
+    }),
+
+    //DocumentsFilter
     setDataDocumentsCheckedFilter: (state, action) => ({
       ...state,
       dataDocumentsCheckedFilter: { ...action.payload }
@@ -368,6 +400,7 @@ export const {
   setOpenModalDocumentOfName,
   setOpenModalDocumentOfNameAdmin,
   getDocuments, getDocumentsSuccess, getDocumentsFail,
+  getDocumentCategory, getDocumentCategorySuccess, getDocumentCategoryFail,
   getAllDocument, getAllDocumentSuccess, getAllDocumentFail,
   getDocumentsChecked, getDocumentsCheckedSuccess, getDocumentsCheckedFail,
   getAllDocumentNew, getAllDocumentNewSuccess, getAllDocumentNewFail,
@@ -378,7 +411,7 @@ export const {
   getAllDocumentOfName, getAllDocumentOfNameSuccess, getAllDocumentOfNameFail,
   getAllDocumentOfNameAdmin, getAllDocumentOfNameAdminSuccess, getAllDocumentOfNameAdminFail,
   updateViewPost, updateViewPostSuccess, updateViewPostFail,
-  setDataDocumentsCheckedFilter, setDataDocumentsFilter, setDataFilter, setDataPendingFilter, setDataPendingOverFilter, setDataCheckedFilter, setDataDocumentOfNameFilter, setDataDocumentOfNameAdminFilter
+  setDataDocumentsCategoryFilter, setDataDocumentsCheckedFilter, setDataDocumentsFilter, setDataFilter, setDataPendingFilter, setDataPendingOverFilter, setDataCheckedFilter, setDataDocumentOfNameFilter, setDataDocumentOfNameAdminFilter
 
 
 } = document.actions

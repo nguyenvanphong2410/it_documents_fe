@@ -55,7 +55,6 @@ const Home = () => {
   const documentsNew = listDocumentsNew.documents
   const documentsView = listDocumentsView.documents
 
-
   useEffect(() => {
     dispatch(requestGetDocuments())
   }, [])
@@ -104,8 +103,6 @@ const Home = () => {
 
     return () => clearTimeout(timeoutId);
   }, []);
-
-
 
   useEffect(() => {
     const getCats = async () => {
@@ -482,39 +479,53 @@ const Home = () => {
                                 </td >
                                 {user.isAdmin && post.status === false && (
                                   <td style={{ textAlign: 'center' }}>
-                                    <Tag className={styles.tagStatusPending} icon={<ClockCircleOutlined />} color="warning">
-                                      Chờ duyệt
-                                    </Tag>
+                                    <Tooltip title="Tài liệu này đang trong trạng thái chờ phê duyệt" color="#d49219">
+                                      <Tag className={styles.tagStatusPending} icon={<ClockCircleOutlined />} color="warning">
+                                        Chờ duyệt
+                                      </Tag>
+                                    </Tooltip>
                                   </td>
                                 )}
 
                                 {user.isAdmin && post.status === true && (
                                   <td style={{ textAlign: 'center' }}>
-                                    <Tag icon={<CheckCircleOutlined />} color="success">
-                                      Đã duyệt
-                                    </Tag>
+                                    <Tooltip title="Tài liệu này đang trong trạng thái đã phê duyệt" color="green">
+                                      <Tag icon={<CheckCircleOutlined />} color="success">
+                                        Đã duyệt
+                                      </Tag>
+                                    </Tooltip>
                                   </td>
                                 )}
                                 <td>
                                   <span>
                                     {post.status === false && user.isAdmin === true ? (
-                                      <Link to={`/post/${post._id}`}>
-                                        <Tag color="#8904B1" icon={<CheckOutlined />} onClick={() => handleUpdate(post._id)}>Duyệt</Tag>
-                                      </Link>
+                                      <Tooltip title="Nhấn để duyệt tài liệu này" color="#8904B1">
+                                        <Link to={`/post/${post._id}`}>
+                                          <Tag color="#8904B1" icon={<CheckOutlined />} onClick={() => handleUpdate(post._id)}>Duyệt</Tag>
+                                        </Link>
+                                      </Tooltip>
                                     ) : post.status === false ? (<Tag color="gold">gold</Tag>) :
-                                      (<Link to={`/post/${post._id}`}>
-                                        <Tag color="#2646ba" icon={<EyeOutlined />} >Xem</Tag>
-                                      </Link>)}
+                                      (
+                                        <Tooltip title="Xem chi tiết tài liệu" color="#2646ba">
+                                          <Link to={`/post/${post._id}`}>
+                                            <Tag color="#2646ba" icon={<EyeOutlined />} >Xem</Tag>
+                                          </Link>
+                                        </Tooltip>
+                                      )}
                                   </span>
                                 </td>
                                 {(user?.isAdmin || post.username === user?.username) && (
                                   <td className={styles.actionWrap}>
-                                    <Link to={`/post/edit/${post._id}`} >
-                                      <EditOutlined className={styles.actionIconEdit} />
-                                    </Link>
-                                    <DeleteOutlined className={styles.actionIconDelete}
-                                      onClick={() => onClickDelete(post._id, post.name)}
-                                    />
+                                    <Tooltip title="Chỉnh sửa thông tin" >
+                                      <Link to={`/post/edit/${post._id}`} >
+                                        <EditOutlined className={styles.actionIconEdit} />
+                                      </Link>
+                                    </Tooltip>
+                                    <Tooltip title="Xóa tài liệu" >
+                                      <DeleteOutlined className={styles.actionIconDelete}
+                                        onClick={() => onClickDelete(post._id, post.name)}
+                                      />
+                                    </Tooltip>
 
                                   </td>
                                 )}
@@ -558,11 +569,9 @@ const Home = () => {
                                               actions={[
                                                 <Tooltip title={`Tài liệu này có ${item.view} lượt xem`} color="purple">
                                                   <Link to={`/post/${item._id}`} onClick={() => handleUpdateView(item._id)}>
-
                                                     <EyeOutlined style={{ color: 'purple', fontSize: '18px' }} key="view" />
                                                     <span style={{ color: 'purple', fontSize: '18px', marginLeft: '2px' }}>
                                                       {item.view}
-
                                                     </span>
                                                   </Link>
                                                 </Tooltip>,
@@ -726,6 +735,11 @@ const Home = () => {
                                                     >{item?.name}
                                                     </Link>
                                                   </Tooltip>
+                                                  <div className={styles.itemCard} >
+                                                    <ProfileOutlined className={styles.iconOriginCard} />
+                                                    <span className={styles.textOriginCard}> Thể loại: </span>
+                                                    <span className={styles.infoOriginCard}> {item?.category.replace(/-/g, ' ')}</span>
+                                                  </div>
                                                   <div className={styles.itemCard}>
                                                     <span >
                                                       <FieldTimeOutlined className={styles.iconOriginCard} />

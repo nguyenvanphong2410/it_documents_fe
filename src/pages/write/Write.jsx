@@ -9,10 +9,11 @@ import { publicRequest, userRequest } from "../../requestMethods";
 import { FileUploader } from "react-drag-drop-files";
 import { SvgDelete } from "../../components/svgs/SvgDelete";
 import Spinner from "../../components/spinner/Spinner";
-import { Col, Input, Row, Typography } from "antd";
+import { Col, DatePicker, Input, Row, Typography } from "antd";
 import styles from './style.module.scss'
 import { FileTextOutlined, FolderOpenOutlined } from "@ant-design/icons";
 import { Slide, ToastContainer, toast } from "react-toastify";
+import SpinComponent from "../../components/spin";
 
 const Write = () => {
   useEffect(() => {
@@ -32,10 +33,24 @@ const Write = () => {
   const navigate = useNavigate();
   const [isUploading, setIsUploading] = useState(false);
   const fileTypes = ["JPG", "JPEG", "PNG", "GIF", "jfif"];
+  const [showSpin, setShowSpin] = useState(true);
+
+  const SpinComponentDelayed = () => (
+    <div className="spin-container">
+      <SpinComponent />
+    </div>
+  );
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setShowSpin(false);
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+  }, []);
 
   // Upload Pdf
   const [file, setFile] = useState(null);
-  console.log(file);
+  // console.log(file);
 
   // CKEditor
   const editorConfiguration = {
@@ -45,7 +60,7 @@ const Write = () => {
   useEffect(() => {
     const getCats = async () => {
       const res = await publicRequest.get("/category/all");
-      console.log(res.data.data.categories);
+      // console.log(res.data.data.categories);
       setCategories(res.data.data.categories);
     };
     getCats();
@@ -125,70 +140,78 @@ const Write = () => {
     }
   };
 
+  //handleDate
+  const handleDate = (date, dateString) => {
+    setYear(dateString);
+  };
   return (
+
     <div className="write">
-      <ToastContainer transition={Slide} autoClose={1000} />
-      <h3 className={styles.titleCreateDocument}> <FolderOpenOutlined /> Tạo mới tài liệu </h3>
-      <div className="write__wrapper">
-        <span className={styles.suggest}>Chú thích:</span>
-        <span className={styles.Obligatory}>* ( bắt buộc )</span>
-        <form className="write__form" onSubmit={handleSubmit}>
-          <div className="write__formGroup">
-            <div className="write__formWrapper">
+      {showSpin && <SpinComponentDelayed />}
+      {!showSpin && (
+        <>
+          <ToastContainer transition={Slide} autoClose={1000} />
+          <h3 className={styles.titleCreateDocument}> <FolderOpenOutlined /> Tạo mới tài liệu </h3>
+          <div className="write__wrapper">
+            <span className={styles.suggest}>Chú thích:</span>
+            <span className={styles.Obligatory}>* ( bắt buộc )</span>
+            <form className="write__form" onSubmit={handleSubmit}>
+              <div className="write__formGroup">
+                <div className="write__formWrapper">
 
-              <div className="write__imageWrapper">
-                {thumbs &&
-                  thumbs.map((thumb, index) => (
-                    <figure key={index} className="write__thumb">
-                      <img src={thumb} alt="" />
-                      <span
-                        className="write__iconDelete"
-                        onClick={() => handleDeleteSelectedImage(index)}
-                      >
-                        <SvgDelete color="#d63232" />
-                      </span>
-                    </figure>
-                  ))}
+                  <div className="write__imageWrapper">
+                    {thumbs &&
+                      thumbs.map((thumb, index) => (
+                        <figure key={index} className="write__thumb">
+                          <img src={thumb} alt="" />
+                          <span
+                            className="write__iconDelete"
+                            onClick={() => handleDeleteSelectedImage(index)}
+                          >
+                            <SvgDelete color="#d63232" />
+                          </span>
+                        </figure>
+                      ))}
+                  </div>
+                  <FileUploader
+                    id="fileInput"
+                    classes="drop_area"
+                    type="file"
+                    label="Tải lên ảnh tại đây"
+                    name="file"
+                    multiple
+                    hoverTitle="Thả ở đây"
+                    types={fileTypes}
+                    handleChange={(e) => handleFiles(e)}
+                  />
+                  <div className="pdfFileWrapper">
+                    <label className="pdfFile" htmlFor="pdfFile">
+                      <Row>
+                        <span className={styles.textUploadFile}> <FileTextOutlined className={styles.iconUploadFile} />Tải lên tệp PDF + <span className={styles.Obligatory}>*</span></span>
+                        <Col span={1}></Col>
+                        <Col span={18}>
+                          <div className={file?.name ? styles.nameFileWrap : ''} >
+                            <span>
+                              {file?.name}
+                            </span>
+                          </div>
+
+                        </Col>
+                      </Row>
+
+                    </label>
+
+                    <input id="pdfFile" type="file" className="form-control" accept="application/pdf" required
+                      onChange={(e) => setFile(e.target.files[0])} style={{ display: "none" }}
+                    />
+                  </div>
+                </div>
               </div>
-              <FileUploader
-                id="fileInput"
-                classes="drop_area"
-                type="file"
-                label="Tải lên ảnh tại đây"
-                name="file"
-                multiple
-                hoverTitle="Thả ở đây"
-                types={fileTypes}
-                handleChange={(e) => handleFiles(e)}
-              />
-              <div className="pdfFileWrapper">
-                <label className="pdfFile" htmlFor="pdfFile">
-                  <Row>
-                    <span className={styles.textUploadFile}> <FileTextOutlined className={styles.iconUploadFile} />Tải lên tệp PDF + <span className={styles.Obligatory}>*</span></span>
-                    <Col span={1}></Col>
-                    <Col span={18}>
-                      <div className={file?.name ? styles.nameFileWrap : ''} >
-                        <span>
-                          {file?.name}
-                        </span>
-                      </div>
-
-                    </Col>
-                  </Row>
-
-                </label>
-
-                <input id="pdfFile" type="file" className="form-control" accept="application/pdf" required
-                  onChange={(e) => setFile(e.target.files[0])} style={{ display: "none" }}
-                />
-              </div>
-            </div>
-          </div>
-          <div className="write__formGroup" style={{ marginBottom: "24px" }}>
-            <Row>
-              <Col xs={24} sm={24} md={11} lg={11}>
-                {/* <label htmlFor="">Tên tài liệu:</label> */}
-                {/* <input
+              <div className="write__formGroup" style={{ marginBottom: "24px" }}>
+                <Row>
+                  <Col xs={24} sm={24} md={11} lg={11}>
+                    {/* <label htmlFor="">Tên tài liệu:</label> */}
+                    {/* <input
                   type="text"
                   className="write__input"
                   style={{ fontSize: "14px" }}
@@ -196,73 +219,77 @@ const Write = () => {
                   autoFocus={true}
                   onChange={(e) => setName(e.target.value)}
                 /> */}
-                <Typography.Title level={5} style={{ color: '#213ea7' }}>Tên tài liệu<span className={styles.Obligatory}> *</span></Typography.Title>
-                <Input placeholder="Nhập tên tài liệu" onChange={(e) => setName(e.target.value)} />
-              </Col>
-              <Col md={2} lg={2}></Col>
-              <Col xs={24} sm={24} md={11} lg={11}>
-                {/* <input type="number" className="write__input" style={{ fontSize: "14px" }} placeholder="Nhập năm xuất bản"
-                  onChange={(e) => setYear(e.target.value)}
-                /> */}
-                <Typography.Title level={5} style={{ color: '#213ea7' }}>Tác giả <span className={styles.ifExists}>(nếu có)</span>:</Typography.Title>
-                <Input placeholder="Nhập tên tác giả nếu có" onChange={(e) => setAuthor(e.target.value)} />
-              </Col>
-            </Row>
-
-            <Row>
-              <Col xs={24} sm={24} md={11} lg={11}>
-                <Row>
-                  <Col xs={24} sm={24} md={11} lg={10}>
-
-                    <Typography.Title level={5} style={{ color: '#213ea7' }}>Năm xuất bản<span className={styles.Obligatory}> *</span></Typography.Title>
-                    <Input type="number" placeholder="Nhập năm xuất bản" onChange={(e) => setYear(e.target.value)} />
+                    <Typography.Title level={5} style={{ color: '#213ea7' }}>Tên tài liệu<span className={styles.Obligatory}> *</span></Typography.Title>
+                    <Input placeholder="Nhập tên tài liệu" onChange={(e) => setName(e.target.value)} />
                   </Col>
                   <Col md={2} lg={2}></Col>
-                  <Col xs={24} sm={24} md={11} lg={12}>
-                    <div className={styles.selectCategory}>
-                      <select onChange={(e) => { setCategory(e.target.value); }}>
-                        <option style={{ display: "none" }}>Thể loại</option>
-                        {categories &&
-                          categories.map((category) => (
-                            <option key={category._id} value={category.slug}>
-                              {category.name}
-                            </option>
-                          ))}
-                      </select>
-                    </div>
+                  <Col xs={24} sm={24} md={11} lg={11}>
+                    {/* <input type="number" className="write__input" style={{ fontSize: "14px" }} placeholder="Nhập năm xuất bản"
+                  onChange={(e) => setYear(e.target.value)}
+                /> */}
+                    <Typography.Title level={5} style={{ color: '#213ea7' }}>Tác giả <span className={styles.ifExists}>(nếu có)</span>:</Typography.Title>
+                    <Input placeholder="Nhập tên tác giả" onChange={(e) => setAuthor(e.target.value)} />
                   </Col>
-
-
                 </Row>
 
-              </Col>
-              <Col md={2} lg={2}></Col>
-              <Col xs={24} sm={24} md={11} lg={11}>
-                <Typography.Title level={5} style={{ color: '#213ea7' }}>Nhà xuất bản <span className={styles.ifExists}>(nếu có)</span>:</Typography.Title>
-                <Input placeholder="Nhập nhà xuất bản nếu có" onChange={(e) => setPublisher(e.target.value)} />
-              </Col>
-            </Row>
+                <Row>
+                  <Col xs={24} sm={24} md={11} lg={11}>
+                    <Row>
+                      <Col xs={24} sm={24} md={11} lg={10}>
+
+                        <Typography.Title level={5} style={{ color: '#213ea7' }}>Năm xuất bản<span className={styles.Obligatory}> *</span></Typography.Title>
+                        {/* <Input type="number" placeholder="Nhập năm xuất bản" onChange={(e) => setYear(e.target.value)} /> */}
+                        {/* <DatePicker placeholder="Nhập năm" onChange={(e) => setYear(e.target.value)} picker="year" /> */}
+                        <DatePicker placeholder="Nhập năm" onChange={handleDate} picker="year" />
+                      </Col>
+                      <Col md={2} lg={2}></Col>
+                      <Col xs={24} sm={24} md={11} lg={12}>
+                        <div className={styles.selectCategory}>
+                          <select onChange={(e) => { setCategory(e.target.value); }}>
+                            <option style={{ display: "none" }}>Thể loại</option>
+                            {categories &&
+                              categories.map((category) => (
+                                <option key={category._id} value={category.slug}>
+                                  {category.name}
+                                </option>
+                              ))}
+                          </select>
+                        </div>
+                      </Col>
 
 
+                    </Row>
+
+                  </Col>
+                  <Col md={2} lg={2}></Col>
+                  <Col xs={24} sm={24} md={11} lg={11}>
+                    <Typography.Title level={5} style={{ color: '#213ea7' }}>Nhà xuất bản <span className={styles.ifExists}>(nếu có)</span>:</Typography.Title>
+                    <Input placeholder="Nhập nhà xuất bản" onChange={(e) => setPublisher(e.target.value)} />
+                  </Col>
+                </Row>
+
+
+              </div>
+              <div >
+                <Typography.Title level={5} style={{ color: '#213ea7' }}>Mô tả</Typography.Title>
+                <CKEditor
+                  editor={ClassicEditor}
+                  config={editorConfiguration}
+                  className="write__textarea"
+                  onChange={(event, editor) => {
+                    setDesc(editor.getData());
+                    // console.log( { event, editor, data } );
+                  }}
+                />
+              </div>
+
+              <button className="write__submit" type="submit">
+                {isUploading ? <Spinner color="white" /> : "Tạo tài liệu"}
+              </button>
+            </form>
           </div>
-          <div >
-            <Typography.Title level={5} style={{ color: '#213ea7' }}>Mô tả</Typography.Title>
-            <CKEditor
-              editor={ClassicEditor}
-              config={editorConfiguration}
-              className="write__textarea"
-              onChange={(event, editor) => {
-                setDesc(editor.getData());
-                // console.log( { event, editor, data } );
-              }}
-            />
-          </div>
-
-          <button className="write__submit" type="submit">
-            {isUploading ? <Spinner color="white" /> : "Tạo tài liệu"}
-          </button>
-        </form>
-      </div>
+        </>
+      )}
     </div>
   );
 };

@@ -41,7 +41,20 @@ const CheckedPost = () => {
   const documents = listDocuments.documents
   const [idDelete, setIdDelete] = useState('');
   const [nameDelete, setNameDelete] = useState('');
+  const [showSpin, setShowSpin] = useState(true);
 
+  const SpinComponentDelayed = () => (
+    <div className="spin-container">
+      <SpinComponent />
+    </div>
+  );
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setShowSpin(false);
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+  }, []);
   useEffect(() => {
     dispatch(setDataCheckedFilter({ status_document: true, name_user: user?.username }))
     dispatch(requestGetAllCheckedDocument())
@@ -67,18 +80,20 @@ const CheckedPost = () => {
           user?.isAdmin ? <></> : <Col span={window.innerWidth <= 1440 ? 1 : 3} ></Col>
         }
         <Col span={user.isAdmin ? 24 : window.innerWidth <= 1440 ? 18 : 19}>
-          {!isLoading ?
 
-            <div className={styles.container}>
-              <div className={styles.headingUserWrapper}>
-                <div className={styles.headingTitle}>
-                  <span className={styles.titleNewDocument} onClick={hanleClickTitleHeading}><CheckCircleOutlined /> Tài liệu đã phê duyệt </span>
-                </div>
 
-                <div className={styles.headingOpption}>
-                  <InputSearchCheckedPost />
-                </div>
+          <div className={styles.container}>
+            <div className={styles.headingUserWrapper}>
+              <div className={styles.headingTitle}>
+                <span className={styles.titleNewDocument} onClick={hanleClickTitleHeading}><CheckCircleOutlined /> Tài liệu đã phê duyệt </span>
               </div>
+
+              <div className={styles.headingOpption}>
+                <InputSearchCheckedPost />
+              </div>
+            </div>
+            {showSpin && <SpinComponentDelayed />}
+            {!isLoading && !showSpin && (
               <Row gutter={gutter}>
                 {
                   documents?.length ?
@@ -177,16 +192,16 @@ const CheckedPost = () => {
                       }) : <NoData />
                 }
               </Row>
-            </div>
-            : <SpinComponent />
-          }
+            )}
+          </div>
+
 
           {
             user.isAdmin ? <></> :
               <PaginationChecked listDocuments={listDocuments} />
           }
           <ModalDeleteChecked
-           
+
           />
         </Col>
         {

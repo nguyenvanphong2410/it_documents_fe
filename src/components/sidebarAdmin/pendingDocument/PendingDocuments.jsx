@@ -5,7 +5,7 @@ import { requestGetAllDocument, requestGetAllPendingDocumentOver, requestGetDocu
 import { useDispatch, useSelector } from "react-redux";
 import { setDataDocumentsCheckedFilter, setDataDocumentsFilter, setOpenModalDelete } from "../../../states/modules/document";
 import ModalDelete from "./components/modalDelete/ModalDelete";
-import { Button, Popover, Radio, Select, Tag } from "antd";
+import { Button, Popover, Radio, Select, Tag, Tooltip } from "antd";
 import {
   CheckCircleOutlined,
   CheckOutlined,
@@ -53,7 +53,7 @@ const PendingDocumentAdmin = () => {
 
     return () => clearTimeout(timeoutId);
   }, []);
-  
+
   const onClickDelete = async (id, name) => {
     setIdDelete(id);
     setNameDelete(name)
@@ -186,21 +186,31 @@ const PendingDocumentAdmin = () => {
 
                   <td data-label="Thời gian đăng" ><span>{dayjsFormatSort(post?.createdAt)}</span></td >
 
+                  <Tooltip title="Tài liệu này đang trong trạng thái chờ phê duyệt" color="#d49219">
                   <Tag icon={<CheckCircleOutlined />} color="warning"> Chờ duyệt </Tag>
+                  </Tooltip>
 
                   <td>
-                    <Link to={`/post/${post._id}`}>
-                      <Tag color="#8904B1" icon={<CheckOutlined />}
-                        onClick={() => handleUpdate(post._id)}
-                      >Duyệt
-                      </Tag>
-                    </Link>
+                    <div className={styles.btnApprove}>
+                      <Tooltip title="Nhấn để duyệt tài liệu này" color="#8904B1">
+                        <Link to={`/post/${post._id}`}>
+                          <Tag color="#8904B1" icon={<CheckOutlined />}
+                            onClick={() => handleUpdate(post._id)}
+                          >Duyệt
+                          </Tag>
+                        </Link>
+                      </Tooltip>
+                    </div>
                   </td>
 
                   {(user?.isAdmin || post.username === user?.username) && (
                     <td className={styles.actionWrap}>
+                      <Tooltip title="Chỉnh sửa thông tin" >
                       <Link to={`/post/edit/${post._id}`} > <EditOutlined className={styles.actionIconEdit} /> </Link>
+                      </Tooltip>
+                      <Tooltip title="Xóa tài liệu">
                       <DeleteOutlined className={styles.actionIconDelete} onClick={() => onClickDelete(post._id, post.name)} />
+                      </Tooltip>
                     </td>
                   )}
 

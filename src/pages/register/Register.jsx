@@ -129,7 +129,7 @@ const Register = () => {
               <Col xs={24} sm={24} md={11} lg={11}>
                 <div className={styles.inputItem}>
                   <label htmlFor="" className={styles.headingTextOriginInput}>Mật khẩu<span style={{ color: 'red' }}>*</span></label><br />
-                  <input className="register__input" type="text" placeholder="Mật khẩu" id="password"
+                  <input className="register__input" type="password" placeholder="Mật khẩu" id="password"
                     name="password"
                     value={formik.values.password}
                     onChange={formik.handleChange}

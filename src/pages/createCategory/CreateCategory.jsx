@@ -5,7 +5,7 @@ import { setCategoriesDataFilter, setCategoryActive, setOpenModalAddCategory, se
 import styles from './style.module.scss';
 import ModalAddCategory from "./components/modal/modalAdd";
 import { Container } from "react-bootstrap";
-import { Image, Select, Space, Table } from 'antd';
+import { Image, Select, Space, Table, Tooltip } from 'antd';
 import { requestGetAllCategory } from "../../api/category";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import PaginationCategory from "./components/pagination/paginationCategory";
@@ -79,8 +79,12 @@ const CreateCategory = () => {
       key: 'action',
       render: (_, record) => (
         <Space size="middle" className={styles.action}>
-          <EditOutlined className={styles.actionIconEdit} onClick={() => onClickEdit(record._id, record)} />
-          <DeleteOutlined className={styles.actionIconDelete} onClick={() => onClickDelete(record._id, record.name)} />
+          <Tooltip title="Chỉnh sửa thông tin" >
+            <EditOutlined className={styles.actionIconEdit} onClick={() => onClickEdit(record._id, record)} />
+          </Tooltip>
+          <Tooltip title="Xóa tài liệu" >
+            <DeleteOutlined className={styles.actionIconDelete} onClick={() => onClickDelete(record._id, record.name)} />
+          </Tooltip>
         </Space>
       ),
     },

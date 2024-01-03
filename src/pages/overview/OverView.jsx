@@ -18,6 +18,20 @@ const OverView = () => {
     const listCategory = useSelector(state => state.category.listCategories);
     const listDocumentChecked = useSelector(state => state.document.listDocuments);
     const listDocumentPending = useSelector(state => state.document.listDocumentsPendingOver);
+    const [showSpin, setShowSpin] = useState(true);
+
+    const SpinComponentDelayed = () => (
+        <div className="spin-container">
+            <SpinComponent />
+        </div>
+    );
+    useEffect(() => {
+        const timeoutId = setTimeout(() => {
+            setShowSpin(false);
+        }, 500);
+
+        return () => clearTimeout(timeoutId);
+    }, []);
 
     const colors = ['#8433e0', '#3bc0c3', '#23c023', '#eb906f'];
 
@@ -99,9 +113,9 @@ const OverView = () => {
 
     return (
         <>
-            {
-                !isLoading ?
-
+            {showSpin && <SpinComponentDelayed />}
+            {!isLoading && !showSpin && (
+                <>
                     <div className={styles.totalWrap}>
                         <Row gutter={{
                             xs: [10, 10],
@@ -157,71 +171,72 @@ const OverView = () => {
                             </Col>
                         </Row>
                     </div>
-                    : <SpinComponent />
-            }
-            <div className={styles.charWrap}>
 
-                <Row>
-                    <Col span={18}>
-                        <div className={styles.barChartWrap}>
-                            <ResponsiveContainer width="95%" height={400}>
-                                <BarChart
-                                    className={styles.barChart}
-                                    data={data}
-                                >
-                                    <CartesianGrid strokeDasharray="3 3" />
-                                    <XAxis dataKey="name" />
-                                    <YAxis />
-                                    <Tooltip />
-                                    <Bar dataKey="Số lượng" fill="#8884d8" label={{ position: 'top' }}>
-                                        {data.map((entry, index) => (
-                                            <Cell key={`cell-${index}`} fill={colors[index % 20]} />
-                                        ))}
-                                    </Bar>
-                                </BarChart>
-                            </ResponsiveContainer>
-                            <div className={styles.textName}>
-                                <span> Biều đồ tài thống kê tổng quan</span>
-                            </div>
-                        </div>
+                    <div className={styles.charWrap}>
 
-                    </Col>
-                    <Col span={1}></Col>
-                    <Col span={5}>
-                        <div className={styles.barChartPieWrap}>
-                            <div className={styles.pieChartCenter}>
-                                <PieChart width={400} height={400} >
-                                    <Tooltip />
-                                    <Pie
-                                        data={dataPie}
-                                        labelLine={false}
-                                        label={renderCustomizedLabel}
-                                        outerRadius={90}
-                                        fill="#8884d8"
-                                        dataKey="value"
-                                    >
-                                        {dataPie.map((entry, index) => (
-                                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                        ))}
-                                    </Pie>
-                                </PieChart>
-                            </div>
-                            <div className={styles.namePie}>
-                                <span><PieChartFilled /></span>
-                                <span className={styles.textName}> Biều đồ thống kế tài liệu</span>
-                                <div className={styles.itemNote}>
-                                    <span className={styles.circlePending}></span>
-                                    <span className={styles.textPending}>Tài liệu chờ duyệt</span>
+                        <Row>
+                            <Col span={18}>
+                                <div className={styles.barChartWrap}>
+                                    <ResponsiveContainer width="95%" height={400}>
+                                        <BarChart
+                                            className={styles.barChart}
+                                            data={data}
+                                        >
+                                            <CartesianGrid strokeDasharray="3 3" />
+                                            <XAxis dataKey="name" />
+                                            <YAxis />
+                                            <Tooltip />
+                                            <Bar dataKey="Số lượng" fill="#8884d8" label={{ position: 'top' }}>
+                                                {data.map((entry, index) => (
+                                                    <Cell key={`cell-${index}`} fill={colors[index % 20]} />
+                                                ))}
+                                            </Bar>
+                                        </BarChart>
+                                    </ResponsiveContainer>
+                                    <div className={styles.textName}>
+                                        <span> Biều đồ thống kê tổng quan</span>
+                                    </div>
                                 </div>
-                                <div className={styles.itemNote}>
-                                    <span className={styles.circleChecked}></span>
-                                    <span className={styles.textChecked}>Tài liệu đã duyệt</span>
+
+                            </Col>
+                            <Col span={1}></Col>
+                            <Col span={5}>
+                                <div className={styles.barChartPieWrap}>
+                                    <div className={styles.pieChartCenter}>
+                                        <PieChart width={400} height={400} >
+                                            <Tooltip />
+                                            <Pie
+                                                data={dataPie}
+                                                labelLine={false}
+                                                label={renderCustomizedLabel}
+                                                outerRadius={90}
+                                                fill="#8884d8"
+                                                dataKey="value"
+                                            >
+                                                {dataPie.map((entry, index) => (
+                                                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                                ))}
+                                            </Pie>
+                                        </PieChart>
+                                    </div>
+                                    <div className={styles.namePie}>
+                                        <span><PieChartFilled /></span>
+                                        <span className={styles.textName}> Biều đồ thống kế tài liệu</span>
+                                        <div className={styles.itemNote}>
+                                            <span className={styles.circlePending}></span>
+                                            <span className={styles.textPending}>Tài liệu chờ duyệt</span>
+                                        </div>
+                                        <div className={styles.itemNote}>
+                                            <span className={styles.circleChecked}></span>
+                                            <span className={styles.textChecked}>Tài liệu đã duyệt</span>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    </Col>
-                </Row>
-            </div>
+                            </Col>
+                        </Row>
+                    </div>
+                </>
+            )}
         </>
     );
 };

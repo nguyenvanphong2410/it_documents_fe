@@ -77,7 +77,7 @@ const Login = () => {
           <label htmlFor="" className={styles.headingTextOriginInput}>Mật khẩu<span style={{ color: 'red' }}>*</span></label>
           <input
             className="register__input"
-            type="text"
+            type="password"
             placeholder="Nhập mật khẩu "
             id="password"
             name="password"

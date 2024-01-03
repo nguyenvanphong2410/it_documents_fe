@@ -1,4 +1,4 @@
-import { getAllCheckedDocument, getAllCheckedDocumentFail, getAllCheckedDocumentSuccess, getAllDocument, getAllDocumentFail, getAllDocumentNew, getAllDocumentNewFail, getAllDocumentNewSuccess, getAllDocumentOfName, getAllDocumentOfNameAdmin, getAllDocumentOfNameAdminFail, getAllDocumentOfNameAdminSuccess, getAllDocumentOfNameFail, getAllDocumentOfNameSuccess, getAllDocumentSuccess, getAllDocumentView, getAllDocumentViewFail, getAllDocumentViewSuccess, getAllPendingDocument, getAllPendingDocumentFail, getAllPendingDocumentOver, getAllPendingDocumentOverFail, getAllPendingDocumentOverSuccess, getAllPendingDocumentSuccess, getDocuments, getDocumentsChecked, getDocumentsCheckedFail, getDocumentsCheckedSuccess, getDocumentsFail, getDocumentsSuccess, updateViewPost, updateViewPostFail, updateViewPostSuccess } from "../../states/modules/document";
+import { getAllCheckedDocument, getAllCheckedDocumentFail, getAllCheckedDocumentSuccess, getAllDocument, getAllDocumentFail, getAllDocumentNew, getAllDocumentNewFail, getAllDocumentNewSuccess, getAllDocumentOfName, getAllDocumentOfNameAdmin, getAllDocumentOfNameAdminFail, getAllDocumentOfNameAdminSuccess, getAllDocumentOfNameFail, getAllDocumentOfNameSuccess, getAllDocumentSuccess, getAllDocumentView, getAllDocumentViewFail, getAllDocumentViewSuccess, getAllPendingDocument, getAllPendingDocumentFail, getAllPendingDocumentOver, getAllPendingDocumentOverFail, getAllPendingDocumentOverSuccess, getAllPendingDocumentSuccess, getDocumentCategory, getDocumentCategoryFail, getDocumentCategorySuccess, getDocuments, getDocumentsChecked, getDocumentsCheckedFail, getDocumentsCheckedSuccess, getDocumentsFail, getDocumentsSuccess, updateViewPost, updateViewPostFail, updateViewPostSuccess } from "../../states/modules/document";
 import callApi from "../../api/callApi";
 // import store from "@/states/configureStore";
 // import store from "../../states/configureStore";
@@ -11,6 +11,18 @@ export const requestGetDocuments = () => async (dispatch, getState) => {
         apiPath: `api/post/documents`,
         actionTypes: [getDocuments, getDocumentsSuccess, getDocumentsFail],
         variables: { ...filterDocuments },
+        dispatch,
+        getState
+    })
+}
+
+export const requestGetDocumentsCategory = () => async (dispatch, getState) => {
+    const filterDocumentsCategory = getState().document.dataDocumentsCategoryFilter
+    return callApi({
+        method: 'get',
+        apiPath: `api/post/document_category`,
+        actionTypes: [getDocumentCategory, getDocumentCategorySuccess, getDocumentCategoryFail],
+        variables: { ...filterDocumentsCategory },
         dispatch,
         getState
     })

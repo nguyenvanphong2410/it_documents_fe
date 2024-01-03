@@ -13,7 +13,7 @@ import "dayjs/locale/vi";
 import PdfComp from "../PdfComp/PdfComp";
 import { pdfjs } from "react-pdf";
 import styles from './style.module.scss'
-import { CommentOutlined, DownloadOutlined, EyeOutlined, FieldTimeOutlined, HighlightOutlined, PicLeftOutlined, SolutionOutlined, UserOutlined } from "@ant-design/icons";
+import { CalendarOutlined, CommentOutlined, DownloadOutlined, EyeOutlined, FieldTimeOutlined, HighlightOutlined, PicLeftOutlined, SolutionOutlined, UserOutlined } from "@ant-design/icons";
 import { Slide, ToastContainer, toast } from "react-toastify";
 import { dayjsFormatFromNow } from "../../utils/dayjsFormat";
 import { Col, List, Row } from "antd";
@@ -30,12 +30,14 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 export default function SinglePost() {
   const location = useLocation();
   const path = location.pathname.split("/")[2];
+  const [suggestCategory, setSuggestCategory] = useState(null);
   const [post, setPost] = useState(false);
   const { user } = useContext(Context);
   const [name, setName] = useState("");
   const [desc, setDesc] = useState("");
   const [photo, setPhoto] = useState("");
   const [photos, setPhotos] = useState([]);
+
   // cats lấy từ mongodb cho select option
   const [loading, setLoading] = useState(true);
   // console.log(objectUrl);
@@ -44,13 +46,14 @@ export default function SinglePost() {
   const [comments, setComments] = useState([]);
   const [comment, setComment] = useState("");
   const [isComment, setIsComment] = useState(false);
+
   // console.log(comment);
   const newComment = {
     username: user.username,
     documentId: post._id,
     desc: comment,
   };
-  // console.log(newComment);
+  // handleSubmit
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -83,6 +86,7 @@ export default function SinglePost() {
       setPhotos(res.data.photos);
       setLoading(false);
       setPhoto(null);
+      setSuggestCategory(res?.data?.category);
       const timer = setTimeout(() => {
         setPhoto(res.data.photo);
       }, 200);
@@ -90,7 +94,7 @@ export default function SinglePost() {
     };
     getPost();
   }, [path]);
-
+  
   // const handleDelete = async () => {
   //   try {
   //     await userRequest.delete(`/posts/${post._id}`, {
@@ -196,7 +200,7 @@ export default function SinglePost() {
                 </Col>
                 <Col xs={24} sm={24} md={8} lg={8} className={styles.colRight}>
                   <div className={styles.infoItem}>
-                    <span className={styles.titleOrigin}><HighlightOutlined /> Năm xuất bản: </span>
+                    <span className={styles.titleOrigin}><CalendarOutlined /> Năm xuất bản: </span>
                     {
                       post?.year ?
                         <span className={styles.info}> {post.year} </span>
@@ -209,22 +213,22 @@ export default function SinglePost() {
               </Row>
               <Row>
                 <Col xs={24} sm={24} md={8} lg={8}>
-                <div className={styles.infoItem}>
-                  <a
-                    // style={{ marginLeft: '10px' }}
-                    href={`http://localhost:5000/files/${post.pdf}`}
-                    download
-                    rel="noreferrer"
-                    target="_blank"
-                  >
-                    <span className={styles.titleDown}><DownloadOutlined /> Tải xuống tại đây </span>
-                  </a>
+                  <div className={styles.infoItem}>
+                    <a
+                      // style={{ marginLeft: '10px' }}
+                      href={`http://localhost:5000/files/${post.pdf}`}
+                      download
+                      rel="noreferrer"
+                      target="_blank"
+                    >
+                      <span className={styles.titleDown}><DownloadOutlined /> Tải xuống tại đây </span>
+                    </a>
                   </div>
                 </Col>
                 <Col xs={24} sm={24} md={8} lg={8} className={styles.colRight}>
                   <div className={styles.infoItem}>
                     <span className={styles.titleOrigin}>
-                      <EyeOutlined /> Lượt xem {post.view}
+                      <EyeOutlined /> Lượt xem: {post.view} lượt
                     </span>
                   </div>
                 </Col>
@@ -354,7 +358,9 @@ export default function SinglePost() {
                 </div>
               </div>
               <div className="singlePost__rightContent">
-                <Tabs />
+                <Tabs 
+                  suggestCategory = {suggestCategory}
+                />
               </div>
             </div>
           </div>

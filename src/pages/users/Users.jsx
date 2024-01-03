@@ -41,9 +41,7 @@ const Users = () => {
   const [nameClickAdmin, setNameClickAdmin] = useState(null);
 
   const SpinComponentDelayed = () => (
-
     <SpinComponent />
-
   );
 
   const [showSpin, setShowSpin] = useState(true);
@@ -231,7 +229,7 @@ const Users = () => {
 
                                           <td data-label="Tài liệu">
                                             <span className={styles.btnWrapView}>
-                                              <Tooltip title={`Xem những tài liệu của ${userData.username} `} color="#2646ba">
+                                              <Tooltip title={`Xem tài liệu của ${userData.username} `} color="#2646ba">
                                                 <Tag color="#2646ba" icon={<EyeOutlined />}
                                                   onClick={() => onClickNameAdmin(userData.username)}
                                                 >Xem</Tag>
@@ -279,54 +277,56 @@ const Users = () => {
                               <InputSearchUser usersList={usersList} />
                             </div>
                           </div>
-                          <Row gutter={[20, 7]}>
+                          {showSpin && <SpinComponentDelayed />}
+                          {!isLoadingListUser && !showSpin && (
+                            <Row gutter={[20, 7]}>
 
-                            {
-                              listUsers?.filter((item) => item.username !== 'admin')
-                              .map((item, index) => {
-                                return (
-                                  <Col key={index} xs={24} sm={12} md={12} lg={6}>
+                              {
+                                listUsers?.filter((item) => item.username !== 'admin')
+                                  .map((item, index) => {
+                                    return (
+                                      <Col key={index} xs={24} sm={12} md={12} lg={6}>
 
-                                    <Card
-                                      className={styles.cardItem}
-                                      key={index}
-                                      style={{ width: 280, marginTop: 16 }}
-                                      actions={[
-                                        // <Link to={`/?user=${item.username}`}>
+                                        <Card
+                                          className={styles.cardItem}
+                                          key={index}
+                                          style={{ width: 280, marginTop: 16 }}
+                                          actions={[
+                                            // <Link to={`/?user=${item.username}`}>
 
-                                        <Tag color="#2646ba" icon={<EyeOutlined />}
-                                          onClick={() => onClickName(item.username)}
-                                        >Xem tài liệu của
-                                          <span className={styles.userNameText}>{item.fullName}</span>
-                                        </Tag>
-                                        // </Link>
+                                            <Tag color="#2646ba" icon={<EyeOutlined />}
+                                              onClick={() => onClickName(item.username)}
+                                            >Xem tài liệu của
+                                              <span className={styles.userNameText}>{item.fullName}</span>
+                                            </Tag>
+                                            // </Link>
 
-                                      ]}
-                                    >
+                                          ]}
+                                        >
 
-                                      <Meta
-                                        avatar={<Avatar size="large" src={item?.profilePic} icon={<UserOutlined />} />}
-                                        title={item.fullName}
-                                        description={
-                                          <div>
-                                            <div>
-                                              <span style={{ fontSize: '14px', color: '#898989', fontWeight: 600 }}>Mã SV/CB: </span>
-                                              <span style={{ fontSize: '14px', color: '#2646ba' }}>{item.mssv ? item.mssv : <span style={{ fontSize: '14px', color: '#898989' }}>Đang cập nhật</span>}</span>
-                                            </div>
-                                            <div>
-                                              <span style={{ fontSize: '14px', color: '#898989', fontWeight: 600 }}>Email: </span>
-                                              <span style={{ fontSize: '14px', color: '#2646ba' }}>{item.email}</span>
-                                            </div>
-                                          </div>
-                                        }
-                                      />
-                                    </Card>
-                                  </Col>
-                                )
-                              })
-                            }
-                          </Row>
-
+                                          <Meta
+                                            avatar={<Avatar size="large" src={item?.profilePic} icon={<UserOutlined />} />}
+                                            title={item.fullName}
+                                            description={
+                                              <div>
+                                                <div>
+                                                  <span style={{ fontSize: '14px', color: '#898989', fontWeight: 600 }}>Mã SV/CB: </span>
+                                                  <span style={{ fontSize: '14px', color: '#2646ba' }}>{item.mssv ? item.mssv : <span style={{ fontSize: '14px', color: '#898989' }}>Đang cập nhật</span>}</span>
+                                                </div>
+                                                <div>
+                                                  <span style={{ fontSize: '14px', color: '#898989', fontWeight: 600 }}>Email: </span>
+                                                  <span style={{ fontSize: '14px', color: '#2646ba' }}>{item.email}</span>
+                                                </div>
+                                              </div>
+                                            }
+                                          />
+                                        </Card>
+                                      </Col>
+                                    )
+                                  })
+                              }
+                            </Row>
+                          )}
                         </div>
 
 

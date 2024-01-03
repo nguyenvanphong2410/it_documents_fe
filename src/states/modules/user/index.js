@@ -17,6 +17,7 @@ const user = createSlice({
     modalDeleteUser: {
       isShowModalDeleteUser: false,
     },
+    
 
   },
   reducers: {

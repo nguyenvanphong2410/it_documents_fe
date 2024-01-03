@@ -5,7 +5,7 @@ import { requestGetAllDocument, requestGetDocuments, requestGetDocumentsChecked 
 import { useDispatch, useSelector } from "react-redux";
 import { setDataDocumentsCheckedFilter, setDataDocumentsFilter, setOpenModalDelete } from "../../../states/modules/document";
 import ModalDelete from "./components/modalDelete/ModalDelete";
-import { Button, Popover, Radio, Select, Tag } from "antd";
+import { Button, Popover, Radio, Select, Tag, Tooltip } from "antd";
 import {
   CheckCircleOutlined,
   DeleteOutlined,
@@ -182,68 +182,78 @@ const CheckedDocumentAdmin = () => {
 
           <InputSearchAdmin />
         </div>
-       {showSpin && <SpinComponentDelayed />}
+        {showSpin && <SpinComponentDelayed />}
         {!isLoading && !showSpin && (
-            <table className={styles.tableDocumentWrap}>
-              <thead>
-                <tr >
-                  <td >STT</td>
-                  <td>Hình ảnh</td>
-                  <td>Tên tài liệu</td>
-                  <td>Đăng bởi</td>
-                  <td>Thể loại</td>
-                  <td>Tác giả</td>
-                  <td style={{ textAlign: 'center' }}>Lượt xem</td>
-                  <td style={{ textAlign: 'center' }}>Năm xuất bản</td>
-                  <td>Nhà xuất bản</td>
-                  <td>Thời gian đăng</td>
-                  <td style={{ textAlign: 'center' }}>Trạng thái</td>
-                  <td></td>
-                  {user?.isAdmin && <td></td>}
-                </tr>
-              </thead>
-              <tbody>
-                {listDocument?.map((post, index) => (
-                  <tr key={post._id}>
-                    <td data-label="STT">{index + 1} </td>
-                    <td data-label="Hình ảnh">
-                      <img
-                        style={{ width: "60px", height: "30px", objectFit: "cover" }}
-                        src={post.photos[0]?.src || ''} alt="alt"
-                      />
-                    </td>
-                    <td data-label="Tên tài liệu"> <Link className="linkTable" to={`/post/${post._id}`}> {post.name} </Link> </td>
+          <table className={styles.tableDocumentWrap}>
+            <thead>
+              <tr >
+                <td >STT</td>
+                <td>Hình ảnh</td>
+                <td>Tên tài liệu</td>
+                <td>Đăng bởi</td>
+                <td>Thể loại</td>
+                <td>Tác giả</td>
+                <td style={{ textAlign: 'center' }}>Lượt xem</td>
+                <td style={{ textAlign: 'center' }}>Năm xuất bản</td>
+                <td>Nhà xuất bản</td>
+                <td>Thời gian đăng</td>
+                <td style={{ textAlign: 'center' }}>Trạng thái</td>
+                <td></td>
+                {user?.isAdmin && <td></td>}
+              </tr>
+            </thead>
+            <tbody>
+              {listDocument?.map((post, index) => (
+                <tr key={post._id}>
+                  <td data-label="STT">{index + 1} </td>
+                  <td data-label="Hình ảnh">
+                    <img
+                      style={{ width: "60px", height: "30px", objectFit: "cover" }}
+                      src={post.photos[0]?.src || ''} alt="alt"
+                    />
+                  </td>
+                  <td data-label="Tên tài liệu"> <Link className="linkTable" to={`/post/${post._id}`}> {post.name} </Link> </td>
 
-                    <td data-label="Đăng bởi"> <Link className="linkTable" to={`/?user=${post.username}`}>{post.username} </Link> </td>
+                  <td data-label="Đăng bởi"> <Link className="linkTable" to={`/?user=${post.username}`}>{post.username} </Link> </td>
 
-                    <td data-label="Thể loại"> <Link className="linkTable" to={`/articles/category/${post.category}`} >{post.category.replace(/-/g, ' ')} </Link>  </td>
+                  <td data-label="Thể loại"> <Link className="linkTable" to={`/articles/category/${post.category}`} >{post.category.replace(/-/g, ' ')} </Link>  </td>
 
-                    <td data-label="Tác giả" ><span>{post?.author ? post?.author : <span className={styles.textUpdating}>- Đang cập nhật -</span>} </span> </td >
+                  <td data-label="Tác giả" ><span>{post?.author ? post?.author : <span className={styles.textUpdating}>- Đang cập nhật -</span>} </span> </td >
 
-                    <td data-label="Lượt xem" style={{ textAlign: 'center' }}><span >{post.view}</span> </td >
+                  <td data-label="Lượt xem" style={{ textAlign: 'center' }}><span >{post.view}</span> </td >
 
-                    <td data-label="Năm xuất bản" style={{ textAlign: 'center' }}> <span>{post.year}</span> </td >
+                  <td data-label="Năm xuất bản" style={{ textAlign: 'center' }}> <span>{post.year}</span> </td >
 
-                    <td data-label="Nhà xuất bản"><span>{post?.publisher ? post?.publisher : <span className={styles.textUpdating}>- Đang cập nhật -</span>} </span> </td >
+                  <td data-label="Nhà xuất bản"><span>{post?.publisher ? post?.publisher : <span className={styles.textUpdating}>- Đang cập nhật -</span>} </span> </td >
 
-                    <td data-label="Thời gian đăng" ><span>{dayjsFormatSort(post?.createdAt)}</span></td >
-
+                  <td data-label="Thời gian đăng" ><span>{dayjsFormatSort(post?.createdAt)}</span></td >
+                  <Tooltip title="Tài liệu này đang trong trạng thái đã phê duyệt" color="green">
                     <Tag icon={<CheckCircleOutlined />} color="success"> Đã duyệt </Tag>
+                  </Tooltip>
+                  <td>
+                    <div className={styles.btnApprove}>
+                      <Tooltip title="Xem chi tiết tài liệu" color="#2646ba">
+                        <Link to={`/post/${post._id}`}><Tag color="#2646ba" icon={<EyeOutlined />} >Xem</Tag> </Link>
+                      </Tooltip>
+                    </div>
+                  </td>
 
-                    <td> <Link to={`/post/${post._id}`}><Tag color="#2646ba" icon={<EyeOutlined />} >Xem</Tag> </Link></td>
-
-                    {(user?.isAdmin || post.username === user?.username) && (
-                      <td className={styles.actionWrap}>
+                  {(user?.isAdmin || post.username === user?.username) && (
+                    <td className={styles.actionWrap}>
+                      <Tooltip title="Chỉnh sửa thông tin" >
                         <Link to={`/post/edit/${post._id}`} > <EditOutlined className={styles.actionIconEdit} /> </Link>
+                      </Tooltip>
+                      <Tooltip title="Xóa tài liệu" >
                         <DeleteOutlined className={styles.actionIconDelete} onClick={() => onClickDelete(post._id, post.name)} />
-                      </td>
-                    )}
+                      </Tooltip>
+                    </td>
+                  )}
 
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-         )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
         <PanigationAdminChecked listDocuments={listDocumentChecked} />
       </div>
 

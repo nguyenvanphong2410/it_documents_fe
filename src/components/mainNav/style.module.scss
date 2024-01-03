@@ -8,6 +8,11 @@
     align-items: center;
 }
 
+.nameLogin {
+    color: white;
+    margin-left: 8px;
+}
+
 .popoverMainNavWrap {
     font-size: 16px;
 
@@ -21,7 +26,7 @@
 
         .iconPending {
             margin-right: 4px;
-            
+
         }
 
         .iconChecked {
@@ -38,10 +43,12 @@
 
     .textLogout {
         color: red;
+
         &:hover {
             opacity: 0.6;
             cursor: pointer;
         }
+
         .iconLogout {
             margin-right: 4px;
         }
@@ -130,6 +137,9 @@
     .logo {
         width: 160px;
     }
+
+    .nameLogin {
+    font-size: 12px;}
 
     .mainNavRightOption {
         .optionRight {
