@@ -104,7 +104,7 @@
       margin-top: 11px;
 
       .titleLink {
-        color: #1c3694;
+        color:#1c3694 ;
       }
     }
   }
@@ -153,7 +153,6 @@
   box-shadow: rgba(121, 121, 121, 0.3) 0px 20px 29px 0px;
   
 }
-
 .textUpdating {
   color: gray;
   font-style: italic;
@@ -206,12 +205,6 @@
   }
 }
 
-.btnChangeStatus {
-  box-shadow: rgba(121, 121, 121, 0.3) 0px 7px 29px 0px;
-
-}
-
-
 .container {
   margin-top: -40px;
   margin-bottom: 30px;
@@ -260,10 +253,6 @@
 }
 
 .btnWrapView {
-  .btn{
-    box-shadow: rgba(121, 121, 121, 0.3) 0px 7px 29px 0px;
-  }
-
   &:hover {
     opacity: 0.6;
     cursor: pointer;
@@ -286,12 +275,11 @@
       .title {
         font-size: 16px;
       }
-
+      
     }
   }
-
-  .headingUserWrapper {
-    .textUser {
+  .headingUserWrapper{
+    .textUser{
       display: none;
     }
   }
@@ -311,11 +299,9 @@
       }
     }
   }
-
-  .headingUserWrapper {
+  .headingUserWrapper{
     width: 100%;
-
-    .textUser {
+    .textUser{
       display: none;
     }
   }
@@ -344,11 +330,9 @@
   .headingOpption {
     margin-left: 18px;
   }
-
-  .headingUserWrapper {
+  .headingUserWrapper{
     width: 100%;
-
-    .headingTitle {
+    .headingTitle{
       display: none;
     }
   }

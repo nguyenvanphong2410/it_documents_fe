@@ -2,6 +2,7 @@
 @import "../../styles/variables.scss";
 
 .settings {
+  width: 700px;
   $this: &;
   @include spacingM;
   padding-top: 32px;
@@ -17,13 +18,8 @@
   &__heading {
     margin-bottom: 16px;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    flex: 0 0 66.6666666667%;
-    max-width: 66.6666666667%;
-    height: 100%;
-    display: flex;
-    flex-wrap: wrap;
 
     @include md {
       flex: 0 0 83.3333333333%;
@@ -45,7 +41,7 @@
   }
 
   &__mainTitle {
-    @include font-xl;
+    font-size: 30px;
     font-weight: 700;
     color: $neu-12;
     padding: 24px 0;
@@ -125,16 +121,21 @@
     display: flex;
     flex-direction: column;
     transition: all 0.4s 0s ease;
+    position: relative;
+    justify-content: center;
+    align-items: center;
   }
-
+  
   &__profilePic {
+    
+    box-shadow: rgba(121, 121, 121, 0.3) 0px 20px 29px 0px;
     width: 160px;
     height: 160px;
     border-radius: 100%;
     overflow: hidden;
     margin-bottom: 10px;
     border: 5px solid white;
-    box-shadow: 0px 0px 0px 1px rgba($m-02, 0.5);
+    // box-shadow: 0px 0px 0px 1px rgba($m-02, 0.5);
     cursor: pointer;
     transition: all 0.4s ease;
     position: relative;
@@ -189,8 +190,9 @@
   }
 
   input {
-    color: $neu-12;
-    margin-top: 10px;
+    color: #585858;
+    font-size: 15px;
+    margin-top: 5px;
     margin-bottom: 10px;
     height: 30px;
     border: none;

@@ -5,7 +5,7 @@ import callApi from "../../api/callApi";
 
 export const requestGetDocuments = () => async (dispatch, getState) => {
     const filterDocuments = getState().document.dataDocumentsFilter
-    console.log('fiter api requestGetDocuments', filterDocuments)
+    // console.log('fiter api requestGetDocuments', filterDocuments)
     return callApi({
         method: 'get',
         apiPath: `api/post/documents`,
@@ -30,7 +30,7 @@ export const requestGetDocumentsCategory = () => async (dispatch, getState) => {
 
 export const requestGetDocumentsChecked = () => async (dispatch, getState) => {
     const filterDocumentsChecked = getState().document.dataDocumentsCheckedFilter
-    console.log('fiter api requestGetDocumentsChecked', filterDocumentsChecked)
+    // console.log('fiter api requestGetDocumentsChecked', filterDocumentsChecked)
     return callApi({
         method: 'get',
         apiPath: `api/post/documents_checked`,
@@ -43,7 +43,7 @@ export const requestGetDocumentsChecked = () => async (dispatch, getState) => {
 
 export const requestGetAllDocument = () => async (dispatch, getState) => {
     const filter = getState().document.dataFilter
-    console.log('fiter api requestGetAllDocument', filter)
+    // console.log('fiter api requestGetAllDocument', filter)
     return callApi({
         method: 'get',
         apiPath: `api/post/all_document`,
@@ -80,7 +80,7 @@ export const requestGetAllDocumentView = () => async (dispatch, getState) => {
 
 export const requestGetAllPendingDocument = () => async (dispatch, getState) => {
     const pendingFilter = getState().document.dataPendingFilter
-    console.log('fiter api requestGetAllPendingDocument', pendingFilter)
+    // console.log('fiter api requestGetAllPendingDocument', pendingFilter)
     return callApi({
         method: 'get',
         apiPath: `api/post/all_document_pending`,
@@ -93,7 +93,7 @@ export const requestGetAllPendingDocument = () => async (dispatch, getState) => 
 
 export const requestGetAllCheckedDocument = () => async (dispatch, getState) => {
     const checkedFilter = getState().document.dataCheckedFilter
-    console.log('fiter api requestGetAllPendingDocument', checkedFilter)
+    // console.log('fiter api requestGetAllPendingDocument', checkedFilter)
     return callApi({
         method: 'get',
         apiPath: `api/post/all_document_checked`,
@@ -118,7 +118,7 @@ export const requestGetAllPendingDocumentOver = () => async (dispatch, getState)
 
 export const requestGetAllDocumentOfName = () => async (dispatch, getState) => {
     const documentOfFilter = getState().document.dataDocumentOfNameFilter
-    console.log('fiter api requestGetAllDocumentOfName', documentOfFilter)
+    // console.log('fiter api requestGetAllDocumentOfName', documentOfFilter)
     return callApi({
         method: 'get',
         apiPath: `api/post/all_document_name`,
@@ -131,7 +131,7 @@ export const requestGetAllDocumentOfName = () => async (dispatch, getState) => {
 
 export const requestGetAllDocumentOfNameAdmin = () => async (dispatch, getState) => {
     const documentOfNameAdminFilter = getState().document.dataDocumentOfNameAdminFilter
-    console.log('fiter api requestGetAllDocumentOfNameAdmin', documentOfNameAdminFilter)
+    // console.log('fiter api requestGetAllDocumentOfNameAdmin', documentOfNameAdminFilter)
     return callApi({
         method: 'get',
         apiPath: `api/post/all_document_name`,
@@ -154,7 +154,7 @@ export const requestGetDetailsCategory = (id) => async (dispatch, getState) => {
 }
 
 export const requestUpdateViewPost = (id) => async (dispatch, getState) => {
-    console.log('id view upadte', id)
+    // console.log('id view upadte', id)
     return callApi({
         method: 'patch',
         apiPath: `api/post/updatedView/${id}`,

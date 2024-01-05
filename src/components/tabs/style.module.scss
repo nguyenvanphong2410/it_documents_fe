@@ -24,6 +24,11 @@
     color: #0f2f7f;
     font-size: 20px;
     font-weight: 700;
+     
+    &:hover{
+        cursor: pointer;
+        opacity: 0.8;
+    }
 }
 
 .timeRecentDocuments {

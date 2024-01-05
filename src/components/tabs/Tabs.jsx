@@ -12,22 +12,19 @@ import { CaretRightOutlined, EyeOutlined, FieldTimeOutlined, FileTextOutlined, F
 import { useDispatch, useSelector } from "react-redux";
 import { requestGetAllDocument, requestGetAllDocumentNew, requestGetAllDocumentView, requestGetDocumentsCategory, requestUpdateViewPost } from "../../api/documents";
 import { setDataDocumentsCategoryFilter, setDataFilter } from "../../states/modules/document";
-const Tabs = ({ suggestCategory }) => {
+import NoData from "../notData";
 
-  // console.log('đây là category cua Tab', suggestCategory)
+const Tabs = ({ suggestCategory }) => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [active, setActive] = useState("tab1");
-
   const filter = useSelector(state => state.document.dataFilter)
-
   const listDocumentsCategory = useSelector(state => state.document.documentsCategory);
   const listDocumentsView = useSelector(state => state.document.listDocumentsView);
-
+  
   const documentsCategory = listDocumentsCategory.documents
-  // console.log('Danhx sacfh goif ys Cate', documentsCategory)
   const documentsView = listDocumentsView.documents
 
   useEffect(() => {
@@ -65,34 +62,36 @@ const Tabs = ({ suggestCategory }) => {
             </div>
           </div>
           <div className={cx("tabs__list", { show: active === "tab1" })}>
-            {documentsCategory?.slice(0, 6).map((post) => (
-              <div className="tabs__listItem" key={post?._id}>
+            {documentsCategory?.length > 0 ?
+              documentsCategory?.slice(0, 6).map((post) => (
+                <div className="tabs__listItem" key={post?._id}>
 
-                <div onClick={() => handleClickItemTab(post._id)}>
-                  <FolderOpenFilled className={styles.iconRecentDocuments} />
-                  <span className={styles.nameRecentDocuments}>{post?.name}</span>
+                  <div onClick={() => handleClickItemTab(post._id)}>
+                    <FolderOpenFilled className={styles.iconRecentDocuments} />
+                    <span className={styles.nameRecentDocuments}>{post?.name}</span>
+                  </div>
+
+                  <div>
+                    <span className={styles.tabItemTextOrigin}>
+                      <FieldTimeOutlined /> Thời gian:
+                    </span>
+                    <span className={styles.tabItemText}>
+                      {dayjsFormatFromNow(post?.createdAt)}
+                    </span>
+                  </div>
+
+                  <div>
+                    <span className={styles.tabItemTextOrigin}>
+                      <ProfileOutlined /> Thể loại:
+                    </span>
+                    <span className={styles.tabItemText}>
+                      {post?.category.replace(/-/g, ' ')}
+                    </span>
+                  </div>
+
                 </div>
-
-                <div>
-                  <span className={styles.tabItemTextOrigin}>
-                    <FieldTimeOutlined /> Thời gian:
-                  </span>
-                  <span className={styles.tabItemText}>
-                    {dayjsFormatFromNow(post?.createdAt)}
-                  </span>
-                </div>
-
-                <div>
-                  <span className={styles.tabItemTextOrigin}>
-                    <ProfileOutlined /> Thể loại:
-                  </span>
-                  <span className={styles.tabItemText}>
-                    {post?.category.replace(/-/g, ' ')}
-                  </span>
-                </div>
-
-              </div>
-            ))}
+              ))
+              : <><NoData/></>}
           </div>
           <div className={cx("tabs__list", { show: active === "tab2" })}>
             {documentsView?.slice(0, 6).map((post) => (

@@ -35,7 +35,7 @@ const PeopleGrid = () => {
             <h3 className="peopleGrid__name">
               Nguyễn Văn Phong
             </h3>
-            <p className="peopleGrid__description">K64ATT - 646502</p>
+            <p className="peopleGrid__description">K64ATTT - 646502</p>
           </article>
 
           <article className="peopleGrid__item">

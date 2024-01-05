@@ -1,9 +1,18 @@
-.loginWrap{
-  background-color: rgba(255, 255, 255, 0.9);
+.loginWrap {
+  background-color: rgb(255, 255, 255);
   padding: 50px;
   border-radius: 6px;
+  box-shadow: rgba(121, 121, 121, 0.7) 0px 7px 29px 0px;
 
-  .headingTextlogin{
+  .messageError {
+    color: red;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .headingTextlogin {
     color: #12266e;
     font-size: 50px;
     display: flex;
@@ -12,13 +21,13 @@
     text-align: center;
   }
 
-  .headingTextOriginInput{
+  .headingTextOriginInput {
     font-weight: 700;
     color: #12266e;
     font-size: 16px;
   }
 
-  .noAccountText{
+  .noAccountText {
     margin-top: 14px;
     font-size: 14px;
     color: rgb(10, 65, 117);
@@ -27,14 +36,15 @@
     justify-content: center;
     text-align: center;
 
-    .switchText{
+    .switchText {
       margin-left: 6px;
       color: blue;
-       &:hover{
+
+      &:hover {
         opacity: 0.8;
         cursor: pointer;
         text-decoration: underline;
-       }
+      }
     }
   }
 }

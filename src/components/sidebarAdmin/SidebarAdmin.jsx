@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { CheckCircleOutlined, CheckSquareOutlined, CompressOutlined, FieldTimeOutlined, FileOutlined, FileTextOutlined, FullscreenOutlined, HolderOutlined, InfoCircleOutlined, LogoutOutlined, PieChartOutlined, ProfileOutlined, UserOutlined } from '@ant-design/icons';
-import { Avatar, Breadcrumb, Image, Layout, Menu, Popover, theme } from 'antd';
+import { BorderlessTableOutlined, CheckCircleOutlined, CheckSquareOutlined, CompressOutlined, FieldTimeOutlined, FileOutlined, FileTextOutlined, FullscreenOutlined, HolderOutlined, InfoCircleOutlined, LogoutOutlined, MehOutlined, PieChartOutlined, ProfileOutlined, SmileOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons';
+import { Avatar, Breadcrumb, Image, Layout, Menu, Popover, Tooltip, theme } from 'antd';
 // import MainNav from '../mainNav/MainNav';
 import styles from './style.module.scss'
 import { Context } from '../../context/Context';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import logo from "../../assets/images/logo/logormbg.png"
 import { Routes, Route } from "react-router-dom";
 import PageNotFound from '../pageNotFound/PageNotFound';
@@ -21,10 +21,13 @@ import OverView from '../../pages/overview/OverView';
 import Articles from '../../pages/articles/Articles';
 import PendingPost from '../../pages/pendingPost/PendingPost';
 import Users from '../../pages/users/Users';
+import UserOfficer from '../../pages/users/components/pages/userOfficer/UserOfficer';
 import CreateCategory from '../../pages/createCategory/CreateCategory';
 import CheckedPost from '../../pages/checkedPost/CheckedPost';
 import CheckedDocumentAdmin from './checkedDocument/CheckedDocuments'
 import PendingDocumentAdmin from './pendingDocument/PendingDocuments';
+import UserStudent from '../../pages/users/components/pages/userStudent/UserStudent';
+import UserOther from '../../pages/users/components/pages/userOther/UserOther';
 
 
 const SidebarAdmin = () => {
@@ -37,17 +40,23 @@ const SidebarAdmin = () => {
             label,
         };
     }
+    const navigate = useNavigate();
+
     const items = [
         // <Image />,
         getItem(<Link to="/" onClick={() => handleBreadcrumb('Tổng quan')}>Tổng quan</Link>, '1', <PieChartOutlined />),
-        getItem(<Link to="/users" onClick={() => handleBreadcrumb('Quản lý người dùng')}>Quản lý người dùng</Link>, '2', <UserOutlined />),
-        // getItem(<Link to="/documents" onClick={() => handleBreadcrumb('Quản lý tài liệu')} >Quản lý tài liệu</Link>, '3', <FileTextOutlined />),
-        getItem('Quản lý tài liệu', 'sub1', <FileTextOutlined />, [
-            getItem(<Link to="/documents" onClick={() => handleBreadcrumb('Tất cả tài liệu')}>Tất cả tài liệu</Link>, '3', <HolderOutlined />),
-            getItem(<Link to="/pendingPostAdmin" onClick={() => handleBreadcrumb('Tài liệu chờ')}>Tài liệu chờ</Link>, '4', <FieldTimeOutlined />),
-            getItem(<Link to="/checkedPostAdmin" onClick={() => handleBreadcrumb('Tài liệu đã duyệt')}>Tài liệu đã duyệt</Link>, '5', <CheckCircleOutlined />),
+        getItem('Quản lý người dùng', 'sub1', <UserOutlined />, [
+            getItem(<Link to="/users" onClick={() => handleBreadcrumb('Tất cả người dùng')}>Tất cả</Link>, '3', <TeamOutlined />),
+            getItem(<Link to="/officer" onClick={() => handleBreadcrumb('Cán bộ')}>Cán bộ</Link>, '4', <MehOutlined />),
+            getItem(<Link to="/student" onClick={() => handleBreadcrumb('Sinh viên')}>Sinh viên</Link>, '5', <SmileOutlined />),
+            getItem(<Link to="/other" onClick={() => handleBreadcrumb('Người dùng kháchác')}>Người dùng khác</Link>, '6', <BorderlessTableOutlined />),
         ]),
-        getItem(<Link to="/createCategory" onClick={() => handleBreadcrumb('Quản lý thể loại')}>Quản lý thể loại</Link>, '6', <ProfileOutlined />),
+        getItem('Quản lý tài liệu', 'sub2', <FileTextOutlined />, [
+            getItem(<Link to="/documents" onClick={() => handleBreadcrumb('Tất cả tài liệu')}>Tất cả tài liệu</Link>, '7', <HolderOutlined />),
+            getItem(<Link to="/pendingPostAdmin" onClick={() => handleBreadcrumb('Tài liệu chờ')}>Tài liệu chờ</Link>, '8', <FieldTimeOutlined />),
+            getItem(<Link to="/checkedPostAdmin" onClick={() => handleBreadcrumb('Tài liệu đã duyệt')}>Tài liệu đã duyệt</Link>, '9', <CheckCircleOutlined />),
+        ]),
+        getItem(<Link to="/createCategory" onClick={() => handleBreadcrumb('Quản lý thể loại')}>Quản lý thể loại</Link>, '10', <ProfileOutlined />),
     ];
     const [titleBreadcrumb, setTitleBreadcrumb] = useState('Tổng quan');
 
@@ -104,7 +113,7 @@ const SidebarAdmin = () => {
             }}
         >
 
-            <Sider className={styles.siderWrap} collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
+            <Sider width={220} className={styles.siderWrap} collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
                 <Image className={styles.logo} src={logo} preview={false} />
                 <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} />
             </Sider>
@@ -112,7 +121,9 @@ const SidebarAdmin = () => {
                 <Header style={{ padding: 0, background: colorBgContainer }} >
                     <div className={styles.headerAdminWrap} >
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginRight: '20px' }}>
-                            <CompressOutlined className={styles.iconFullScreen} onClick={handleToggleFullscreen} />
+                            <Tooltip title="Mở rộng màn hình">
+                                <CompressOutlined className={styles.iconFullScreen} onClick={handleToggleFullscreen} />
+                            </Tooltip>
                             <Avatar src={user.profilePic ? user.profilePic : <UserOutlined />} size="large" />
                             <div className={styles.nameAdminWrap}>
                                 <Popover style={{ width: '50px' }} title={
@@ -175,7 +186,7 @@ const SidebarAdmin = () => {
                                 path="/checkedPostAdmin"
                                 element={user ? <CheckedDocumentAdmin /> : <Register />}
                             />
-                             <Route
+                            <Route
                                 path="/pendingPostAdmin"
                                 element={user ? <PendingDocumentAdmin /> : <Register />}
                             />
@@ -184,6 +195,10 @@ const SidebarAdmin = () => {
                                 element={user ? <CheckedPost /> : <Login />}
                             />
                             <Route path="/users" element={user ? <Users /> : <Register />} />
+                            <Route path="/officer" element={user ? <UserOfficer /> : <Register />} />
+                            <Route path="/student" element={user ? <UserStudent /> : <Register />} />
+                            <Route path="/other" element={user ? <UserOther /> : <Register />} />
+
                             <Route
                                 path="/createCategory"
                                 element={user ? <CreateCategory /> : <Register />}

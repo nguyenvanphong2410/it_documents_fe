@@ -7,6 +7,7 @@ import * as Yup from "yup";
 import styles from './style.module.scss'
 import { Col, Row } from "antd";
 import { Slide, ToastContainer, toast } from "react-toastify";
+import { createUser } from "../../services/Api";
 
 const Register = () => {
 
@@ -14,6 +15,7 @@ const Register = () => {
   // const [email, setEmail] = useState("");
   // const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
+  const [messageError, setMessageError] = useState("");
 
   const formik = useFormik({
     initialValues: {
@@ -22,7 +24,9 @@ const Register = () => {
       password: "",
       fullName: "",
       mssv: "",
-      address: ""
+      address: "",
+      option: "1",
+      class: "",
     },
     validationSchema: Yup.object({
       // username: Yup.string()
@@ -40,29 +44,58 @@ const Register = () => {
         ),
     }),
     onSubmit: async (values) => {
-      try {
-        const res = await userRequest.post("/auth/register", {
-          username: values.username,
-          email: values.email,
-          password: values.password,
-          fullName: values.fullName,
-          mssv: values.mssv,
-          address: values.address
-        });
-        if (res) {
+      // try {
+      // const res = await userRequest.post("/auth/register", {
+      //   username: values.username,
+      //   email: values.email,
+      //   password: values.password,
+      //   fullName: values.fullName,
+      //   mssv: values.mssv,
+      //   address: values.address,
+      //   option: values.option,
+      //   class: values.class
+      // });
+      // if (res) {
+      //   toast.success('Đăng ký thành công')
+      //   // setTimeout(() => {
+      //   //   res.data && window.location.replace("/login");
+      //   // }, 2000);
+      // }
+
+      // } catch (err) {
+      //   console.log('loilaaaaaaaa: ', err)
+      //   toast.error('Đăng ký thất bại !')
+      //   setError(true);
+      //   setTimeout(() => {
+      //     setError(false);
+      //   }, 3000);
+      // }
+      createUser({
+        username: values.username,
+        email: values.email,
+        password: values.password,
+        fullName: values.fullName,
+        mssv: values.mssv,
+        address: values.address,
+        option: values.option,
+        class: values.class
+      }, {})
+        .then((data) => {
+          // console.log('dataaa then', data.data)
           toast.success('Đăng ký thành công')
           setTimeout(() => {
-            res.data && window.location.replace("/login");
+            window.location.replace("/login");
           }, 2000);
-        }
-
-      } catch (err) {
-        toast.error('Đăng ký thất bại !')
-        setError(true);
-        setTimeout(() => {
-          setError(false);
-        }, 2000);
-      }
+        })
+        .catch((data) => {
+          console.log('data catch', data?.response?.data?.message);
+          setError(true);
+          setTimeout(() => {
+            setError(false);
+          }, 8000);
+          setMessageError(data?.response?.data?.message)
+          toast.error('Đăng ký thất bại !')
+        })
     },
   });
 
@@ -76,6 +109,42 @@ const Register = () => {
         <div className={styles.registerWrap}>
           <h2 className={styles.headingTextRegister}>Đăng ký</h2>
           <form onSubmit={formik.handleSubmit}>
+            
+              {error && (
+                <span className={styles.messageError}> {messageError}</span>
+              )}
+            
+            <Row>
+              <Col xs={24} sm={24} md={24} lg={24}>
+                <label htmlFor="" className={styles.headingTextOriginInput}>Bạn là: <span style={{ color: 'red' }}>*</span></label>
+                <span className={styles.optionLabel}>
+                  <input
+                    value={"1"}
+                    onChange={formik.handleChange}
+                    type="radio" id="sv" name="option" required defaultChecked
+                  />
+                  <label className={styles.text} for="sv">Sinh viên</label>
+                </span>
+                <span className={styles.optionLabel}>
+                  <input
+                    value={"2"}
+                    onChange={formik.handleChange}
+                    type="radio" id="cb" name="option" required
+                  />
+                  <label className={styles.text} for="cb">Cán bộ</label>
+                </span>
+                <span className={styles.optionLabel}>
+                  <input
+                    value={"3"}
+                    onChange={formik.handleChange}
+                    type="radio" id="other" name="option" required
+                  />
+                  <label className={styles.text} for="other">Khác</label>
+                </span>
+              </Col>
+              {/* <Col md={2} lg={2}></Col>
+              <Col xs={24} sm={24} md={11} lg={11}></Col> */}
+            </Row>
             <Row>
               <Col xs={24} sm={24} md={11} lg={11}>
                 <div className={styles.inputItem}>
@@ -143,26 +212,55 @@ const Register = () => {
             </Row>
             <Row>
               <Col xs={24} sm={24} md={11} lg={11}>
-                <div className={styles.inputItem}>
-                  <label htmlFor="" className={styles.headingTextOriginInput}>Mã SV/CB<span style={{ color: 'red' }}>*</span></label><br />
-                  <input
-                    className="register__input"
-                    type="text"
-                    id="mssv"
-                    name="mssv"
-                    placeholder="Nhập mã SV/CB"
-                    value={formik.values.mssv}
-                    onChange={formik.handleChange}
-                    required
-                    autoComplete="off"
-                  />
-                  {formik.errors.mssv && (
-                    <p style={{ color: 'red' }}> {formik.errors.mssv} </p>
-                  )}
-                </div>
+                {
+                  formik.values.option === '3' ? <></> :
+                    <div className={styles.inputItem}>
+                      <label htmlFor="" className={styles.headingTextOriginInput}>Mã số<span style={{ color: 'red' }}>*</span></label><br />
+                      <input
+                        className="register__input"
+                        type="text"
+                        id="mssv"
+                        name="mssv"
+                        placeholder="Nhập mã số"
+                        value={formik.values.mssv}
+                        onChange={formik.handleChange}
+                        required
+                        autoComplete="off"
+                      />
+                      {formik.errors.mssv && (
+                        <p style={{ color: 'red' }}> {formik.errors.mssv} </p>
+                      )}
+                    </div>
+
+                }
               </Col>
               <Col md={2} lg={2}></Col>
               <Col xs={24} sm={24} md={11} lg={11}>
+                {
+                  formik.values.option === '2' || formik.values.option === '3' ? <></> :
+                    <div className={styles.inputItem}>
+                      <label htmlFor="" className={styles.headingTextOriginInput}>Lớp<span style={{ color: 'red' }}>*</span></label><br />
+                      <input
+                        className="register__input"
+                        type="select"
+                        id="class"
+                        name="class"
+                        placeholder="Nhập tên lớp"
+                        value={formik.values.class}
+                        onChange={formik.handleChange}
+                        // required
+                        autoComplete="off"
+                      />
+                      {formik.errors.mssv && (
+                        <p style={{ color: 'red' }}> {formik.errors.address} </p>
+                      )}
+                    </div>
+                }
+              </Col>
+
+            </Row>
+            <Row>
+              <Col span={24}>
                 <div className={styles.inputItem}>
                   <label htmlFor="" className={styles.headingTextOriginInput}>Địa chỉ</label><br />
                   <input
@@ -181,9 +279,7 @@ const Register = () => {
                   )}
                 </div>
               </Col>
-
             </Row>
-
             <Row>
               <Col span={24}>
                 <button className={styles.btnRegister} type="submit">
@@ -196,11 +292,11 @@ const Register = () => {
           <div className={styles.noAccountText}>
             Đã có tài khoản? <Link to="/login" className={styles.switchText}>Đăng nhập</Link>
           </div>
-          {error && (
+          {/* {error && (
             <span className="register__error" style={{ marginTop: '10px' }}>
               Email người dùng hoặc tên người dùng đã tồn tại!
             </span>
-          )}
+          )} */}
         </div>
       </div>
     </>

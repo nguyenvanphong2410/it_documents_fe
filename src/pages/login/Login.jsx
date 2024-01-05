@@ -14,6 +14,7 @@ const Login = () => {
 
   const { dispatch, isFetching } = useContext(Context);
   const [error, setError] = useState(false);
+  const [messageError, setMessageError] = useState("");
 
   const formik = useFormik({
     initialValues: {
@@ -39,11 +40,13 @@ const Login = () => {
         });
         dispatch({ type: "LOGIN_SUCCESS", payload: res.data });
       } catch (err) {
+        console.log('loi', err?.response?.data?.message)
+        setMessageError(err?.response?.data?.message)
         dispatch({ type: "LOGIN_FAILURE" });
         setError(true);
         setTimeout(() => {
           setError(false);
-        }, 2000);
+        }, 8000);
       }
     },
   });
@@ -54,14 +57,14 @@ const Login = () => {
       <div className={styles.loginWrap}>
         <h2 className={styles.headingTextlogin}>Đăng nhập</h2>
         {error && (
-          <span style={{color:'red'}}>
-            Đăng nhập thất bại !
+          <span className={styles.messageError}>
+            {messageError}
           </span>
         )}
         <form className="login__form" onSubmit={formik.handleSubmit}>
           <label htmlFor="" className={styles.headingTextOriginInput}>Email của bạn<span style={{ color: 'red' }}>*</span></label>
           <input
-            className="login__input"
+            className="register__input"
             type="email"
             placeholder="Nhập mail của bạn"
             id="email"
