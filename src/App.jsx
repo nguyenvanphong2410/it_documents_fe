@@ -94,7 +94,7 @@ function App() {
                 <Route path="/users" element={user ? <Users /> : <Login />} />
                 <Route
                   path="/createCategory"
-                  element={user ? <CreateCategory /> : <Login />}
+                  element={user?.isAdmin ? <CreateCategory /> : <PageNotFound />}
                 />
               </Routes>
               {/* </Col>

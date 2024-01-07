@@ -38,7 +38,6 @@ const PendingPost = () => {
   const dispatch = useDispatch();
   const filter = useSelector(state => state.document.dataPendingFilter)
   const listDocuments = useSelector(state => state.document.listDocumentsPending);
-  console.log('listDocumentsStatus false', listDocuments)
   const isLoading = useSelector(state => state.document.isLoadingGetAll);
   const documents = listDocuments.documents
   const [idDelete, setIdDelete] = useState('');

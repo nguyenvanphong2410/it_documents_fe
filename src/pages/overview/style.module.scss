@@ -1,3 +1,7 @@
+.overViewWrap{
+  // background: #000;
+  min-height: calc( 100vh - 250px);
+}
 .totalWrap {
   box-shadow: rgba(100, 100, 109, 0.3) 0px 7px 29px 0px;
   padding: 20px;
@@ -120,6 +124,86 @@
     }
   }
 
+  //Tron User
+  .barChartPieUserWrap {
+    margin-top: 30px;
+
+    // margin-top: calc(100vh - 699px);
+    box-shadow: rgba(100, 100, 109, 0.3) 0px 7px 29px 0px;
+    border-radius: 10px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    height: 450px;
+    position: relative;
+
+    .pieChartCenter {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -55%);
+    }
+
+    .wrapNote {
+      justify-content: start;
+      text-align: start;
+      transform: translate(24%, 380%);
+
+      .itemNote {
+        margin-top: 10px;
+      }
+    }
+
+    .namePie {
+      top: 30px;
+
+      .textName {
+        justify-content: start !important;
+        text-align: start !important;
+        font-size: 15px;
+        color: rgb(71, 71, 71);
+        font-weight: 700;
+      }
+
+      .circleOfficer {
+        background: #f7d61c;
+        padding: 0 10px 0 10px;
+        border-radius: 100%;
+        margin-right: 4px;
+        margin-left: 20px;
+      }
+
+      .circleStudent {
+        background: #34b5ff;
+        padding: 0 10px 0 10px;
+        border-radius: 100%;
+        margin-right: 4px;
+        margin-left: 20px;
+      }
+
+
+      .circleOther {
+        background: #e22dbb;
+        padding: 0 10px 0 10px;
+        border-radius: 100%;
+        margin-right: 4px;
+        margin-left: 20px;
+      }
+
+      .textPending {
+        color: rgb(87, 86, 86);
+        font-weight: 400;
+      }
+
+      .textChecked {
+        color: rgb(87, 86, 86);
+        font-weight: 400;
+      }
+
+    }
+  }
+
   //Tron
   .barChartPieWrap {
     margin-top: 30px;
@@ -132,22 +216,30 @@
     text-align: center;
     width: 100%;
     height: 450px;
+    position: relative;
 
     .pieChartCenter {
       position: absolute;
       left: 50%;
       top: 50%;
-      transform: translate(-50%, -50%);
+      transform: translate(-50%, -55%);
     }
 
-    .namePie {
-      top: 30px;
+    .wrapNote {
+      justify-content: start;
+      text-align: start;
+      transform: translate(18%, 600%);
 
       .itemNote {
         margin-top: 10px;
       }
+    }
+    .namePie {
+      top: 30px;
 
       .textName {
+        justify-content: start !important;
+        text-align: start !important;
         font-size: 15px;
         color: rgb(71, 71, 71);
         font-weight: 700;
@@ -163,7 +255,7 @@
 
       .textPending {
         color: rgb(87, 86, 86);
-        font-weight: 700;
+        font-weight: 400;
       }
 
       //Checked
@@ -177,7 +269,7 @@
 
       .textChecked {
         color: rgb(87, 86, 86);
-        font-weight: 700;
+        font-weight: 400;
       }
 
     }

@@ -14,6 +14,8 @@ import styles from './style.module.scss'
 import { FileTextOutlined, FolderOpenOutlined } from "@ant-design/icons";
 import { Slide, ToastContainer, toast } from "react-toastify";
 import SpinComponent from "../../components/spin";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 const Write = () => {
   useEffect(() => {
@@ -36,6 +38,7 @@ const Write = () => {
   const [showSpin, setShowSpin] = useState(true);
 
   const SpinComponentDelayed = () => (
+
     <div className="spin-container">
       <SpinComponent />
     </div>
@@ -80,6 +83,28 @@ const Write = () => {
     URL.revokeObjectURL(thumbs[index]);
   };
 
+  const formik = useFormik({
+    initialValues: {
+      name: "",
+      author: "",
+      desc: "",
+      year: "",
+      publisher: "",
+    },
+    validationSchema: Yup.object({
+      name: Yup.string()
+        .matches(/^[a-zA-ZÀ-ỹ ]/, "Tên tài liệu không hợp lệ")
+        .max(255, "Tên phải ngắn hơn 255 ký tự"),
+      author: Yup.string()
+        .matches(/^[a-zA-ZÀ-ỹ ]+$/, "Tên tác giả không hợp lệ")
+        .max(35, "Tên tác giả phải ngắn hơn 35 ký tự"),
+      publisher: Yup.string()
+        .matches(/^[a-zA-ZÀ-ỹ ]+$/, "Tên nhà xuất bản không hợp lệ")
+        .max(50, "Tên nhà xuất bản phải ngắn hơn 50 ký tự"),
+    }),
+   
+  });
+
   const handleSubmit = async (e) => {
     setIsUploading(true);
     e.preventDefault();
@@ -110,12 +135,12 @@ const Write = () => {
           formData.append("file", file);
           const newPost = {
             username: user.username,
-            name,
-            author,
+            name: formik.values.name,
+            author: formik.values.author,
             desc,
             category,
             year,
-            publisher,
+            publisher: formik.values.publisher,
             photos: list,
           };
           console.log(newPost);
@@ -123,10 +148,8 @@ const Write = () => {
           await userRequest.post("/post", formData, {
             headers: { "Content-Type": "multipart/form-data" },
           });
-          // await userRequest.post("/posts", newPost);
           setIsUploading(true);
           thumbs.map((thumb) => URL.revokeObjectURL(thumb));
-          // navigate("/room/" + res.data.name);
           setTimeout(() => {
             toast.success('Tạo mới tài liệu thành công')
           }, 1000);
@@ -210,37 +233,43 @@ const Write = () => {
               <div className="write__formGroup" style={{ marginBottom: "24px" }}>
                 <Row>
                   <Col xs={24} sm={24} md={11} lg={11}>
-                    {/* <label htmlFor="">Tên tài liệu:</label> */}
-                    {/* <input
-                  type="text"
-                  className="write__input"
-                  style={{ fontSize: "14px" }}
-                  placeholder="Nhập tên tài liệu"
-                  autoFocus={true}
-                  onChange={(e) => setName(e.target.value)}
-                /> */}
                     <Typography.Title level={5} style={{ color: '#213ea7' }}>Tên tài liệu<span className={styles.Obligatory}> *</span></Typography.Title>
-                    <Input placeholder="Nhập tên tài liệu" onChange={(e) => setName(e.target.value)} />
+                    <Input
+                      placeholder="Nhập tên tài liệu"
+                      name="name"
+                      id="name"
+                      value={formik.values.name}
+                      onChange={formik.handleChange}
+                      required
+                    // onChange={(e) => setName(e.target.value)} 
+                    />
+                    {formik.errors.name && (
+                      <p style={{ color: 'red' }}> {formik.errors.name} </p>
+                    )}
                   </Col>
                   <Col md={2} lg={2}></Col>
                   <Col xs={24} sm={24} md={11} lg={11}>
-                    {/* <input type="number" className="write__input" style={{ fontSize: "14px" }} placeholder="Nhập năm xuất bản"
-                  onChange={(e) => setYear(e.target.value)}
-                /> */}
                     <Typography.Title level={5} style={{ color: '#213ea7' }}>Tác giả <span className={styles.ifExists}>(nếu có)</span>:</Typography.Title>
-                    <Input placeholder="Nhập tên tác giả" onChange={(e) => setAuthor(e.target.value)} />
+                    <Input
+                      placeholder="Nhập tên tác giả"
+                      name="author"
+                      id="author"
+                      value={formik.values.author}
+                      onChange={formik.handleChange}
+                    // onChange={(e) => setAuthor(e.target.value)}
+                    />
+                    {formik.errors.author && (
+                      <p style={{ color: 'red' }}> {formik.errors.author} </p>
+                    )}
                   </Col>
                 </Row>
 
-                <Row>
+                <Row className={styles.rowMarginTop}>
                   <Col xs={24} sm={24} md={11} lg={11}>
                     <Row>
                       <Col xs={24} sm={24} md={11} lg={10}>
-
                         <Typography.Title level={5} style={{ color: '#213ea7' }}>Năm xuất bản<span className={styles.Obligatory}> *</span></Typography.Title>
-                        {/* <Input type="number" placeholder="Nhập năm xuất bản" onChange={(e) => setYear(e.target.value)} /> */}
-                        {/* <DatePicker placeholder="Nhập năm" onChange={(e) => setYear(e.target.value)} picker="year" /> */}
-                        <DatePicker placeholder="Nhập năm" onChange={handleDate} picker="year" />
+                        <DatePicker required placeholder="Nhập năm" onChange={handleDate} picker="year" />
                       </Col>
                       <Col md={2} lg={2}></Col>
                       <Col xs={24} sm={24} md={11} lg={12}>
@@ -257,17 +286,25 @@ const Write = () => {
                         </div>
                       </Col>
 
-
                     </Row>
 
                   </Col>
                   <Col md={2} lg={2}></Col>
                   <Col xs={24} sm={24} md={11} lg={11}>
                     <Typography.Title level={5} style={{ color: '#213ea7' }}>Nhà xuất bản <span className={styles.ifExists}>(nếu có)</span>:</Typography.Title>
-                    <Input placeholder="Nhập nhà xuất bản" onChange={(e) => setPublisher(e.target.value)} />
+                    <Input
+                      placeholder="Nhập nhà xuất bản"
+                      name="publisher"
+                      id="publisher"
+                      value={formik.values.publisher}
+                      onChange={formik.handleChange}
+                    // onChange={(e) => setPublisher(e.target.value)}
+                    />
+                    {formik.errors.publisher && (
+                      <p style={{ color: 'red' }}> {formik.errors.publisher} </p>
+                    )}
                   </Col>
                 </Row>
-
 
               </div>
               <div >

@@ -52,6 +52,7 @@ const UserOfficer = () => {
   useEffect(() => {
     dispatch(requestGetAllOfficer())
   }, [])
+  
   useEffect(() => {
     dispatch(setDataDocumentOfNameAdminFilter({ name_user: nameClickAdmin }))
     dispatch(requestGetAllDocumentOfNameAdmin())
@@ -165,8 +166,8 @@ const UserOfficer = () => {
                 <td>Địa chỉ</td>
                 <td>Vai trò</td>
                 <td>Tài liệu</td>
-                <td></td>
-                <td></td>
+                <td colspan="2" style={{ textAlign: 'center' }}> Hành động</td>
+
               </tr>
             </thead>
             <tbody>

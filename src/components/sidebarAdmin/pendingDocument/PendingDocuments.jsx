@@ -11,7 +11,7 @@ import {
   CheckOutlined,
   DeleteOutlined,
   EditOutlined,
-  EyeOutlined, FunnelPlotOutlined,
+  EyeOutlined, FileDoneOutlined, FunnelPlotOutlined,
 } from "@ant-design/icons";
 import Search from "antd/es/input/Search";
 import { Slide, ToastContainer, toast } from "react-toastify";
@@ -93,6 +93,7 @@ const PendingDocumentAdmin = () => {
         status: true,
       });
       toast.success('Duyệt thành công ');
+      dispatch(requestGetAllPendingDocumentOver())
     } catch (err) {
       toast.error('Xóa thất bại !');
     }
@@ -157,8 +158,8 @@ const PendingDocumentAdmin = () => {
                 <td>Nhà xuất bản</td>
                 <td>Thời gian đăng</td>
                 <td style={{ textAlign: 'center' }}>Trạng thái</td>
-                <td></td>
-                {user?.isAdmin && <td></td>}
+                <td colspan="2" style={{ textAlign: 'center' }}> Hành động</td>
+
               </tr>
             </thead>
             <tbody>
@@ -193,11 +194,11 @@ const PendingDocumentAdmin = () => {
 
                   <td>
                     <div className={styles.btnApprove}>
-                      <Tooltip title="Nhấn để duyệt tài liệu này" color="#8904B1">
+                      <Tooltip title="Duyệt và xem tài liệu này" color="#8904B1">
                         <Link to={`/post/${post._id}`}>
-                          <Tag color="#8904B1" icon={<CheckOutlined />}
+                          <Tag className={styles.tagHandle} color="#8904B1" icon={<CheckOutlined />}
                             onClick={() => handleUpdate(post._id)}
-                          >Duyệt
+                          >Duyệt và xem
                           </Tag>
                         </Link>
                       </Tooltip>
@@ -206,10 +207,13 @@ const PendingDocumentAdmin = () => {
 
                   {(user?.isAdmin || post.username === user?.username) && (
                     <td className={styles.actionWrap}>
-                      <Tooltip title="Chỉnh sửa thông tin" >
-                      <Link to={`/post/edit/${post._id}`} > <EditOutlined className={styles.actionIconEdit} /> </Link>
+                      <Tooltip title="Duyệt" color="#8904B1">
+                        <FileDoneOutlined className={styles.actionIconHandleCheck}  onClick={() => handleUpdate(post._id)} /> 
                       </Tooltip>
-                      <Tooltip title="Xóa tài liệu">
+                      <Tooltip title="Chỉnh sửa thông tin" color='#2646ba' >
+                      <Link to={`/post/edit/${post?._id}`} > <EditOutlined className={styles.actionIconEdit} /> </Link>
+                      </Tooltip>
+                      <Tooltip title="Xóa tài liệu" color='red' >
                       <DeleteOutlined className={styles.actionIconDelete} onClick={() => onClickDelete(post._id, post.name)} />
                       </Tooltip>
                     </td>

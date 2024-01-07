@@ -11,9 +11,6 @@ import { createUser } from "../../services/Api";
 
 const Register = () => {
 
-  // const [username, setUsername] = useState("");
-  // const [email, setEmail] = useState("");
-  // const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
   const [messageError, setMessageError] = useState("");
 
@@ -29,9 +26,6 @@ const Register = () => {
       class: "",
     },
     validationSchema: Yup.object({
-      // username: Yup.string()
-      //   .matches(/^[a-zA-Z0-9]{4,}$/,
-      //     "Tên người dùng phải có ít nhất 4 ký tự, không dấu, không có khoản trắng và ký tự đặc biệt"),
       email: Yup.string()
         .matches(
           /^[a-zA-Z0-9]{4,}@([a-zA-Z0-9]+\.)+[a-zA-Z]{2,}$/,
@@ -42,34 +36,13 @@ const Register = () => {
           /^(?=.*[0-9])(?=.*[!@#$%^&*()-_+=])[a-zA-Z0-9!@#$%^&*()-_+=]{8,}$/,
           "Có số, lớn hơn 8 ký tự, có ký tự đặc biệt"
         ),
+      address: Yup.string().max(255, "Địa chỉ không được vượt quá 255 ký tự"),
+      username: Yup.string().matches(/^[^\d]+$/, "Tên không được chứa số").max(50, "Tên phải ngắn hơn 50 ký tự"),
+      fullName: Yup.string().matches(/^[^\d]+$/, "Tên không được chứa số").max(50, "Tên phải ngắn hơn 50 ký tự"),
+      class: Yup.string().max(10, "Tên lớp phải ngắn hơn 10 ký tự"),
+      mssv: Yup.string().max(10, "Mã số phải ngắn hơn 10 ký tự"),
     }),
     onSubmit: async (values) => {
-      // try {
-      // const res = await userRequest.post("/auth/register", {
-      //   username: values.username,
-      //   email: values.email,
-      //   password: values.password,
-      //   fullName: values.fullName,
-      //   mssv: values.mssv,
-      //   address: values.address,
-      //   option: values.option,
-      //   class: values.class
-      // });
-      // if (res) {
-      //   toast.success('Đăng ký thành công')
-      //   // setTimeout(() => {
-      //   //   res.data && window.location.replace("/login");
-      //   // }, 2000);
-      // }
-
-      // } catch (err) {
-      //   console.log('loilaaaaaaaa: ', err)
-      //   toast.error('Đăng ký thất bại !')
-      //   setError(true);
-      //   setTimeout(() => {
-      //     setError(false);
-      //   }, 3000);
-      // }
       createUser({
         username: values.username,
         email: values.email,
@@ -81,14 +54,13 @@ const Register = () => {
         class: values.class
       }, {})
         .then((data) => {
-          // console.log('dataaa then', data.data)
           toast.success('Đăng ký thành công')
           setTimeout(() => {
             window.location.replace("/login");
           }, 2000);
         })
         .catch((data) => {
-          console.log('data catch', data?.response?.data?.message);
+          // console.log('data catch', data?.response?.data?.message);
           setError(true);
           setTimeout(() => {
             setError(false);
@@ -251,8 +223,8 @@ const Register = () => {
                         // required
                         autoComplete="off"
                       />
-                      {formik.errors.mssv && (
-                        <p style={{ color: 'red' }}> {formik.errors.address} </p>
+                      {formik.errors.class && (
+                        <p style={{ color: 'red' }}> {formik.errors.class} </p>
                       )}
                     </div>
                 }
@@ -274,7 +246,7 @@ const Register = () => {
                     // required
                     autoComplete="off"
                   />
-                  {formik.errors.mssv && (
+                  {formik.errors.address && (
                     <p style={{ color: 'red' }}> {formik.errors.address} </p>
                   )}
                 </div>

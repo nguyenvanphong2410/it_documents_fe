@@ -8,16 +8,17 @@ import ModalDelete from "./components/modalDelete/ModalDelete";
 import { Button, Popover, Radio, Select, Tag, Tooltip } from "antd";
 import {
   CheckCircleOutlined,
+  CloseCircleOutlined,
   DeleteOutlined,
   EditOutlined,
   EyeOutlined, FunnelPlotOutlined,
 } from "@ant-design/icons";
 import Search from "antd/es/input/Search";
-import { Slide, ToastContainer } from "react-toastify";
+import { Slide, ToastContainer, toast } from "react-toastify";
 import InputSearchAdmin from "./components/inputSearchAdmin/inputSearchAdmin";
 import SortIconDocumentAdmin from "./components/sortIconAdmin/sortIconAdmin";
 import { Context } from "../../../context/Context";
-import { publicRequest } from "../../../requestMethods";
+import { publicRequest, userRequest } from "../../../requestMethods";
 import MainHeading from "../../MainHeading/MainHeading";
 import { dayjsFormatSort } from "../../../utils/dayjsFormat";
 import PanigationAdminChecked from "./components/panigationAdminChecked/panigationAdminChecked";
@@ -69,6 +70,19 @@ const CheckedDocumentAdmin = () => {
     dispatch(setDataDocumentsCheckedFilter({}))
     dispatch(requestGetDocumentsChecked())
   }
+
+  //Bỏ duyệt tài liệu
+  const handleUpdatePending = async (id) => {
+    try {
+      await userRequest.put(`/post/updatedStatus/${id}`, {
+        status: false,
+      });
+      toast.success('Bỏ duyệt thành công ');
+      dispatch(requestGetDocumentsChecked())
+    } catch (err) {
+      toast.error('Bỏ duyệt thất bại !');
+    }
+  };
 
   useEffect(() => {
     document.title = user?.isAdmin ? "Tài liệu đã duyệt" : "IT Documents";
@@ -198,8 +212,7 @@ const CheckedDocumentAdmin = () => {
                 <td>Nhà xuất bản</td>
                 <td>Thời gian đăng</td>
                 <td style={{ textAlign: 'center' }}>Trạng thái</td>
-                <td></td>
-                {user?.isAdmin && <td></td>}
+                <td colspan="2" style={{ textAlign: 'center' }}> Hành động</td>
               </tr>
             </thead>
             <tbody>
@@ -232,18 +245,20 @@ const CheckedDocumentAdmin = () => {
                   </Tooltip>
                   <td>
                     <div className={styles.btnApprove}>
-                      <Tooltip title="Xem chi tiết tài liệu" color="#2646ba">
-                        <Link to={`/post/${post._id}`}><Tag color="#2646ba" icon={<EyeOutlined />} >Xem</Tag> </Link>
+                      <Tooltip title="Nhấn để bỏ duyệt tài liệu" color="#grey">
+                        <Tag className={styles.tagHandle} color="grey" icon={<CloseCircleOutlined />}
+                          onClick={() => handleUpdatePending(post._id)}
+                        > Bỏ duyệt</Tag>
                       </Tooltip>
                     </div>
                   </td>
 
                   {(user?.isAdmin || post.username === user?.username) && (
                     <td className={styles.actionWrap}>
-                      <Tooltip title="Chỉnh sửa thông tin" >
+                      <Tooltip title="Chỉnh sửa thông tin" color='#2646ba'>
                         <Link to={`/post/edit/${post._id}`} > <EditOutlined className={styles.actionIconEdit} /> </Link>
                       </Tooltip>
-                      <Tooltip title="Xóa tài liệu" >
+                      <Tooltip title="Xóa tài liệu" color='red'>
                         <DeleteOutlined className={styles.actionIconDelete} onClick={() => onClickDelete(post._id, post.name)} />
                       </Tooltip>
                     </td>

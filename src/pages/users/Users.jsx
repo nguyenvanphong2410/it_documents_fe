@@ -173,19 +173,13 @@ const Users = () => {
                             <p className={styles.titleLink} to="/users" onClick={hanleClickTitleHeading}>Thông tin tất cả người dùng</p>
                           </span>
                         </div>
-
                         <div className={styles.headingOpption}>
-
                           <InputSearchUser usersList={usersList} />
                         </div>
                       </div>
                       :
-                      <>
-
-
-                      </>
+                      <></>
                   }
-
 
                   {
                     user?.isAdmin ?
@@ -213,8 +207,8 @@ const Users = () => {
                                       <td>Địa chỉ</td>
                                       <td>Vai trò</td>
                                       <td>Tài liệu</td>
-                                      <td></td>
-                                      <td></td>
+                                      <td colspan="2" style={{ textAlign: 'center' }}> Hành động</td>
+
                                     </tr>
                                   </thead>
                                   <tbody>

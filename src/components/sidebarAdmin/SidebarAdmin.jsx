@@ -212,7 +212,7 @@ const SidebarAdmin = () => {
                         textAlign: 'center',
                     }}
                 >
-                    Kho quản lí tài liệu cho sinh viên khoa công nghệ thông tin ©2023 - Sinh viên Nguyễn Văn Phong
+                    Kho tài liệu cho sinh viên khoa Công nghệ thông tin ©2023 - Nguyễn Văn Phong - 646502 - K64ATTT
                 </Footer>
             </Layout>
         </Layout>

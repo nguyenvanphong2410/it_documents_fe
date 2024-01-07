@@ -16,8 +16,9 @@ import ModalDelete from "./components/modalDelete/ModalDelete";
 import { Button, Card, Col, FloatButton, Image, Popover, Radio, Row, Select, Tag, Tooltip } from "antd";
 import {
   CheckCircleOutlined, CheckOutlined, ClockCircleOutlined,
+  CloseCircleOutlined,
   DeleteOutlined, DownloadOutlined, EditOutlined,
-  EyeOutlined, FieldTimeOutlined, FunnelPlotOutlined,
+  EyeOutlined, FieldTimeOutlined, FileDoneOutlined, FunnelPlotOutlined,
   PicCenterOutlined, PlusOutlined, ProfileOutlined, QuestionCircleOutlined,
   UserOutlined
 } from "@ant-design/icons";
@@ -119,16 +120,30 @@ const Home = () => {
     dispatch(setOpenModalDelete(true));
   }
 
-  const handleUpdate = async (id) => {
+  const handleUpdateChecked = async (id) => {
     try {
       await userRequest.put(`/post/updatedStatus/${id}`, {
         status: true,
       });
       toast.success('Duyệt thành công ');
     } catch (err) {
-      toast.error('Xóa thất bại !');
+      toast.error('Duyệt thất bại !');
     }
   };
+
+  //Bỏ duyệt tài liệu
+  const handleUpdatePending = async (id) => {
+    try {
+      await userRequest.put(`/post/updatedStatus/${id}`, {
+        status: false,
+      });
+      toast.success('Bỏ duyệt thành công ');
+      dispatch(requestGetDocuments())
+    } catch (err) {
+      toast.error('Bỏ duyệt thất bại !');
+    }
+  };
+
 
   //handleSubmit
   const handleSubmit = (e) => {
@@ -398,7 +413,7 @@ const Home = () => {
                   </div>
               }
               <section className="contentProducts">
-                <div className="contentProducts__wrapper">
+                <div className="k">
                   {!showTable && user?.isAdmin && <SpinComponent />}
                   {
                     user?.isAdmin ? (
@@ -418,8 +433,8 @@ const Home = () => {
                               <td>Nhà xuất bản</td>
                               <td>Thời gian đăng</td>
                               <td style={{ textAlign: 'center' }}>Trạng thái</td>
-                              <td></td>
-                              {user?.isAdmin && <td></td>}
+                              <td colspan="2" style={{ textAlign: 'center' }}> Hành động</td>
+
                             </tr>
                           </thead>
                           <tbody>
@@ -499,29 +514,38 @@ const Home = () => {
                                 <td>
                                   <span>
                                     {post.status === false && user.isAdmin === true ? (
-                                      <Tooltip title="Nhấn để duyệt tài liệu này" color="#8904B1">
+                                      <Tooltip title="Duyệt và xem tài liệu này" color="#8904B1">
                                         <Link to={`/post/${post._id}`}>
-                                          <Tag color="#8904B1" icon={<CheckOutlined />} onClick={() => handleUpdate(post._id)}>Duyệt</Tag>
+                                          <Tag className={styles.tagHandle} color="#8904B1" icon={<CheckOutlined />} onClick={
+                                            () => handleUpdateChecked(post._id)
+                                          }>Duyệt và xem</Tag>
                                         </Link>
                                       </Tooltip>
                                     ) : post.status === false ? (<Tag color="gold">gold</Tag>) :
                                       (
-                                        <Tooltip title="Xem chi tiết tài liệu" color="#2646ba">
-                                          <Link to={`/post/${post._id}`}>
-                                            <Tag color="#2646ba" icon={<EyeOutlined />} >Xem</Tag>
-                                          </Link>
+                                        <Tooltip title="Nhấn để bỏ duyệt tài liệu" color="#grey">
+                                          <Tag className={styles.tagHandle} color="grey" icon={<CloseCircleOutlined />}
+                                            onClick={() => handleUpdatePending(post._id)}
+                                          >Bỏ phê duyệt</Tag>
                                         </Tooltip>
                                       )}
                                   </span>
                                 </td>
                                 {(user?.isAdmin || post.username === user?.username) && (
                                   <td className={styles.actionWrap}>
-                                    <Tooltip title="Chỉnh sửa thông tin" >
+                                    {post.status === false && user.isAdmin === true ?
+                                      <Tooltip title="Duyệt" color='#8904B1'>
+                                        <FileDoneOutlined className={styles.actionIconHandleCheck} onClick={() => handleUpdateChecked(post._id)} />
+                                      </Tooltip>
+                                      :
+                                      ''}
+
+                                    <Tooltip title="Chỉnh sửa thông tin" color='#2646ba'>
                                       <Link to={`/post/edit/${post._id}`} >
                                         <EditOutlined className={styles.actionIconEdit} />
                                       </Link>
                                     </Tooltip>
-                                    <Tooltip title="Xóa tài liệu" >
+                                    <Tooltip title="Xóa tài liệu" color='red'>
                                       <DeleteOutlined className={styles.actionIconDelete}
                                         onClick={() => onClickDelete(post._id, post.name)}
                                       />

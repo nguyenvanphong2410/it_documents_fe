@@ -51,6 +51,7 @@
     margin-top: -6px;
     margin-left: 16px;
     display: block !important;
+
     &:hover {
       opacity: 0.8;
       cursor: pointer;
@@ -116,6 +117,13 @@
     margin: 14px auto;
     display: flex;
 
+    .actionIconHandleCheck {
+      color: #8904B1;
+      margin-right: 15px;
+      font-size: 20px;
+
+    }
+
     .actionIconEdit {
       color: blue;
       font-size: 20px;
@@ -128,12 +136,20 @@
       margin-left: 8px;
 
     }
+
   }
 
   .textUpdating {
     font-size: 12px;
     color: gray;
     font-style: italic;
+  }
+
+  .tagHandle {
+    &:hover {
+      cursor: pointer;
+      opacity: 0.6;
+    }
   }
 
 }
@@ -168,8 +184,6 @@
   .cardItem {
     box-shadow: rgba(100, 100, 109, 0.3) 0px 7px 29px 0px;
     background: linear-gradient(90deg, rgb(227, 238, 255) 0%, rgb(255, 255, 255) 50%, rgb(227, 238, 255) 100%);
-
-
 
     &:hover {
       transform: scale(1.04);
@@ -330,7 +344,7 @@
 
 }
 
-.btnApprove{
+.btnApprove {
   margin-top: 10px;
 }
 

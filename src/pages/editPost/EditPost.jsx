@@ -16,10 +16,12 @@ import { Col, DatePicker, Input, Row, Typography } from "antd";
 import SpinComponent from "../../components/spin";
 import { Slide, ToastContainer, toast } from "react-toastify";
 import dayjs from "dayjs";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 const EditPost = () => {
   useEffect(() => {
-    document.title = "Chỉnh sửa phòng";
+    document.title = "Chỉnh sửa ";
   }, []);
   const location = useLocation();
   const path = location.pathname.split("/")[3];
@@ -49,6 +51,7 @@ const EditPost = () => {
       <SpinComponent />
     </div>
   );
+
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       setShowSpin(false);
@@ -58,7 +61,7 @@ const EditPost = () => {
   }, []);
   const navigate = useNavigate();
 
-  //new add
+
   useEffect(() => {
     const getPost = async () => {
       const res = await publicRequest.get(`/post/details/${path}`);
@@ -75,7 +78,26 @@ const EditPost = () => {
     getPost();
   }, [path]);
 
-  // console.log(base64);
+  const formik = useFormik({
+    initialValues: {
+      name: name,
+      author: author,
+      publisher: publisher,
+    },
+    validationSchema: Yup.object({
+      name: Yup.string()
+        .matches(/^[a-zA-ZÀ-ỹ ]/, "Tên tài liệu không hợp lệ")
+        .max(255, "Tên phải ngắn hơn 255 ký tự"),
+      author: Yup.string()
+        .matches(/^[a-zA-ZÀ-ỹ ]+$/, "Tên tác giả không hợp lệ")
+        .max(35, "Tên tác giả phải ngắn hơn 35 ký tự"),
+      publisher: Yup.string()
+        .matches(/^[a-zA-ZÀ-ỹ ]+$/, "Tên nhà xuất bản không hợp lệ")
+        .max(50, "Tên nhà xuất bản phải ngắn hơn 50 ký tự"),
+    }),
+
+  });
+
   const fileTypes = ["JPG", "JPEG", "PNG", "GIF", "jfif"];
 
   // CKEditor
@@ -83,6 +105,7 @@ const EditPost = () => {
     mediaEmbed: { previewsInData: true },
   };
 
+  //setCategories
   useEffect(() => {
     const getCats = async () => {
       const res = await publicRequest.get("/category/all");
@@ -116,6 +139,8 @@ const EditPost = () => {
     ]);
   };
 
+
+
   const handleUpdate = async (e) => {
     e.preventDefault();
     setIsUploading(true);
@@ -146,15 +171,16 @@ const EditPost = () => {
           formData.append("file", file);
           const newPost = {
             username: user.username,
-            name,
+            name: name,
             desc,
             category,
             year,
-            author,
-            publisher,
+            author: author,
+            publisher: publisher,
             photos: [...photos, ...list],
             photosDelete,
           };
+
           console.log(newPost);
           formData.append("newPost", JSON.stringify(newPost));
           // await userRequest.put(`/posts/${post._id}`, newPost);
@@ -187,7 +213,7 @@ const EditPost = () => {
     setYear(dateString);
     console.log('namw la ', dateString)
   };
-// console.log(year)
+  // console.log(year)
   return (
     <>
       <ToastContainer
@@ -262,23 +288,43 @@ const EditPost = () => {
                   <Row>
                     <Col xs={24} sm={24} md={11} lg={11}>
                       <Typography.Title level={5} style={{ color: '#213ea7' }}>Tên tài liệu<span className={styles.Obligatory}> *</span></Typography.Title>
-                      
-                      <Input placeholder="Nhập tên tài liệu" value={name} onChange={(e) => setName(e.target.value)} />
 
+                      <Input
+                        required
+                        placeholder="Nhập tên tài liệu"
+                        value={name} onChange={(e) => setName(e.target.value)}
+                      // name="name"
+                      // id="name"
+                      // value={formik.values.name}
+                      // onChange={formik.handleChange}
+                      />
+                      {formik.errors.name && (
+                        <p style={{ color: 'red' }}> {formik.errors.name} </p>
+                      )}
                     </Col>
                     <Col md={2} lg={2}></Col>
                     <Col xs={24} sm={24} md={11} lg={11}>
                       <Typography.Title level={5} style={{ color: '#213ea7' }}>Tác giả <span className={styles.ifExists}>(nếu có)</span>:</Typography.Title>
-                      <Input placeholder="Nhập tên tác giả nếu có" value={author} onChange={(e) => setAuthor(e.target.value)} />
+                      <Input
+                        placeholder="Nhập tên tác giả nếu có"
+                        value={author} onChange={(e) => setAuthor(e.target.value)} 
+                        // name="author"
+                        // id="author"
+                        // value={formik.values.author}
+                        // onChange={formik.handleChange}
+                      />
+                      {formik.errors.author && (
+                        <p style={{ color: 'red' }}> {formik.errors.author} </p>
+                      )}
                     </Col>
                   </Row>
 
-                  <Row>
+                  <Row className={styles.rowMarginTop}>
                     <Col xs={24} sm={24} md={11} lg={11}>
                       <Row>
                         <Col xs={24} sm={24} md={11} lg={10}>
                           <Typography.Title level={5} style={{ color: '#213ea7' }}>Năm xuất bản<span className={styles.Obligatory}> *</span></Typography.Title>
-                          <DatePicker defaultValue={dayjs(year?.toString(), 'YYYY')} placeholder="Nhập năm"  onChange={handleDate} picker="year" />
+                          <DatePicker defaultValue={dayjs(year?.toString(), 'YYYY')} placeholder="Nhập năm" onChange={handleDate} picker="year" />
                           {/* <Input type="number" value={year} placeholder="Nhập năm xuất bản" onChange={(e) => setYear(e.target.value)} /> */}
 
                         </Col>
@@ -305,13 +351,19 @@ const EditPost = () => {
                     <Col md={2} lg={2}></Col>
                     <Col xs={24} sm={24} md={11} lg={11}>
                       <Typography.Title level={5} style={{ color: '#213ea7' }}>Nhà xuất bản <span className={styles.ifExists}>(nếu có)</span>:</Typography.Title>
-                      <Input placeholder="Nhập nhà xuất bản nếu có" value={publisher} onChange={(e) => setPublisher(e.target.value)} />
+                      <Input
+                        placeholder="Nhập nhà xuất bản nếu có"
+                        value={publisher} onChange={(e) => setPublisher(e.target.value)}
+                      // name="publisher"
+                      // id="publisher"
+                      // value={formik.values.publisher}
+                      // onChange={formik.handleChange}
+                      />
+                      {formik.errors.publisher && (
+                        <p style={{ color: 'red' }}> {formik.errors.publisher} </p>
+                      )}
                     </Col>
-
                   </Row>
-
-
-
                 </div>
 
                 <div className="write__formGroup">
