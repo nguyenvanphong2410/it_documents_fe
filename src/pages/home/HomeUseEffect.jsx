@@ -21,7 +21,6 @@ export default function HomeUseEffect() {
       setPosts(res.data.posts);
       setPage(res.data.page);
       setTotalPages(res.data.total_pages);
-      console.log(res.data);
       setTimeout(() => {
         setIsLoading(false);
       }, 400);

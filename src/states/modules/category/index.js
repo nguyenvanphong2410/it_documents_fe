@@ -162,7 +162,6 @@ const category = createSlice({
     }),
   },
 });
-// console.log('data category', category)
 
 export const {
   setOpenModalDelete,

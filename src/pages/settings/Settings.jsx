@@ -10,6 +10,7 @@ import { Col, Row, Tag } from 'antd';
 import styles from './style.module.scss';
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { Slide, ToastContainer, toast } from 'react-toastify';
 
 const Settings = () => {
   const { user, dispatch } = useContext(Context);
@@ -35,6 +36,10 @@ const Settings = () => {
     }, 500);
 
     return () => clearTimeout(timeoutId);
+  }, []);
+
+  useEffect(() => {
+    document.title = "Cập nhật Hồ sơ";
   }, []);
 
   const formik = useFormik({
@@ -99,12 +104,13 @@ const Settings = () => {
 
     try {
       const res = await userRequest.put("/user/" + user._id, updatedUser);
-      setSuccess(true);
+      // setSuccess(true);
       setSubmitText("Cập nhật");
       dispatch({ type: "UPDATE_SUCCESS", payload: res.data });
-      setTimeout(() => {
-        setSuccess(false);
-      }, 1000);
+      toast.success('Cập nhật thành công')
+      // setTimeout(() => {
+      //   setSuccess(false);
+      // }, 1000);
     } catch (err) {
       dispatch({ type: "UPDATE_FAILURE" })
     }
@@ -113,6 +119,10 @@ const Settings = () => {
 
   return (
     <>
+      <ToastContainer
+        transition={Slide}
+        autoClose={2500}
+      />
       <Row>
         <Col xs={24} sm={24} md={3} lg={3}></Col>
         <Col xs={24} sm={24} md={19} lg={19} className={styles.centerContent}>
@@ -122,7 +132,7 @@ const Settings = () => {
               <>
                 <div className="settings__wrapper">
                   <div className="settings__heading">
-                    <span className="settings__mainTitle">Cập Nhật Tài Khoản</span>
+                    <span className="settings__mainTitle">Cập Nhật Hồ Sơ</span>
                   </div>
                   <div className="settings__container">
                     <div className="settings__left">
@@ -157,7 +167,7 @@ const Settings = () => {
                         {formik.errors.fullName && (
                           <p style={{ color: 'red' }}> {formik.errors.fullName} </p>
                         )}
-                        
+
                         {
                           user.isAdmin === true || user.option === '3' ? <></> : <>
                             <label className={styles.textLabel} htmlFor="">Mã số<span className={styles.Obligatory}> *</span></label>
@@ -182,7 +192,7 @@ const Settings = () => {
                               // value={classStudy} onChange={e => setClass(e.target.value)} 
                               name="class"
                               id="class"
-                              value={classStudy}
+                              value={formik.values.class}
                               onChange={formik.handleChange}
                             />
                             {formik.errors.class && (
@@ -216,7 +226,7 @@ const Settings = () => {
                         )}
                         <label className={styles.textLabel} htmlFor="">Mật khẩu</label>
                         <input
-                          type="password" placeholder="Mật khẩu" 
+                          type="password" placeholder="Mật khẩu"
                           // onChange={e => setPassword(e.target.value)}
                           name="password"
                           id="password"
@@ -227,7 +237,7 @@ const Settings = () => {
                           <p style={{ color: 'red' }}> {formik.errors.password} </p>
                         )}
                         <button className="settings__submit" type="submit">{submitText}</button>
-                        {success && <span style={{ color: "green", textAlign: "center" }}>Hồ sơ đã được cập nhật!</span>}
+                        {/* {success && <span style={{ color: "green", textAlign: "center" }}>Hồ sơ đã được cập nhật!</span>} */}
                       </form>
                     </div>
                   </div>

@@ -11,7 +11,6 @@ const Pagination = ({ total_pages, page }) => {
   }
   const { pathname, search } = useLocation();
   let searchPath = search.split("&")[0];
-  // console.log(searchPath);
   if (pathname === "/search") {
     return (
       <div className="pagination">

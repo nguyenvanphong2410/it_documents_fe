@@ -394,7 +394,6 @@ const document = createSlice({
 
   },
 });
-// console.log('data document', document)
 export const {
   setOpenModalDelete,
   setOpenModalDocumentOfName,

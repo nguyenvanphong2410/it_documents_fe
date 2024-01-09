@@ -112,7 +112,6 @@ const UserStudent = () => {
   //Thay đổi trạng thái
   const handleChangeChecked = async (id, statusUser) => {
     try {
-      // console.log('Trang thai là', statusOfUser)
       await userRequest.put(`/user/updatedStatusUser/${id}`, {
         status: !statusUser,
       });

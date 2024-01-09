@@ -25,7 +25,6 @@ const UserOther = () => {
   const others = useSelector(state => state.user.listOther);
   const listDocumentOfNameAdmin = useSelector(state => state.document.listDocumentsDocumentOfNameAdmin);
   const listOfficer = others.users;
-  // console.log('listOfficer', listOfficer)
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [idDelete, setIdDelete] = useState(null);
@@ -113,7 +112,6 @@ const UserOther = () => {
   //Thay đổi trạng thái
   const handleChangeChecked = async (id, statusUser) => {
     try {
-      // console.log('Trang thai là', statusOfUser)
       await userRequest.put(`/user/updatedStatusUser/${id}`, {
         status: !statusUser,
       });

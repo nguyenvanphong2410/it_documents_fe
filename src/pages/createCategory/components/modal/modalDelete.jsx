@@ -19,7 +19,6 @@ const ModalDeleteCategory = ({ idDelete, name }) => {
   const handleOkModal = async () => {
     try {
       await dispatch(handleDeleteCategory(idDelete));
-      console.log('Xóa thành công');
       handleCLoseModal();
       
       // Hiện toast message

@@ -24,7 +24,6 @@ const SortIconDocument = ({ type }) => {
             dispatch(setDataFilter({ ...filter, sort_by: 'view', sort_order: newSortOrder }))
             dispatch(requestGetAllDocument());
         }
-        console.log('type', type);
     }
 
     const handleType = (type) => {

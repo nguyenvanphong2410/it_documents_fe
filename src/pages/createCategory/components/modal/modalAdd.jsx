@@ -39,16 +39,13 @@ function ModalAddCategory() {
             const file = e.target.files[0];
             setInputData({ ...inputData, [name]: e.target.files[0] });
             setThumbnailPreview(URL.createObjectURL(file));
-            console.log('inputData IF else', typeof inputData.thumbnail);
         } else {
             setInputData({ ...inputData, [name]: value });
             setErrorMessages({ ...errorMessages, [name]: "" });
         }
-        console.log('input Category', inputData);
     }
 
     const onClickSubmit = async (e) => {
-        console.log('input data onLick oke', inputData)
         e.preventDefault();
         const isTrueName = specialChars.test(inputData.name);
         const ishasNumberName = hasNumber.test(inputData.name);
@@ -96,7 +93,6 @@ function ModalAddCategory() {
 
             requestCreateCategory(inputData)
                 .then((response) => {
-                    console.log('response Create Cate', response)
                     if (response.status < 300 && response.status >= 200) {
                         toast.success('Tạo mới thể loại thành công');
                         handleCLoseModal();

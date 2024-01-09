@@ -40,7 +40,6 @@ const CreateCategory = () => {
 
   //onClickEdit
   const onClickEdit = async (id, item) => {
-    console.log('modal edit')
     setIdEdit(id);
     dispatch(setCategoryActive(item))
     dispatch(setOpenModalUpdateCategory(true));

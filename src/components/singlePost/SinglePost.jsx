@@ -40,14 +40,12 @@ export default function SinglePost() {
 
   // cats lấy từ mongodb cho select option
   const [loading, setLoading] = useState(true);
-  // console.log(objectUrl);
 
   // comments
   const [comments, setComments] = useState([]);
   const [comment, setComment] = useState("");
   const [isComment, setIsComment] = useState(false);
 
-  // console.log(comment);
   const newComment = {
     username: user.username,
     documentId: post._id,
@@ -69,7 +67,6 @@ export default function SinglePost() {
   useEffect(() => {
     const getComments = async () => {
       const res = await publicRequest.get(`/comments/${path}`);
-      // console.log(res.data);
       setComments(res.data);
     };
     getComments();
@@ -94,17 +91,6 @@ export default function SinglePost() {
     };
     getPost();
   }, [path]);
-  
-  // const handleDelete = async () => {
-  //   try {
-  //     await userRequest.delete(`/posts/${post._id}`, {
-  //       data: { username: user.username },
-  //     });
-  //     window.location.replace("/");
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
 
   const shimmer = (w, h) => `
     <svg width="${w}" height="${h}" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">

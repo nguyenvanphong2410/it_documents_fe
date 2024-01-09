@@ -108,7 +108,6 @@ const Home = () => {
   useEffect(() => {
     const getCats = async () => {
       const res = await publicRequest.get("/category/all");
-      // console.log(res.data);
       setCategories(res.data.data.categories);
     };
     getCats();
@@ -126,6 +125,8 @@ const Home = () => {
         status: true,
       });
       toast.success('Duyệt thành công ');
+      dispatch(requestGetDocuments())
+
     } catch (err) {
       toast.error('Duyệt thất bại !');
     }
@@ -298,7 +299,7 @@ const Home = () => {
                         </span>
                       </span>
                       <span className={styles.title}>
-                        <span className={styles.titleLink} onClick={hanleClickTitleHeading}>Thông tin tài liệu</span>
+                        <span className={styles.titleLink} onClick={hanleClickTitleHeading}>Thông tin tất cả tài liệu</span>
                       </span>
                     </div>
 

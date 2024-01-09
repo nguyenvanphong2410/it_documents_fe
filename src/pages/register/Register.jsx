@@ -60,7 +60,6 @@ const Register = () => {
           }, 2000);
         })
         .catch((data) => {
-          // console.log('data catch', data?.response?.data?.message);
           setError(true);
           setTimeout(() => {
             setError(false);

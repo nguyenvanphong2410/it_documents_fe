@@ -26,13 +26,11 @@ const MainNav = () => {
   const filter = useSelector(state => state.document.dataFilter)
 
   const documents = listDocuments.documents
-  // console.log('listDocumentsSearch', documents)
   useEffect(() => {
     dispatchDocument(requestGetAllDocument())
   }, [])
 
   const { user, dispatch } = useContext(Context);
-  // console.log(user);
   const handleLogout = () => {
     dispatch({ type: "LOGOUT" });
   };
@@ -45,8 +43,6 @@ const MainNav = () => {
   };
 
   const onSearch = (value, _e, info) => {
-    console.log('so loc', typeof value)
-    console.log('lll', typeof comPareValue)
     dispatchDocument(setDataFilter({ ...filter, number_view: value, compare_view: comPareValue }))
     dispatchDocument(requestGetAllDocument());
   };

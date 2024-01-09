@@ -164,7 +164,11 @@
         color: #0f2f7f;
     }
 }
-
+.textUpdating {
+    font-size: 12px;
+    color: gray;
+    font-style: italic;
+  }
 // Màn hình máy tính
 @media (min-width: 1440px) {}
 

@@ -41,7 +41,7 @@ const EditPost = () => {
 
   // Upload Pdf
   const [file, setFile] = useState(null);
-  // console.log(used);
+
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState(false);
   const [showSpin, setShowSpin] = useState(true);
@@ -109,7 +109,6 @@ const EditPost = () => {
   useEffect(() => {
     const getCats = async () => {
       const res = await publicRequest.get("/category/all");
-      // console.log(res.data);
       setCategories(res.data.data.categories);
     };
     getCats();
@@ -163,7 +162,6 @@ const EditPost = () => {
             };
           })
         );
-        console.log([...photos, ...list]);
 
         try {
           // newPost.photos = list;
@@ -181,7 +179,6 @@ const EditPost = () => {
             photosDelete,
           };
 
-          console.log(newPost);
           formData.append("newPost", JSON.stringify(newPost));
           // await userRequest.put(`/posts/${post._id}`, newPost);
           await userRequest.put(`/post/${post._id}`, formData, {
@@ -211,9 +208,7 @@ const EditPost = () => {
   //handleDate
   const handleDate = (date, dateString) => {
     setYear(dateString);
-    console.log('namw la ', dateString)
   };
-  // console.log(year)
   return (
     <>
       <ToastContainer
@@ -375,7 +370,6 @@ const EditPost = () => {
                     data={desc}
                     onChange={(event, editor) => {
                       setDesc(editor.getData());
-                      // console.log( { event, editor, data } );
                     }}
                   />
                 </div>

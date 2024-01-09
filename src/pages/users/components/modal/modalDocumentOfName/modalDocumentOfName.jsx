@@ -15,9 +15,7 @@ const ModalDocumentOfName = ({ nameClick, listDocumentOfName }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const isShowModalDocumentOfName = useSelector(state => state.document.modalDocumentOfName.isShowModalDocumentOfName);
-  console.log('isShowModalDocumentOfNamdffff', isShowModalDocumentOfName)
   const documents = listDocumentOfName?.documents
-  console.log('listDocumentsStatus', documents)
 
   const handleCLoseModal = () => {
     dispatch(setOpenModalDocumentOfName(false));

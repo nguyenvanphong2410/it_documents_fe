@@ -67,14 +67,12 @@ const Users = () => {
   }, [nameClickAdmin])
 
   const onClickName = async (nameOnClick) => {
-    console.log('fdjfdfdjflalaaaaaaaaaaaaa', nameClick)
     setNameClick(nameOnClick)
     dispatch(setOpenModalDocumentOfName(true));
   }
 
   //onClickNameAdmin
   const onClickNameAdmin = async (nameOnClickAdmin) => {
-    console.log('nameClickAdminfff5', nameOnClickAdmin)
     setNameClickAdmin(nameOnClickAdmin)
     dispatch(setOpenModalDocumentOfNameAdmin(true));
   }

@@ -53,7 +53,6 @@ const Write = () => {
 
   // Upload Pdf
   const [file, setFile] = useState(null);
-  // console.log(file);
 
   // CKEditor
   const editorConfiguration = {
@@ -63,7 +62,6 @@ const Write = () => {
   useEffect(() => {
     const getCats = async () => {
       const res = await publicRequest.get("/category/all");
-      // console.log(res.data.data.categories);
       setCategories(res.data.data.categories);
     };
     getCats();
@@ -128,7 +126,6 @@ const Write = () => {
             };
           })
         );
-        // console.log(list);
         try {
           // newPost.photos = list;
           const formData = new FormData();
@@ -143,7 +140,6 @@ const Write = () => {
             publisher: formik.values.publisher,
             photos: list,
           };
-          console.log(newPost);
           formData.append("newPost", JSON.stringify(newPost));
           await userRequest.post("/post", formData, {
             headers: { "Content-Type": "multipart/form-data" },
@@ -315,7 +311,6 @@ const Write = () => {
                   className="write__textarea"
                   onChange={(event, editor) => {
                     setDesc(editor.getData());
-                    // console.log( { event, editor, data } );
                   }}
                 />
               </div>

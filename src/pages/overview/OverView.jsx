@@ -113,7 +113,6 @@ const OverView = () => {
         );
     };
 
-    console.log('listDocumentPending', listDocumentPending)
     useEffect(() => {
         dispatch(requestGetAllUser())
     }, [])

@@ -40,7 +40,6 @@ const Login = () => {
         });
         dispatch({ type: "LOGIN_SUCCESS", payload: res.data });
       } catch (err) {
-        console.log('loi', err?.response?.data?.message)
         setMessageError(err?.response?.data?.message)
         dispatch({ type: "LOGIN_FAILURE" });
         setError(true);

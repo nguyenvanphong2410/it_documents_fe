@@ -17,7 +17,6 @@ const SortIcon = ({ type }) => {
             dispatch(setCategoriesDataFilter({ ...filter, sort_by: 'name', sort_order: newSortOrder }))
             dispatch(requestGetAllCategory());
         }
-        console.log('type', type);
     }
     return (
         <span onClick={handleSort}>{type === 'fullName'? 'Tên thể loại':''}</span>

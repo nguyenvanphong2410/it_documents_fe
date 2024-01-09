@@ -12,13 +12,15 @@ import { Button, Card, Col, Image, Row, Tag, Tooltip } from "antd";
 import styles from "./style.module.scss"
 import { CheckCircleOutlined, CheckOutlined, ClockCircleOutlined, DeleteOutlined, DownloadOutlined, EditOutlined, EyeOutlined, FieldTimeOutlined, ProfileOutlined, UserOutlined } from "@ant-design/icons";
 import Meta from "antd/es/card/Meta";
-import { dayjsFormatFromNow } from "../../utils/dayjsFormat";
+import { dayjsFormatFromNow, dayjsFormatSort } from "../../utils/dayjsFormat";
 import NoData from "../../components/notData";
 import NoImage from "../../components/notImage";
 import ModalDeleteArticles from "./components/modalDeleteArtiles/ModalDeleteArticles";
 import { setOpenModalDelete } from "../../states/modules/document";
 import { useDispatch } from "react-redux";
 import SpinComponent from "../../components/spin";
+import { Slide, ToastContainer, toast } from "react-toastify";
+import { requestUpdateViewPost } from "../../api/documents";
 
 
 const Articles = () => {
@@ -84,7 +86,8 @@ const Articles = () => {
       await userRequest.put(`/post/updatedStatus/${id}`, {
         status: true,
       });
-      alert("Đã xác nhận");
+      // alert("Đã xác nhận");
+      toast.success('Duyệt thành công ');
     } catch (err) {
       console.log(err);
     }
@@ -94,8 +97,20 @@ const Articles = () => {
     setNameDelete(name)
     dispatch(setOpenModalDelete(true));
   }
+
+  //handleUpdateView
+  const handleUpdateView = (id) => {
+    dispatch(requestUpdateViewPost(id))
+    return 0
+  }
+
   return (
     <>
+      <ToastContainer
+        transition={Slide}
+        autoClose={2500}
+        hideProgressBar={false}
+      />
       <Row className={styles.rowContainer} style={{ backgroundColor: '' }}>
         {
           user?.isAdmin ? <></> : <Col span={window.innerWidth <= 1440 ? 1 : 3} ></Col>
@@ -146,118 +161,121 @@ const Articles = () => {
                         {/* <h2>Tài liệu thuộc thể loại {posts[0].category.replace(/-/g, ' ')} </h2> */}
                         {/* {showSpin && <SpinComponentDelayed />}
                         {showSpin && ( */}
-                          <table>
-                            <thead>
-                              <tr>
-                                <td>STT</td>
-                                <td>Hình ảnh</td>
-                                <td>Tên bài viết</td>
-                                <td>Đăng bởi</td>
-                                <td>Thể loại</td>
-                                <td>Năm sáng tác</td>
-                                <td>Trạng thái</td>
-                                <td></td>
-                                {user?.isAdmin && <td></td>}
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {posts.map((post, index) => (
-                                <tr key={post._id}>
-                                  <td data-label="STT">
-                                    <span>{index + 1}</span>
+                        <table>
+                          <thead>
+                            <tr>
+                              <td>STT</td>
+                              <td>Hình ảnh</td>
+                              <td>Tên bài viết</td>
+                              <td>Đăng bởi</td>
+                              <td>Tác giả</td>
+                              <td style={{ textAlign: 'center' }}>Lượt xem</td>
+                              <td>Thể loại</td>
+                              <td>Nhà xuất bản</td>
+                              <td>Thời gian đăng</td>
+                              <td>Năm xuất bản</td>
+                              <td>Trạng thái</td>
+                              <td colspan="2" style={{ textAlign: 'center' }}> Hành động</td>
+
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {posts.map((post, index) => (
+                              <tr key={post._id}>
+                                <td data-label="STT">
+                                  <span>{index + 1}</span>
+                                </td>
+                                <td data-label="Hình ảnh">
+                                  <span>
+                                    <img
+                                      style={{
+                                        width: "100px", height: "50px",
+                                        objectFit: "cover"
+                                      }}
+                                      src={post.photos[0]?.src || ImgPlaceholder}
+                                      alt="alt"
+                                    />
+                                  </span>
+                                </td>
+                                <td data-label="Tên bài viết">
+                                  <span>{post.name}</span>
+                                </td>
+                                <td data-label="Đăng bởi">
+                                  <span>
+                                    {/* <Link
+                                      className="linkTable"
+                                      to={`/?user=${post.username}`}
+                                    > */}
+                                    {post.username}
+                                    {/* </Link> */}
+                                  </span>
+                                </td>
+                                <td data-label="Tác giả" ><span>{post?.author ? post?.author : <span className={styles.textUpdating}>- Đang cập nhật -</span>} </span> </td >
+                                <td data-label="Lượt xem" style={{ textAlign: 'center' }}><span >{post.view}</span> </td >
+                                {/* <td data-label="Năm xuất bản" style={{ textAlign: 'center' }}> <span>{post.year}</span> </td > */}
+
+                                <td data-label="Thể loại"> {post?.category?.replace(/-/g, ' ')} </td>
+
+                                <td data-label="Nhà xuất bản"><span>{post?.publisher ? post?.publisher : <span className={styles.textUpdating}>- Đang cập nhật -</span>} </span> </td >
+                                <td data-label="Thời gian đăng" ><span>{dayjsFormatSort(post?.createdAt)}</span></td >
+
+                                <td data-label="Năm sáng tác">
+                                  <span>{post.year}</span>
+                                </td>
+                                {user.isAdmin && post.status === false && (
+                                  <td>
+                                    <Tag className={styles.tagStatusPending} icon={<ClockCircleOutlined />} color="warning">
+                                      Chờ duyệt
+                                    </Tag>
                                   </td>
-                                  <td data-label="Hình ảnh">
-                                    <span>
-                                      <img
-                                        style={{
-                                          width: "100px", height: "50px",
-                                          objectFit: "cover"
-                                        }}
-                                        src={post.photos[0]?.src || ImgPlaceholder}
-                                        alt="alt"
+                                )}
+
+                                {user.isAdmin && post.status === true && (
+                                  <td >
+                                    <Tag icon={<CheckCircleOutlined />} color="success">
+                                      Đã duyệt
+                                    </Tag>
+                                  </td>
+                                )}
+                                <td data-label="">
+                                  <span>
+                                    {post.status === false && user.isAdmin === true ? (
+                                      <Link to={`/post/${post._id}`}>
+                                        <Link to={`/post/${post._id}`}>
+                                          <Tag color="#8904B1" icon={<CheckOutlined />} onClick={() => handleUpdate(post._id)}>Duyệt và xem</Tag>
+                                        </Link>
+                                      </Link>
+                                    ) : (
+                                      <Link to={`/post/${post._id}`}>
+                                        <Link to={`/post/${post._id}`}>
+                                          <Tag color="#2db7f5" icon={<EyeOutlined />}> Xem tài liệu</Tag>
+                                        </Link>
+                                      </Link>
+                                    )}
+                                  </span>
+                                </td>
+
+                                {(user?.isAdmin || post.username === user?.username) && (
+                                  <td className={styles.actionWrap}>
+                                    <Link to={`/post/edit/${post._id}`} className="edit">
+                                      <EditOutlined className={styles.actionIconEdit} />
+                                    </Link>
+                                    <div
+                                      onClick={() => onClickDelete(post._id, post.name)}
+                                    >
+                                      <DeleteOutlined className={styles.actionIconDelete}
+                                      // onClick={() => handleDelete(post._id)}
                                       />
-                                    </span>
+                                    </div>
                                   </td>
-                                  <td data-label="Tên bài viết">
-                                    <span>{post.name}</span>
-                                  </td>
-                                  <td data-label="Đăng bởi">
-                                    <span>
-                                      <Link
-                                        className="linkTable"
-                                        to={`/?user=${post.username}`}
-                                      >
-                                        {post.username}
-                                      </Link>
-                                    </span>
-                                  </td>
-                                  <td data-label="Thể loại">
-                                    <span>
-                                      <Link
-                                        className="linkTable"
-                                        to={`/articles/category/${post.category}`}
-                                      >
-                                        {post.category}
-                                      </Link>
-                                    </span>
-                                  </td>
-                                  <td data-label="Năm sáng tác">
-                                    <span>{post.year}</span>
-                                  </td>
-                                  {user.isAdmin && post.status === false && (
-                                    <td>
-                                      <Tag className={styles.tagStatusPending} icon={<ClockCircleOutlined />} color="warning">
-                                        Chờ duyệt
-                                      </Tag>
-                                    </td>
-                                  )}
-
-                                  {user.isAdmin && post.status === true && (
-                                    <td >
-                                      <Tag icon={<CheckCircleOutlined />} color="success">
-                                        Đã duyệt
-                                      </Tag>
-                                    </td>
-                                  )}
-                                  <td data-label="">
-                                    <span>
-                                      {post.status === false && user.isAdmin === true ? (
-                                        <Link to={`/post/${post._id}`}>
-                                          <Link to={`/post/${post._id}`}>
-                                            <Tag color="#8904B1" icon={<CheckOutlined />} onClick={() => handleUpdate(post._id)}>Duyệt</Tag>
-                                          </Link>
-                                        </Link>
-                                      ) : (
-                                        <Link to={`/post/${post._id}`}>
-                                          <Link to={`/post/${post._id}`}>
-                                            <Tag color="#2db7f5" icon={<EyeOutlined />}>Xem</Tag>
-                                          </Link>
-                                        </Link>
-                                      )}
-                                    </span>
-                                  </td>
-
-                                  {(user?.isAdmin || post.username === user?.username) && (
-                                    <td className={styles.actionWrap}>
-                                      <Link to={`/post/edit/${post._id}`} className="edit">
-                                        <EditOutlined className={styles.actionIconEdit} />
-                                      </Link>
-                                      <div
-                                        onClick={() => onClickDelete(post._id, post.name)}
-                                      >
-                                        <DeleteOutlined className={styles.actionIconDelete}
-                                        // onClick={() => handleDelete(post._id)}
-                                        />
-                                      </div>
-                                    </td>
-                                  )}
-                                  {!(user?.isAdmin || post.username === user?.username) && (
-                                    <td></td>
-                                  )}
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
+                                )}
+                                {!(user?.isAdmin || post.username === user?.username) && (
+                                  <td></td>
+                                )}
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
                         {/* )} */}
                       </>
                       :
@@ -285,6 +303,7 @@ const Articles = () => {
                                               item?.photos[0]?.src ?
                                                 <Link to={item?.status === true ? `/post/${item._id}` : ''}>
                                                   <Image
+                                                    onClick={() => handleUpdateView(item._id)}
                                                     className={item?.status === true ? '' : styles.itemCardPending}
                                                     height={170} width={window.innerWidth < 576 ? 300 : 250} src={item?.photos[0]?.src} preview={false} />
                                                 </Link>
@@ -292,7 +311,7 @@ const Articles = () => {
                                             }
                                             actions={[
                                               <Tooltip title={`Tài liệu này có ${item.view} lượt xem`} color="purple">
-                                                <Link to={`/post/${item._id}`} >
+                                                <Link to={`/post/${item._id}`} onClick={() => handleUpdateView(item._id)} >
 
                                                   <EyeOutlined style={{ color: 'purple', fontSize: '18px' }} key="view" />
                                                   <span style={{ color: 'purple', fontSize: '18px', marginLeft: '2px' }}>

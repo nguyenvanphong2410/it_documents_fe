@@ -11,12 +11,11 @@ import NoImage from '../../../../components/notImage';
 function ModalUpdateCategory({idEdit}) {
     const isShowModal = useSelector(state => state.category.modalUpdateCategory.isShowModalUpdate);
     const categoryDetails = useSelector(state => state.category.categoryActive);
-    console.log('meme', categoryDetails)
-    console.log('iskkk', idEdit)
+
     const dispatch = useDispatch();
 
     const [inputData, setInputData] = useState({});
-    console.log(inputData)
+
     const [errorMessages, setErrorMessages] = useState({});
     const [thumbnailPreview, setThumbnailPreview] = useState(null);
 

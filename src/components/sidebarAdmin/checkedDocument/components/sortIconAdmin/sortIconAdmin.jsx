@@ -24,7 +24,6 @@ const SortIconDocumentAdmin = ({ type }) => {
             dispatch(setDataDocumentsCheckedFilter({ ...filter, sort_by: 'view', sort_order: newSortOrder }))
             dispatch(requestGetDocumentsChecked());
         }
-        console.log('type', type);
     }
 
     const handleType = (type) => {

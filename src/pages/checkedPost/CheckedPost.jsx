@@ -33,10 +33,14 @@ const CheckedPost = () => {
       setGutter([20, 20])
     }
   }, [])
+
+  useEffect(() => {
+    document.title = "Tài liệu đã duyệt";
+  }, []);
+
   const dispatch = useDispatch();
   const filter = useSelector(state => state.document.dataPendingFilter)
   const listDocuments = useSelector(state => state.document.listDocumentsChecked);
-  console.log('Tai lieu checked cuaban', listDocuments)
   const isLoading = useSelector(state => state.document.isLoadingGetAllChecked);
   const documents = listDocuments.documents
   const [idDelete, setIdDelete] = useState('');

@@ -9,11 +9,7 @@ import { userRequest } from '../../../../../requestMethods';
 const ModalDelete = ({ idDelete, name }) => {
   const isShowModal = useSelector(state => state.document.modalDocumentDelete.isShowModalDelete);
 
-  // console.log('id meme', idDelete)
-  // console.log('Type la', typeof (idDelete))
-
   const dispatch = useDispatch();
-  // const { user } = useContext(Context);
   const handleCLoseModal = () => {
     dispatch(setOpenModalDelete(false));
   };
@@ -21,7 +17,6 @@ const ModalDelete = ({ idDelete, name }) => {
   const handleOkModal = async () => {
     try {
       userRequest.delete(`/post/${idDelete}`);
-      console.log('Xóa thành công');
       handleCLoseModal();
       
       // Hiện toast message
